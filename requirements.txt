@@ -1,0 +1,12 @@
+gevent
+Flask
+alembic
+douban-client
+evernote
+Mysql-Python
+SqlAlchemy
+Flask-SqlAlchemy
+Flask-Login
+Flask-Script
+Flask-Migrate
+Flask-DebugToolbar
