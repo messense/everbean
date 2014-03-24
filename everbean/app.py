@@ -3,9 +3,9 @@
 from __future__ import print_function, with_statement
 import os
 from flask import Flask
-from .utils import parse_command_line
-from .models.user import User
-from .core import db, login_manager
+from everbean.utils import parse_command_line
+from everbean.models.user import User
+from everbean.core import db, login_manager
 
 
 def create_app(config=None, envvar="everbean_config"):
@@ -66,8 +66,9 @@ def register_extensions(app):
 
     db.init_app(app)
     login_manager.init_app(app)
-    
+
     if app.debug:
+        # load debug toobar
         from flask.ext.debugtoolbar import DebugToolbarExtension
         DebugToolbarExtension(app)
 
@@ -81,11 +82,11 @@ def setup_extensions(app):
 
 
 def register_blueprints(app):
-    from .handlers.account import account
-    from .handlers.home import home
+    from everbean.handlers import home
+    from everbean.handlers import account
 
-    app.register_blueprint(home)
-    app.register_blueprint(account)
+    app.register_blueprint(home.bp)
+    app.register_blueprint(account.bp)
 
 
 if __name__ == '__main__':

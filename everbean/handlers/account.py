@@ -8,12 +8,14 @@ from flask.ext.login import login_user, logout_user, current_user
 from everbean.core import db
 from everbean.models import User
 
-account = Blueprint('account', __name__, url_prefix='/account')
+bp = Blueprint('account', __name__, url_prefix='/account')
 
 
-@account.route('/login')
+@bp.route('/login')
 def login():
     """Redirect to douban.com to login"""
+    if current_user.is_authenticated():
+        return redirect(url_for('home.index'))
     client = DoubanClient(app.config['DOUBAN_API_KEY'],
                           app.config['DOUBAN_API_SECRET'],
                           app.config['DOUBAN_REDIRECT_URI'],
@@ -21,10 +23,12 @@ def login():
     return redirect(client.authorize_url)
 
 
-@account.route('/douban')
+@bp.route('/douban')
 def login_with_douban():
     """Use request argument code to get OAuth2
     access_token, refresh_token and etc."""
+    if current_user.is_authenticated():
+        return redirect(url_for('home.index'))
     error = request.args.get('error', '')
     code = request.args.get('code', '')
     if error or (not code):
@@ -65,7 +69,9 @@ def login_with_douban():
     return redirect(url_for('home.index'))
 
 
-@account.route('/logout')
+@bp.route('/logout')
 def logout():
-    logout_user()
+    """logout user"""
+    if current_user.is_authenticated():
+        logout_user()
     return redirect(url_for('home.index'))
