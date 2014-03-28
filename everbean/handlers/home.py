@@ -11,10 +11,10 @@ bp = Blueprint('home', __name__, url_prefix='/')
 def index():
     return render_template('home/index.html')
 
-@bp.route('/about')
+@bp.route('about')
 def about():
     return  render_template('home/about.html')
 
-@bp.route('/faq')
+@bp.route('faq')
 def faq():
     return render_template('home/faq.html')

@@ -2,7 +2,6 @@
 from datetime import datetime
 from flask import Blueprint, render_template, abort, url_for
 from flask import request, redirect, current_app as app
-from jinja2 import TemplateNotFound
 from douban_client import DoubanClient
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from everbean.core import db
@@ -76,7 +75,19 @@ def logout():
         logout_user()
     return redirect(url_for('home.index'))
 
-@bp.route('/')
+@bp.route('/settings')
 @login_required
 def settings():
-    return render_template('account/index.html')
+    return render_template('account/settings.html')
+
+@bp.route('/<uid>')
+@login_required
+def index(uid=None):
+    user = None
+    if uid is None or current_user.douban_uid == uid:
+        user = current_user
+    else:
+        user = User.query.filter_by(douban_uid=uid).first()
+        if not user:
+            abort(404)
+    return render_template('account/index.html', user=user)

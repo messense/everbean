@@ -22,6 +22,12 @@ a:visited {
   background-color: #396;
 }
 
+.eb-navbar img.avatar-small {
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+}
+
 .eb-main a:hover {
     text-decoration: none;
     background-color: #396;
