@@ -40,5 +40,15 @@ def profile():
     log = '/tmp/everbean-profile.log'
     run_dev(log)
 
+@manager.command
+def create_db():
+    from everbean.models import User, Book
+    try:
+        db.create_all()
+        print('Database creation succeed.')
+    except:
+        print('Database creation failed.')
+
+
 if __name__ == '__main__':
     manager.run()

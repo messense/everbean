@@ -6,14 +6,19 @@ a:visited {
     text-decoration: none;
     color: #669;
 }
-.eb-nav a:visited {
+.eb-navbar {
+    background: #f6faf9;
+    border-top: 4px solid #2aac5e;
+    border-bottom: 1px solid #eee;
+}
+.eb-navbar a:visited {
     color: #396;
 }
-.eb-nav li a:hover {
-    background-color: #396;
+.eb-navbar li a:hover {
+    background-color: #2aac5e;
     color: #fff;
 }
-.eb-nav .navbar-toggle .icon-bar {
+.eb-navbar .navbar-toggle .icon-bar {
   background-color: #396;
 }
 
@@ -21,4 +26,10 @@ a:visited {
     text-decoration: none;
     background-color: #396;
     color: #fff;
+}
+
+@media (min-width: 992px) {
+    .everbean .container {
+        width: 960px;
+    }
 }

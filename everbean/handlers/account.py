@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, abort, url_for
 from flask import request, redirect, current_app as app
 from jinja2 import TemplateNotFound
 from douban_client import DoubanClient
-from flask.ext.login import login_user, logout_user, current_user
+from flask.ext.login import login_user, logout_user, current_user, login_required
 from everbean.core import db
 from everbean.models import User
 
@@ -76,6 +76,7 @@ def logout():
         logout_user()
     return redirect(url_for('home.index'))
 
-@bp.route('/settings')
+@bp.route('/')
+@login_required
 def settings():
-    pass
+    return render_template('account/index.html')
