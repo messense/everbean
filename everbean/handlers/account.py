@@ -91,3 +91,8 @@ def index(uid=None):
         if not user:
             abort(404)
     return render_template('account/index.html', user=user)
+
+@bp.route('/bind')
+@login_required
+def bind():
+    return render_template('account/bind.html')

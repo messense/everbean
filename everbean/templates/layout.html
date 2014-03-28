@@ -50,6 +50,26 @@
         </div>
     </div>
     {% endif %}
+    {% if current_user.is_authenticated() and request.endpoint != 'account.bind' and not current_user.evernote_username %}
+    <div class="eb-tips">
+        <div class="container">
+            <div class="alert alert-warning alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                您的帐号尚未与 印象笔记/Evernote 绑定，将无法正常使用笔记同步功能。 <a href="{{ url_for('account.bind') }}" title="绑定">马上去绑定</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if current_user.is_authenticated() and request.endpoint != 'account.settings' and current_user.evernote_username and not current_user.enable_sync %}
+    <div class="eb-tips">
+        <div class="container">
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                您已经关闭此帐号的笔记同步功能，若要开启请到 <a href="{{ url_for('account.settings') }}" title="设置">设置</a> 中开启笔记同步功能。
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="eb-main">
         <div class="container">
             {% block main %}{% endblock %}

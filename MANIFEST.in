@@ -1,0 +1,5 @@
+recursive-include everbean/static *
+recursive-include everbean/templates *
+include README.md
+include requirements.txt
+include optional-requirements.txt
