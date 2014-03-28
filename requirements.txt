@@ -1,4 +1,3 @@
-gevent
 Flask
 alembic
 douban-client

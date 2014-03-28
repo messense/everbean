@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function
-
-from gevent import monkey
-# apply gevent monkey patch
-monkey.patch_all()
-
-from gevent.wsgi import WSGIServer
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from everbean.app import create_app
@@ -22,7 +16,7 @@ manager.add_command("db", MigrateCommand)
 
 def run_dev(profile_log=None):
     """Runs a development server."""
-    from werkzeug.serving import run_with_reloader
+    from werkzeug.serving import run_simple
     from werkzeug.debug import DebuggedApplication
     from werkzeug.contrib.profiler import ProfilerMiddleware
 
@@ -34,14 +28,7 @@ def run_dev(profile_log=None):
     else:
         wsgi = DebuggedApplication(app)
 
-    @run_with_reloader
-    def _run_server():
-        print('Start server at: 127.0.0.1:%s' % port)
-
-        http_server = WSGIServer(('', port), wsgi)
-        http_server.serve_forever()
-
-    _run_server()
+    run_simple('0.0.0.0', port, wsgi, use_reloader=True, use_debugger=True)
 
 
 @manager.command
@@ -54,7 +41,4 @@ def profile():
     run_dev(log)
 
 if __name__ == '__main__':
-    try:
-        manager.run()
-    except:
-        pass
+    manager.run()
