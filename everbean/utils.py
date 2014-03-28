@@ -1,11 +1,13 @@
 # coding: utf-8
+import os
 import sys
 
 
-def parse_command_line(app, args=None):
+def parse_command_line(app, args=None, final=True):
     if args is None:
         args = sys.argv
     remaining = []
+    config = dict()
     for i in range(1, len(args)):
         # All things after the last option are command line arguments
         if not args[i].startswith("-"):
@@ -24,6 +26,21 @@ def parse_command_line(app, args=None):
             value = True
         if value == 'False':
             value = False
-        app.config[name] = value
+        config[name] = value
+        if final:
+            app.config[name] = value
 
-    return remaining
+    return config
+
+
+def parse_config_file(app, filename):
+    if not os.path.exists(filename):
+        app.logger.warning('Configuration file %s does not exist.' % filename)
+        return
+    if filename.endswith('.py'):
+        try:
+            app.config.from_pyfile(filename)
+        except IOError:
+            app.logger.warning("Cannot load configuration from python file %s" % filename)
+    else:
+        app.config.from_object(filename)

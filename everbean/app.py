@@ -3,7 +3,7 @@
 from __future__ import print_function, with_statement
 import os
 from flask import Flask, url_for
-from everbean.utils import parse_command_line
+from everbean.utils import parse_command_line, parse_config_file
 from everbean.models.user import User
 from everbean.core import db, login_manager
 
@@ -29,20 +29,25 @@ def create_app(config=None, envvar="everbean_config"):
 def load_configuration(app, config, envvar):
     # load default configuration first
     app.config.from_object('everbean.defaults')
+    if config is None:
+        # if current directory has a config.py file, try to load it
+        cwd = os.path.join(os.getcwd(), 'config.py')
+        if os.path.exists(cwd):
+            config = cwd
     if config is not None:
-        if config.endswith('.py'):
-            try:
-                app.config.from_pyfile(config)
-            except IOError:
-                app.logger.warning("Cannot load configuration from python file %s" % config)
-        else:
-            app.config.from_object(config)
+        parse_config_file(app, config)
+
     if envvar is not None:
         try:
             app.config.from_envvar(envvar)
         except RuntimeError:
             app.logger.warning("Environment var %s is not set." % envvar)
-    parse_command_line(app)
+
+    cfg = parse_command_line(app, None, final=False)
+    if cfg.get('SETTINGS'):
+        parse_config_file(app, cfg['SETTINGS'])
+    # update app.config with command line arguments
+    app.config.update(cfg)
 
     # check config
     for name in (
