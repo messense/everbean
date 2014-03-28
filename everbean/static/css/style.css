@@ -1,0 +1,24 @@
+a:link {
+    text-decoration: none;
+    color: #396;
+}
+a:visited {
+    text-decoration: none;
+    color: #669;
+}
+.eb-nav a:visited {
+    color: #396;
+}
+.eb-nav li a:hover {
+    background-color: #396;
+    color: #fff;
+}
+.eb-nav .navbar-toggle .icon-bar {
+  background-color: #396;
+}
+
+.eb-main a:hover {
+    text-decoration: none;
+    background-color: #396;
+    color: #fff;
+}

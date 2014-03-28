@@ -75,3 +75,7 @@ def logout():
     if current_user.is_authenticated():
         logout_user()
     return redirect(url_for('home.index'))
+
+@bp.route('/settings')
+def settings():
+    pass

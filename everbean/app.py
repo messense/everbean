@@ -2,7 +2,7 @@
 # coding=utf-8
 from __future__ import print_function, with_statement
 import os
-from flask import Flask
+from flask import Flask, url_for
 from everbean.utils import parse_command_line
 from everbean.models.user import User
 from everbean.core import db, login_manager
@@ -19,6 +19,7 @@ def create_app(config=None, envvar="everbean_config"):
     load_configuration(app, config, envvar)
     register_extensions(app)
     register_hooks(app)
+    register_template_utils(app)
     register_blueprints(app)
     setup_extensions(app)
 
@@ -70,6 +71,8 @@ def register_extensions(app):
     if app.debug:
         # load debug toobar
         from flask.ext.debugtoolbar import DebugToolbarExtension
+        # disable redirection interception of Flask-DebugToobar
+        app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
         DebugToolbarExtension(app)
 
 
@@ -79,6 +82,13 @@ def setup_extensions(app):
         return User.query.filter_by(douban_id=user_id).first()
 
     login_manager.login_view = "account.login"
+
+
+def register_template_utils(app):
+    @app.template_global('static_url')
+    def static_url(f):
+        # shortcut for url_for('static', filename=xxx)
+        return url_for('static', filename=f)
 
 
 def register_blueprints(app):

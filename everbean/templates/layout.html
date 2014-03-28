@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>{% block title %}Everbean{% endblock %}</title>
+    <link href="{{ static_url('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ static_url('css/style.css') }}" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <header class="navbar navbar-static-top eb-nav" id="top" role="banner">
+      <div class="container">
+        <div class="navbar-header">
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".eb-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/" class="navbar-brand">Everbean</a>
+        </div>
+        <nav class="collapse navbar-collapse eb-navbar-collapse" role="navigation">
+          <ul class="nav navbar-nav">
+            <li{% if request.endpoint == 'home.index' %} class="active"{% endif %}><a href="{{ url_for('home.index') }}" title="首页"><span class="glyphicon glyphicon-home"></span> 首页</a>
+            <li{% if request.endpoint == 'home.faq' %} class="active"{% endif %}><a href="{{ url_for('home.faq') }}" title="FAQ"><span class="glyphicon glyphicon-question-sign"></span> FAQ</a>
+            <li{% if request.endpoint == 'home.about' %} class="active"{% endif %}><a href="{{ url_for('home.about') }}" title="关于"><span class="glyphicon glyphicon-info-sign"></span> 关于</a>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {% if current_user.is_anonymous() %}
+            <li><a href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_24.png') }}" alt="使用豆瓣登录" /></a>
+            {% else %}
+            <li{% if request.endpoint == 'account.settings' %} class="active"{% endif %}><a href="{{ url_for('account.settings') }}" title="设置"><span class="glyphicon glyphicon-cog"></span> 设置</a> </li>
+            <li><a href="{{ url_for('account.logout') }}" title="登出"><span class="glyphicon glyphicon-log-out"></span> 登出</a> </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <div class="eb-main">
+        <div class="container">
+            {% block main %}{% endblock %}
+        </div>
+    </div>
+    <footer class="eb-footer">
+        <div class="container">
+
+        </div>
+    </footer>
+    <script src="{{ static_url('js/jquery.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
+    {% block js %}{% endblock %}
+  </body>
+</html>
