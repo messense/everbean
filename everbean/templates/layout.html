@@ -28,12 +28,12 @@
         <nav class="collapse navbar-collapse eb-navbar-collapse" role="navigation">
           <ul class="nav navbar-nav">
             <li{% if request.endpoint == 'home.index' %} class="active"{% endif %}><a href="{{ url_for('home.index') }}" title="首页"><span class="glyphicon glyphicon-home"></span> 首页</a>
-            <li{% if request.endpoint == 'home.faq' %} class="active"{% endif %}><a href="{{ url_for('home.faq') }}" title="FAQ"><span class="glyphicon glyphicon-question-sign"></span> FAQ</a>
+            <li{% if request.endpoint == 'home.faq' %} class="active"{% endif %}><a href="{{ url_for('home.faq') }}" title="常见问题"><span class="glyphicon glyphicon-question-sign"></span> 常见问题</a>
             <li{% if request.endpoint == 'home.about' %} class="active"{% endif %}><a href="{{ url_for('home.about') }}" title="关于"><span class="glyphicon glyphicon-info-sign"></span> 关于</a>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_anonymous() %}
-            <li><a href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_24.png') }}" alt="使用豆瓣登录" /></a>
+            <li class="visible-sm visible-md visible-lg"><a href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_24.png') }}" alt="使用豆瓣登录" /></a>
             {% else %}
             <li><a href="{{ url_for('account.index', uid=current_user.douban_uid) }}" title="个人中心"><img class="avatar-small" src="{{ current_user.avatar }}" />{{ current_user.douban_name }}</a></li>
             <li{% if request.endpoint == 'account.settings' %} class="active"{% endif %}><a href="{{ url_for('account.settings') }}" title="设置"><span class="glyphicon glyphicon-cog"></span> 设置</a> </li>
@@ -43,6 +43,13 @@
         </nav>
       </div>
     </header>
+    {% if current_user.is_anonymous() %}
+    <div class="douban-login hidden-sm hidden-md hidden-lg">
+        <div class="container">
+            <a class="center-block text-center" href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_32.png') }}" alt="使用豆瓣登录" /></a>
+        </div>
+    </div>
+    {% endif %}
     <div class="eb-main">
         <div class="container">
             {% block main %}{% endblock %}
@@ -50,7 +57,13 @@
     </div>
     <footer class="eb-footer">
         <div class="container">
-
+            <div class="text-center">
+                <a href="https://me.alipay.com/messense" title="Donate" target="_blank">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                    <span class="glyphicon glyphicon-chevron-right"></span> with
+                    <span class="glyphicon glyphicon-heart"></span> by <span class="author">Messense</span>
+                </a>
+            </div>
         </div>
     </footer>
     <script src="{{ static_url('js/jquery.min.js') }}"></script>

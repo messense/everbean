@@ -23,8 +23,8 @@ a:visited {
 }
 
 .eb-navbar img.avatar-small {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     margin-right: 5px;
 }
 
@@ -32,6 +32,24 @@ a:visited {
     text-decoration: none;
     background-color: #396;
     color: #fff;
+}
+
+.eb-footer {
+    background: #f6faf9;
+    border-top: 1px solid #eee;
+    padding: 20px 0;
+    color: #aaa;
+}
+.eb-footer a {
+    color: #aaa;
+    font-size: 16px;
+}
+.eb-footer span.author {
+    font-size: 18px;
+    font-weight: bold;
+}
+.eb-footer .glyphicon-chevron-right {
+    margin-left: -6px;
 }
 
 @media (min-width: 992px) {
