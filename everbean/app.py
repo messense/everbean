@@ -5,7 +5,7 @@ import os
 from flask import Flask, url_for
 from everbean.utils import parse_command_line, parse_config_file
 from everbean.models.user import User
-from everbean.core import db, login_manager
+from everbean.core import db, login_manager, assets
 
 
 def create_app(config=None, envvar="everbean_config"):
@@ -41,7 +41,7 @@ def load_configuration(app, config, envvar):
         try:
             app.config.from_envvar(envvar)
         except RuntimeError:
-            app.logger.warning("Environment var %s is not set." % envvar)
+            pass
 
     cfg = parse_command_line(app, None, final=False)
     if cfg.get('SETTINGS'):
@@ -69,9 +69,12 @@ def register_hooks(app):
 
 
 def register_extensions(app):
+    from flask.ext.turbolinks import turbolinks
 
     db.init_app(app)
     login_manager.init_app(app)
+    turbolinks(app)
+    assets.init_app(app)
 
     if app.debug:
         # load debug toobar

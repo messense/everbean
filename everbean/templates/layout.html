@@ -5,13 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>{% block title %}Everbean{% endblock %}</title>
-    <link href="{{ static_url('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ static_url('css/style.css') }}" rel="stylesheet">
+    {% assets "css_all" %}
+    <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+    {% endassets %}
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    {% assets "js_all" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
   </head>
   <body class="everbean">
     <header class="navbar navbar-static-top eb-navbar" id="top" role="banner">
@@ -86,8 +90,6 @@
             </div>
         </div>
     </footer>
-    <script src="{{ static_url('js/jquery.min.js') }}"></script>
-    <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
     {% block js %}{% endblock %}
   </body>
 </html>

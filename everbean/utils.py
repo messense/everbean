@@ -6,15 +6,12 @@ import sys
 def parse_command_line(app, args=None, final=True):
     if args is None:
         args = sys.argv
-    remaining = []
     config = dict()
     for i in range(1, len(args)):
         # All things after the last option are command line arguments
         if not args[i].startswith("-"):
-            remaining = args[i:]
             break
         if args[i] == "--":
-            remaining = args[i + 1:]
             break
         arg = args[i].lstrip("-")
         name, equals, value = arg.partition("=")

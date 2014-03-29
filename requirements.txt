@@ -1,5 +1,7 @@
 Flask
 alembic
+cssmin
+jsmin
 douban-client
 evernote
 Mysql-Python
@@ -9,3 +11,5 @@ Flask-Login
 Flask-Script
 Flask-Migrate
 Flask-DebugToolbar
+Flask-Turbolinks
+Flask-Assets

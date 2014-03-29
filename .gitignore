@@ -56,3 +56,6 @@ docs/_build/
 .idea/
 # config file
 config.py
+everbean/static/.webassets-cache
+everbean/static/css/all.css
+everbean/static/js/all.js
