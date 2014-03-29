@@ -3,6 +3,7 @@
 from __future__ import print_function
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.assets import ManageAssets
 from everbean.app import create_app
 from everbean.core import db
 
@@ -11,8 +12,8 @@ app = create_app()
 manager = Manager(app)
 migrate = Migrate(app, db)
 
-manager = Manager(app)
 manager.add_command("db", MigrateCommand)
+manager.add_command("assets", ManageAssets())
 
 def run_dev(profile_log=None):
     """Runs a development server."""
