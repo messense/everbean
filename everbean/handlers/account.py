@@ -1,8 +1,10 @@
 # coding=utf-8
 from datetime import datetime
-from flask import Blueprint, render_template, abort, url_for
+from flask import Blueprint, render_template, \
+    flash, url_for, session
 from flask import request, redirect, current_app as app
-from flask.ext.login import login_user, logout_user, current_user, login_required
+from flask.ext.login import login_user, logout_user, \
+    current_user, login_required
 from douban_client import DoubanClient
 from evernote.api.client import EvernoteClient
 from everbean.core import db
@@ -86,24 +88,30 @@ def settings():
 @login_required
 def bind():
     token = app.config['EVERNOTE_SANDBOX_TOKEN']
-    if app.config['EVERNOTE_SANDBOX'] and token:
+    if not app.debug and app.config['EVERNOTE_SANDBOX'] and token:
         # using evernote sandox for development
         client = EvernoteClient(token=token)
         user_store = client.get_user_store()
         user = user_store.getUser()
         username = user.username
 
-        c_user = User.query.filter_by(id=current_user.id).first_or_404()
-        c_user.evernote_username = username
-        c_user.evernote_access_token = token
-        db.session.add(c_user)
+        #c_user = User.query.filter_by(id=current_user.id).first_or_404()
+        current_user.evernote_username = username
+        current_user.evernote_access_token = token
+        db.session.add(current_user)
         db.session.commit()
+        flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
         return redirect(url_for('home.index'))
     else:
         tp = request.args.get('type', '0')
         is_i18n = True if tp == '1' else False
         if is_i18n:
-            pass
+            client = EvernoteClient(consumer_key=app.config['EVERNOTE_CONSUMER_KEY'],
+                                    consumer_secret=app.config['EVERNOTE_CONSUMER_SECRET'],
+                                    sandbox=app.config['EVERNOTE_SANDBOX'])
+            request_token = client.get_request_token(app.config['EVERNOTE_REDIRECT_URI'])
+            session['evernote_oauth_token_secret'] = request_token['oauth_token_secret']
+            return redirect(client.get_authorize_url(request_token))
         else:
             pass
         if tp == '0':
@@ -112,7 +120,37 @@ def bind():
 @bp.route('/evernote')
 @login_required
 def evernote():
-    pass
+    client = EvernoteClient(consumer_key=app.config['EVERNOTE_CONSUMER_KEY'],
+                            consumer_secret=app.config['EVERNOTE_CONSUMER_SECRET'],
+                            sandbox=app.config['EVERNOTE_SANDBOX'])
+    oauth_token = request.args.get('oauth_token')
+    oauth_token_secret = session['evernote_oauth_token_secret']
+    oauth_verifier = request.args.get('oauth_verifier')
+
+    if not (oauth_token and oauth_token_secret and oauth_verifier):
+        flash(u'绑定 Evernote 失败！', 'error')
+        return redirect(url_for('account.bind'))
+
+    auth_token = client.get_access_token(oauth_token,
+                                         oauth_token_secret,
+                                         oauth_verifier)
+    app.logger.debug('evernote auth_token: %s' % auth_token)
+
+    if auth_token:
+        client = EvernoteClient(token=auth_token)
+        user_store = client.get_user_store()
+        user = user_store.getUser()
+
+        current_user.evernote_username = user.username
+        current_user.evernote_access_token = auth_token
+        db.session.add(current_user)
+        db.session.commit()
+        flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+        return redirect(url_for('home.index'))
+    else:
+        flash(u'绑定 Evernote 失败！', 'error')
+        return redirect(url_for('account.bind'))
+
 
 @bp.route('/yinxiang')
 @login_required

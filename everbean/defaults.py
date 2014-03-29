@@ -15,6 +15,8 @@ DOUBAN_REDIRECT_URI = ''
 EVERNOTE_CONSUMER_KEY = ''
 # evernote consumer secret
 EVERNOTE_CONSUMER_SECRET = ''
+# evernote redirect uri
+EVERNOTE_REDIRECT_URI = ''
 # is running in sandbox?
 EVERNOTE_SANDBOX = True
 # evernote sandbox token
@@ -23,6 +25,8 @@ EVERNOTE_SANDBOX_TOKEN = ''
 YINXIANG_CONSUMER_KEY = ''
 # yinxiang consumer secret
 YINXIANG_CONSUMER_SECRET = ''
+# yinxiang redirect uri
+YINXIANG_REDIRECT_URI = ''
 
 # is debugging
 DEBUG = False
