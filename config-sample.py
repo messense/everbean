@@ -15,6 +15,10 @@ EVERNOTE_CONSUMER_KEY = ''
 EVERNOTE_CONSUMER_SECRET = ''
 # is running in sandbox?
 EVERNOTE_SANDBOX = True
+# yinxiang consumer key
+YINXIANG_CONSUMER_KEY = ''
+# yinxiang consumer secret
+YINXIANG_CONSUMER_SECRET = ''
 
 # is debugging
 DEBUG = False

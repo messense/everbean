@@ -21,7 +21,16 @@ a:visited {
 .eb-navbar .navbar-toggle .icon-bar {
   background-color: #396;
 }
-
+.eb-navbar #loading {
+    display: none;
+    width: 16px;
+    height: 11px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -5px;
+    margin-left: -8px;
+}
 .eb-navbar img.avatar-small {
     width: 18px;
     height: 18px;
@@ -32,6 +41,12 @@ a:visited {
     text-decoration: none;
     background-color: #396;
     color: #fff;
+}
+.eb-main a.logo {
+    background: none;
+    margin-bottom: 20px;
+    padding: 10px 0 30px;
+    border-bottom: 1px solid #eee;
 }
 
 .eb-footer {

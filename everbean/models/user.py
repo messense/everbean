@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from ..core import db
+from everbean.core import db
 from flask.ext.login import UserMixin
 
 

@@ -102,9 +102,11 @@ def register_template_utils(app):
 def register_blueprints(app):
     from everbean.handlers import home
     from everbean.handlers import account
+    from everbean.handlers import user
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
+    app.register_blueprint(user.bp)
 
 
 if __name__ == '__main__':

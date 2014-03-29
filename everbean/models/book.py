@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from ..core import db
+from everbean.core import db
 
 
 class Book(db.Model):
