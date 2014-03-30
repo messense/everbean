@@ -2,6 +2,7 @@
 import os
 import sys
 from evernote.api.client import EvernoteClient
+from douban_client.client import DoubanClient
 
 
 def parse_command_line(app, args=None, final=True):
@@ -18,7 +19,7 @@ def parse_command_line(app, args=None, final=True):
         name, equals, value = arg.partition("=")
         name = name.replace('-', '_').upper()
         if not name in app.config:
-            raise Exception('Unrecognized command line option: %r' % name)
+            app.logger.warning('Unrecognized command line option: %r' % name)
         # convert to bool
         if value == 'True':
             value = True
@@ -64,4 +65,14 @@ def get_evernote_client(app, is_i18n=True, token=None):
                                 sandbox=app.config['EVERNOTE_SANDBOX'],
                                 service_host=get_evernote_service_host())
 
+    return client
+
+
+def get_douban_client(app, token=None):
+    client = DoubanClient(app.config['DOUBAN_API_KEY'],
+                          app.config['DOUBAN_API_SECRET'],
+                          app.config['DOUBAN_REDIRECT_URI'],
+                          app.config['DOUBAN_API_SCOPE'])
+    if token:
+        client.auth_with_token(token)
     return client

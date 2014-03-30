@@ -3,10 +3,9 @@
 from __future__ import print_function, with_statement
 import os
 from flask import Flask, url_for
-from celery import Celery
 from everbean.utils import parse_command_line, parse_config_file
 from everbean.models.user import User
-from everbean.core import db, login_manager, assets, mail
+from everbean.core import db, celery, login_manager, assets, mail
 
 
 def create_app(config=None, envvar="everbean_config"):
@@ -25,23 +24,6 @@ def create_app(config=None, envvar="everbean_config"):
     setup_extensions(app)
 
     return app
-
-
-def create_celery_app(app=None):
-    app = app or create_app()
-    celery = Celery(__name__, broker=app.config['CELERY_BROKER_URL'])
-    celery.conf.update(app.config)
-    TaskBase = celery.Task
-
-    class ContextTask(TaskBase):
-        abstract = True
-
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery
 
 
 def load_configuration(app, config, envvar):
@@ -90,6 +72,7 @@ def register_extensions(app):
     from flask.ext.turbolinks import turbolinks
 
     db.init_app(app)
+    celery.config_from_object(app.config)
     login_manager.init_app(app)
     mail.init_app(app)
     turbolinks(app)
@@ -130,6 +113,3 @@ def register_blueprints(app):
     app.register_blueprint(oauth.bp)
 
 
-if __name__ == '__main__':
-    app = create_app()
-    app.run()

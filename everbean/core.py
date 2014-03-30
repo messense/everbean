@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
+from celery import Celery
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment, Bundle
@@ -7,6 +8,9 @@ from flask.ext.mail import Mail
 
 # database
 db = SQLAlchemy()
+
+# celery
+celery = Celery()
 
 # flask-login
 login_manager = LoginManager()

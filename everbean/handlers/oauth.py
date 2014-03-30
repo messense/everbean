@@ -3,10 +3,10 @@ from datetime import datetime
 from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required, login_user
-from douban_client import DoubanClient
 from everbean.core import db
 from everbean.models import User
-from everbean.utils import get_evernote_client
+from everbean.utils import get_evernote_client, get_douban_client
+from everbean import tasks
 
 bp = Blueprint('oauth', __name__, url_prefix='/oauth')
 
@@ -23,10 +23,7 @@ def douban():
         flash(u'豆瓣 OAuth 登录失败！', 'error')
         return redirect(url_for('home.index'))
 
-    client = DoubanClient(app.config['DOUBAN_API_KEY'],
-                          app.config['DOUBAN_API_SECRET'],
-                          app.config['DOUBAN_REDIRECT_URI'],
-                          app.config['DOUBAN_API_SCOPE'])
+    client = get_douban_client(app)
     client.auth_with_code(code)
 
     me = client.user.me
@@ -53,6 +50,9 @@ def douban():
     db.session.commit()
 
     login_user(user, remember=True)
+
+    # sync books to database for the first time
+    tasks.sync_books.delay(user)
 
     return redirect(url_for('home.index'))
 

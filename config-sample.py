@@ -29,7 +29,7 @@ SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 
 # Celery broker url
-CELERY_BROKER_URL = ''
+BROKER_URL = ''
 
 # mail server
 MAIL_SERVER = ''

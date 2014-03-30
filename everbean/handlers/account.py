@@ -4,9 +4,8 @@ from flask import Blueprint, render_template, \
 from flask import request, redirect, current_app as app
 from flask.ext.login import logout_user, \
     current_user, login_required
-from douban_client import DoubanClient
 from everbean.core import db
-from everbean.utils import get_evernote_client
+from everbean.utils import get_evernote_client, get_douban_client
 
 bp = Blueprint('account', __name__, url_prefix='/account')
 
@@ -16,10 +15,7 @@ def login():
     """Redirect to douban.com to login"""
     if current_user.is_authenticated():
         return redirect(url_for('home.index'))
-    client = DoubanClient(app.config['DOUBAN_API_KEY'],
-                          app.config['DOUBAN_API_SECRET'],
-                          app.config['DOUBAN_REDIRECT_URI'],
-                          app.config['DOUBAN_API_SCOPE'])
+    client = get_douban_client(app)
     return redirect(client.authorize_url)
 
 
