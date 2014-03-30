@@ -3,16 +3,17 @@
 from __future__ import print_function, with_statement
 import os
 from flask import Flask, url_for
+from celery import Celery
 from everbean.utils import parse_command_line, parse_config_file
 from everbean.models.user import User
-from everbean.core import db, login_manager, assets
+from everbean.core import db, login_manager, assets, mail
 
 
 def create_app(config=None, envvar="everbean_config"):
-    BASEDIR = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.dirname(os.path.abspath(__file__))
     app = Flask(
         __name__,
-        static_folder=os.path.join(BASEDIR, "static"),
+        static_folder=os.path.join(base_dir, "static"),
         template_folder="templates"
     )
 
@@ -24,6 +25,23 @@ def create_app(config=None, envvar="everbean_config"):
     setup_extensions(app)
 
     return app
+
+
+def create_celery_app(app=None):
+    app = app or create_app()
+    celery = Celery(__name__, broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+
+    class ContextTask(TaskBase):
+        abstract = True
+
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery.Task = ContextTask
+    return celery
 
 
 def load_configuration(app, config, envvar):
@@ -73,6 +91,7 @@ def register_extensions(app):
 
     db.init_app(app)
     login_manager.init_app(app)
+    mail.init_app(app)
     turbolinks(app)
     assets.init_app(app)
 

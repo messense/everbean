@@ -32,3 +32,15 @@ SECRET_KEY = ''
 
 # MySQL database URI
 SQLALCHEMY_DATABASE_URI = ''
+
+# Celery broker url
+CELERY_BROKER_URL = ''
+
+# mail server
+MAIL_SERVER = ''
+# mail port
+MAIL_PORT = 25
+# mail username
+MAIL_USERNAME = ''
+# mail password
+MAIL_PASSWORD = ''

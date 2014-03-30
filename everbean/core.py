@@ -3,12 +3,16 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment, Bundle
+from flask.ext.mail import Mail
 
 # database
 db = SQLAlchemy()
 
 # flask-login
 login_manager = LoginManager()
+
+# flask-mail
+mail = Mail()
 
 # flask-assets
 assets = Environment()

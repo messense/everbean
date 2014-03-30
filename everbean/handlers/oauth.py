@@ -4,7 +4,6 @@ from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required, login_user
 from douban_client import DoubanClient
-from evernote.api.client import EvernoteClient
 from everbean.core import db
 from everbean.models import User
 from everbean.utils import get_evernote_client

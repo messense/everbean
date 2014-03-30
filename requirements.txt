@@ -1,6 +1,7 @@
 Flask
 alembic
 cssmin
+celery
 jsmin
 douban-client
 evernote
@@ -13,3 +14,4 @@ Flask-Migrate
 Flask-DebugToolbar
 Flask-Turbolinks
 Flask-Assets
+Flask-Mail
