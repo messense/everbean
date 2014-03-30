@@ -21,12 +21,7 @@ EVERNOTE_REDIRECT_URI = ''
 EVERNOTE_SANDBOX = True
 # evernote sandbox token
 EVERNOTE_SANDBOX_TOKEN = ''
-# yinxiang consumer key
-YINXIANG_CONSUMER_KEY = ''
-# yinxiang consumer secret
-YINXIANG_CONSUMER_SECRET = ''
-# yinxiang redirect uri
-YINXIANG_REDIRECT_URI = ''
+
 
 # is debugging
 DEBUG = False

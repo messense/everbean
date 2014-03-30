@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import sys
+from evernote.api.client import EvernoteClient
 
 
 def parse_command_line(app, args=None, final=True):
@@ -41,3 +42,26 @@ def parse_config_file(app, filename):
             app.logger.warning("Cannot load configuration from python file %s" % filename)
     else:
         app.config.from_object(filename)
+
+
+def get_evernote_client(app, is_i18n=True, token=None):
+
+    def get_evernote_service_host():
+        if app.config['EVERNOTE_SANDBOX']:
+            return 'sandbox.evernote.com'
+        if is_i18n:
+            return 'wwww.evernote.com'
+        else:
+            return 'app.yinxiang.com'
+
+    if token:
+        client = EvernoteClient(token=token,
+                                sandbox=app.config['EVERNOTE_SANDBOX'],
+                                service_host=get_evernote_service_host())
+    else:
+        client = EvernoteClient(consumer_key=app.config['EVERNOTE_CONSUMER_KEY'],
+                                consumer_secret=app.config['EVERNOTE_CONSUMER_SECRET'],
+                                sandbox=app.config['EVERNOTE_SANDBOX'],
+                                service_host=get_evernote_service_host())
+
+    return client

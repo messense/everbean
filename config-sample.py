@@ -17,12 +17,6 @@ EVERNOTE_CONSUMER_SECRET = ''
 EVERNOTE_REDIRECT_URI = ''
 # is running in sandbox?
 EVERNOTE_SANDBOX = True
-# yinxiang consumer key
-YINXIANG_CONSUMER_KEY = ''
-# yinxiang consumer secret
-YINXIANG_CONSUMER_SECRET = ''
-# yinxiang redirect uri
-YINXIANG_REDIRECT_URI = ''
 
 # is debugging
 DEBUG = False

@@ -103,10 +103,12 @@ def register_blueprints(app):
     from everbean.handlers import home
     from everbean.handlers import account
     from everbean.handlers import user
+    from everbean.handlers import oauth
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(user.bp)
+    app.register_blueprint(oauth.bp)
 
 
 if __name__ == '__main__':
