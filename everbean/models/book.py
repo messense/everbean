@@ -19,3 +19,9 @@ class Book(db.Model):
     enable_sync = db.Column(db.Boolean, default=True)
     updated = db.Column(db.DateTime)
     status = db.Column(db.String(7), nullable=False, default="reading")
+
+    @property
+    def alt(self):
+        if self.douban_id:
+            return 'http://book.douban.com/subject/%s' % self.douban_id
+        return ''
