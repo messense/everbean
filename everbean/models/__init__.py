@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-from .user import User
-from .book import Book
+from everbean.models.user import User
+from everbean.models.book import Book
 
 __all__ = ['User', 'Book']
+

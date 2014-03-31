@@ -2,6 +2,7 @@
 import os
 import sys
 from evernote.api.client import EvernoteClient
+from evernote.edam.type.ttypes import Note
 from douban_client.client import DoubanClient
 
 
@@ -76,3 +77,41 @@ def get_douban_client(app, token=None):
     if token:
         client.auth_with_token(token)
     return client
+
+
+def get_books_from_annotations(annotations):
+    books = {}
+    for annotation in annotations:
+        book_id = annotation['book_id']
+        if book_id not in books:
+            books[book_id] = {
+                'book_id': book_id,
+                'title': annotation['book']['title'],
+                'subtitle': annotation['book']['subtitle'],
+                'author': annotation['book']['author'],
+                'alt': annotation['book']['alt'],
+                'cover': annotation['book']['image'],
+                'annotations': [],
+            }
+        note = {
+            'chapter': annotation['chapter'],
+            'summary': annotation['summary'],
+            'content': annotation['content'],
+            'time': annotation['time'],
+            'page_no': int(annotation['page_no']),
+        }
+        # reverse notes
+        books[book_id]['annotations'].insert(0, note)
+    return books
+
+
+def make_note(book):
+    makeup = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    makeup += "<!DOCTYPE en-note SYSTEM \"http://xml.evernote.com/pub/enml2.dtd\">"
+    makeup += "<en-note>%s</en-note>"
+
+    note = Note()
+    note.title = book['title']
+    note.content = makeup
+
+    return note

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 from celery import Celery
-from flask.ext.sqlalchemy import SQLAlchemy
+from everbean.ext import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment, Bundle
 from flask.ext.mail import Mail

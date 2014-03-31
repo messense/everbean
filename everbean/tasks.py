@@ -6,7 +6,7 @@ from flask.ext.mail import Message
 from douban_client.api.error import DoubanAPIError
 from everbean.core import mail, db, celery
 from everbean.models import Book
-from everbean.utils import get_douban_client
+from everbean.utils import get_douban_client, get_books_from_annotations
 
 
 @celery.task
@@ -16,6 +16,28 @@ def send_mail(messages):
     with mail.connect() as conn:
         for msg in messages:
             conn.send(msg)
+
+
+@celery.task
+def refresh_douban_access_token(user):
+    client = get_douban_client(app)
+    client.refresh_token(user.douban_refresh_token)
+    me = client.user.me
+    if 'id' in me:
+        # update access token and other infomations
+        user.douban_access_token = client.token_code
+        user.douban_refresh_token = client.refresh_token_code
+        user.douban_expires_at = client.access_token.expires_at
+        user.douban_name = me['name']
+        user.avatar = me['avatar']
+        user.large_avatar = me['avatar'].replace('icon/u', 'icon/ul')
+        user.signature = me['signature']
+        user.desc = me['desc']
+
+        db.session.add(user)
+        db.session.commit()
+    else:
+        app.logger.warning('Refresh token for user %s error.' % user.douban_uid)
 
 
 @celery.task
@@ -56,7 +78,7 @@ def sync_books(user):
         db.session.add(the_book)
         db.session.commit()
     # clean database
-    old_books = Book.query.filter_by(user_id=user.id)
+    old_books = Book.query.filter_by(user_id=user.id).all()
     for book in old_books:
         if book.douban_id not in book_ids and not book.evernote_guid:
             db.session.delete(book)
@@ -78,34 +100,13 @@ def sync_notes(user):
         return
     total = int(annotations['total'])
     try:
-        annotations = client.book.get(entrypoint, total=total)
+        annotations = client.book.get(entrypoint + '?count=%i' % total)
     except DoubanAPIError, e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return
     annotations = annotations['annotations']
-    books = {}
-    for annotation in annotations:
-        book_id = annotation['book_id']
-        if book_id not in books:
-            books[book_id] = {
-                'book_id': book_id,
-                'title': annotation['book']['title'],
-                'subtitle': annotation['book']['subtitle'],
-                'author': annotation['book']['author'],
-                'alt': annotation['book']['alt'],
-                'cover': annotation['book']['image'],
-                'annotations': [],
-            }
-        note = {
-            'chapter': annotation['chapter'],
-            'summary': annotation['summary'],
-            'content': annotation['content'],
-            'time': annotation['time'],
-            'page_no': int(annotation['page_no']),
-        }
-        # reverse notes
-        books[book_id]['annotations'].insert(0, note)
+    books = get_books_from_annotations(annotations)
 
     # now we can sync notes to evernote
     for book_id in books:
