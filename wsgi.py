@@ -15,6 +15,7 @@ if _has_gevent:
 import sys
 from everbean.app import create_app
 
+
 def run_server():
     """Runs a deployment server"""
     app = create_app()

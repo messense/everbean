@@ -5,9 +5,11 @@ celery
 jsmin
 douban-client
 evernote
+gunicorn
 Mysql-Python
 SqlAlchemy
 Flask-SqlAlchemy
+Flask-DjangoQuery
 Flask-Login
 Flask-Script
 Flask-Migrate

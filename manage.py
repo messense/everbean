@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function
+import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.assets import ManageAssets
+from everbean import tasks
 from everbean.app import create_app
 from everbean.core import db
+from everbean.models import User, Book
 
 app = create_app()
 
@@ -43,12 +46,40 @@ def profile():
 
 @manager.command
 def create_db():
-    from everbean.models import User, Book
     try:
         db.create_all()
         print('Database creation succeed.')
     except:
         print('Database creation failed.')
+
+
+@manager.command
+def cronjob():
+    # refresh access token one day before access token expires
+    expires_time = int(time.time()) - 86400
+    users = User.query.filter_by(enable_sync=True, douban_expires_at__lte=expires_time).all()
+    refresh_access_token(users)
+
+    users = User.query.filter_by(enable_sync=True).all()
+    sync_books(users)
+
+    users = User.query.filter_by(enable_sync=True, evernote_username__isnull=False).all()
+    sync_notes(users)
+
+
+def refresh_access_token(users):
+    for user in users:
+        tasks.refresh_douban_access_token(user)
+
+
+def sync_books(users):
+    for user in users:
+        tasks.sync_books.delay(user)
+
+
+def sync_notes(users):
+    for user in users:
+        tasks.sync_notes.delay(user)
 
 
 if __name__ == '__main__':

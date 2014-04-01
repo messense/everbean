@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
 from douban_client.api.error import DoubanAPIError
+from evernote.edam.type.ttypes import Note
 from everbean.core import mail, db, celery
 from everbean.models import Book
 from everbean.utils import get_douban_client, get_books_from_annotations
@@ -141,7 +142,10 @@ def sync_book_notes(user, book):
                                              '%Y-%m-%d %H:%M:%S')
 
     # generate evernote format note
-
+    if the_book.evernote_guid:
+        pass
+    else:
+        pass
     # sync to evernote
 
     db.session.add(the_book)
