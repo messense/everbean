@@ -1,9 +1,8 @@
 # coding: utf-8
 import os
 import sys
-from evernote.api.client import EvernoteClient
-from evernote.edam.type.ttypes import Note
 from douban_client.client import DoubanClient
+from douban_client.api.error import DoubanAPIError
 
 
 def parse_command_line(app, args=None, final=True):
@@ -46,29 +45,6 @@ def parse_config_file(app, filename):
         app.config.from_object(filename)
 
 
-def get_evernote_client(app, is_i18n=True, token=None):
-
-    def get_evernote_service_host():
-        if app.config['EVERNOTE_SANDBOX']:
-            return 'sandbox.evernote.com'
-        if is_i18n:
-            return 'wwww.evernote.com'
-        else:
-            return 'app.yinxiang.com'
-
-    if token:
-        client = EvernoteClient(token=token,
-                                sandbox=app.config['EVERNOTE_SANDBOX'],
-                                service_host=get_evernote_service_host())
-    else:
-        client = EvernoteClient(consumer_key=app.config['EVERNOTE_CONSUMER_KEY'],
-                                consumer_secret=app.config['EVERNOTE_CONSUMER_SECRET'],
-                                sandbox=app.config['EVERNOTE_SANDBOX'],
-                                service_host=get_evernote_service_host())
-
-    return client
-
-
 def get_douban_client(app, token=None):
     client = DoubanClient(app.config['DOUBAN_API_KEY'],
                           app.config['DOUBAN_API_SECRET'],
@@ -77,6 +53,28 @@ def get_douban_client(app, token=None):
     if token:
         client.auth_with_token(token)
     return client
+
+
+def get_douban_annotations(app, user, client=None, annotations=None,
+                    start=0, count=100, format='html', recursive=True):
+    client = client or get_douban_client(app, user.douban_access_token)
+    annotations = annotations or []
+    entrypoint = 'user/%s/annotations?count=%i&start=%i&format=%s'
+    try:
+        annos = client.book.get(entrypoint % (user.douban_uid, count, start, format))
+    except DoubanAPIError, e:
+        app.logger.error('DoubanAPIError status: %s' % e.status)
+        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        return annotations
+    annotations.extend(annos['annotations'])
+    total = annos['total']
+    # annos['count'] is always 100, be careful
+    real_count = len(annos['annotations'])
+    if (total < count) or (start + real_count >= total) or (not recursive):
+        return annotations
+    start += count
+    annotations = get_douban_annotations(app, user, client, annotations, start, count)
+    return annotations
 
 
 def get_books_from_annotations(annotations):
@@ -88,7 +86,7 @@ def get_books_from_annotations(annotations):
                 'book_id': book_id,
                 'title': annotation['book']['title'],
                 'subtitle': annotation['book']['subtitle'],
-                'author': annotation['book']['author'],
+                'author': ', '.join(annotation['book']['author']),
                 'alt': annotation['book']['alt'],
                 'cover': annotation['book']['image'],
                 'annotations': {},
@@ -99,11 +97,13 @@ def get_books_from_annotations(annotations):
         if chapter not in books[book_id]['annotations']:
             books[book_id]['annotations'][chapter] = []
         note = {
+            'id': annotation['id'],
             'chapter': annotation['chapter'],
             'summary': annotation['summary'],
             'content': annotation['content'],
             'time': annotation['time'],
             'page_no': int(annotation['page_no']),
+            'alt': 'http://book.douban.com/annotation/%s/' % annotation['id'],
         }
         # reverse notes
         books[book_id]['annotations'][chapter].insert(0, note)
@@ -126,7 +126,7 @@ def generate_enml_makeup(book):
                         '<div style="font-size:10pt; margin-bottom:0.2em;">' \
                         '<div style="display:inline-block; width:0.25em; height:0.9em; ' \
                         'margin-right:0.5em; background-color:rgb(100,100,100);">&nbsp;</div>' \
-                        '<span style="color:darkgray">%s</span></div>' \
+                        '<a href="%s" style="text-decoration:none"><span style="color:darkgray">%s</span></a></div>' \
                         '<div style="font-size:12pt;"><span>%s</span></div></div>'
 
     makeup_footer = '<div style="margin-top:2em; margin-bottom:1em">' \
@@ -140,7 +140,9 @@ def generate_enml_makeup(book):
         if chapter != '__DEFAULT__':
             makeup_annotations += makeup_chapter % chapter
         for annotation in annotations[chapter]:
-            makeup_annotations += makeup_annotation % (annotation['time'], annotation['content'])
+            makeup_annotations += makeup_annotation % (annotation['alt'],
+                                                       annotation['time'],
+                                                       annotation['content'])
 
     # Be careful with %%
     makeup_main = '<div style="width:90%%; max-width:600px; margin:0px auto;' \
@@ -151,13 +153,3 @@ def generate_enml_makeup(book):
 
     return makeup % makeup_main
 
-
-def make_note(book, note=None):
-
-    makeup = generate_enml_makeup(book)
-
-    note = note or Note()
-    note.title = book['title']
-    note.content = makeup
-
-    return note

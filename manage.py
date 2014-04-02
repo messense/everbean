@@ -5,10 +5,11 @@ import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.assets import ManageAssets
+from livereload import Server
 from everbean import tasks
 from everbean.app import create_app
 from everbean.core import db
-from everbean.models import User, Book
+from everbean.models import User
 
 app = create_app()
 
@@ -51,6 +52,17 @@ def create_db():
         print('Database creation succeed.')
     except:
         print('Database creation failed.')
+
+
+@manager.command
+def livereload():
+    app.debug = True
+    server = Server(app)
+    server.watch("everbean/*.py")
+    server.watch("everbean/templates/*.html")
+    server.watch("everbean/static/css/*.css")
+    server.watch("everbean/static/js/*.js")
+    server.serve(port=app.config['PORT'])
 
 
 @manager.command

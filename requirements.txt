@@ -6,6 +6,7 @@ jsmin
 douban-client
 evernote
 gunicorn
+livereload
 Mysql-Python
 SqlAlchemy
 Flask-SqlAlchemy

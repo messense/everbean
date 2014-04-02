@@ -1,3 +1,4 @@
+# coding=utf-8
 # configuration file
 
 SETTINGS = ''
@@ -21,6 +22,8 @@ EVERNOTE_REDIRECT_URI = ''
 EVERNOTE_SANDBOX = True
 # evernote sandbox token
 EVERNOTE_SANDBOX_TOKEN = ''
+# evernote default notebook name
+EVERNOTE_NOTEBOOK_NAME = r'读书笔记'
 
 
 # is debugging

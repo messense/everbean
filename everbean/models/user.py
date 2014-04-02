@@ -22,6 +22,7 @@ class User(db.Model, UserMixin):
     douban_expires_at = db.Column(db.Integer)
     evernote_username = db.Column(db.String(50))
     evernote_access_token = db.Column(db.String(200))
+    evernote_notebook = db.Column(db.String(36))
     is_i18n = db.Column(db.Boolean, default=False)
     enable_sync = db.Column(db.Boolean, default=True)
 

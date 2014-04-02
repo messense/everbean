@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import print_function, with_statement
+from __future__ import print_function, with_statement, absolute_import
 import os
 from flask import Flask, url_for
 from everbean.utils import parse_command_line, parse_config_file
