@@ -75,13 +75,13 @@ def cronjob():
     users = User.query.filter_by(enable_sync=True).all()
     sync_books(users)
 
-    users = User.query.filter_by(enable_sync=True, evernote_username__isnull=False).all()
+    users = User.query.filter(User.enable_sync == True, User.evernote_access_token != None).all()
     sync_notes(users)
 
 
 def refresh_access_token(users):
     for user in users:
-        tasks.refresh_douban_access_token(user)
+        tasks.refresh_douban_access_token.delay(user)
 
 
 def sync_books(users):

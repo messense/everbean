@@ -86,8 +86,18 @@ def evernote():
         current_user.is_i18n = is_i18n
         db.session.add(current_user)
         db.session.commit()
-        flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+
+        # sync notes for the first time
+        c_user = User.query.filter_by(id=current_user.id).first()
+        tasks.sync_notes.delay(c_user)
+        if is_i18n:
+            flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+        else:
+            flash(u'成功绑定 印象笔记 账号 %s ！' % user.username, 'success')
         return redirect(url_for('home.index'))
     else:
-        flash(u'绑定 Evernote 失败！', 'error')
+        if is_i18n:
+            flash(u'绑定 Evernote 失败！', 'error')
+        else:
+            flash(u'绑定 印象笔记 失败！', 'error')
         return redirect(url_for('account.bind'))

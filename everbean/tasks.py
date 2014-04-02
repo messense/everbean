@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import with_statement, absolute_import
+import time
 from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
@@ -7,7 +8,7 @@ from douban_client.api.error import DoubanAPIError
 import evernote.edam.type.ttypes as Types
 from everbean.core import mail, db, celery
 from everbean.models import Book
-from everbean.utils import get_douban_client, get_books_from_annotations, get_douban_annotations
+from everbean.utils import get_douban_client, get_books_from_annotations, get_douban_annotations, to_str
 from everbean.evernote import get_evernote_client, get_notebook, find_note, make_note, create_or_update_note
 
 
@@ -129,22 +130,34 @@ def sync_book_notes(user, book):
         the_book.pubdate = a_book['pubdate']
         the_book.summary = a_book['summary']
         the_book.title = a_book['title']
-        the_book.updated = datetime.strptime(a_book['current_user_collection']['updated'],
-                                             '%Y-%m-%d %H:%M:%S')
+    # update book updated time
+    the_book.updated = book['updated']
 
     # generate evernote format note
     token = user.evernote_access_token
     en = get_evernote_client(app, user.is_i18n, token)
     note_store = en.get_note_store()
-    notebook = get_notebook(note_store, the_book.evernote_guid, str(app.config['EVERNOTE_NOTEBOOK_NAME']), token)
+    notebook = get_notebook(note_store, user.evernote_notebook, app.config['EVERNOTE_NOTEBOOK_NAME'], token)
     if not user.evernote_notebook:
         user.evernote_notebook = notebook.guid
         db.session.add(user)
+        db.session.commit()
+    note = None
     if the_book.evernote_guid:
         note = find_note(note_store, the_book.evernote_guid, token)
-    note = make_note(the_book, note, notebook)
+    # Attention: make_note should pass a dict book not a models.Book book
+    note = make_note(book, note, notebook)
+    if note.guid:
+        # note.updated is milliseconds, should convert it to seconds
+        updated = note.updated / 1000
+        book_updated = time.mktime(the_book.updated.timetuple())
+        if updated >= book_updated:
+            return
     # sync to evernote
-    create_or_update_note(note_store, note, token)
+    note = create_or_update_note(note_store, note, token)
+    # sync guid to database
+    if note and hasattr(note, 'guid'):
+        the_book.evernote_guid = note.guid
 
     db.session.add(the_book)
     db.session.commit()

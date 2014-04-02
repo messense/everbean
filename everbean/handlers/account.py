@@ -47,8 +47,10 @@ def bind():
         #c_user = User.query.filter_by(id=current_user.id).first_or_404()
         current_user.evernote_username = username
         current_user.evernote_access_token = token
+        current_user.is_i18n = True
         db.session.add(current_user)
         db.session.commit()
+
         flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
         return redirect(url_for('home.index'))
     else:
