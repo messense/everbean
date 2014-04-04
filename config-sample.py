@@ -28,6 +28,11 @@ SECRET_KEY = ''
 # MySQL database URI
 SQLALCHEMY_DATABASE_URI = ''
 
+# Cache type
+CACHE_TYPE = "simple"
+# Cache key prefix
+CACHE_KEY_PREFIX = "everbean_"
+
 # Celery broker url
 BROKER_URL = ''
 

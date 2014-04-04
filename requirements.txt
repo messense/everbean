@@ -9,6 +9,8 @@ gunicorn
 livereload
 Mysql-Python
 SqlAlchemy
+pylibmc
+Flask-Cache
 Flask-SqlAlchemy
 Flask-DjangoQuery
 Flask-Login

@@ -1,10 +1,36 @@
 {% extends 'layout.html' %}
 {% block title %}{{ user.douban_name }} - Everbean{% endblock %}
 {% block main %}
-<div class="content col-md-9">
-
+<div class="eb-content col-md-8">
+    <div class="eb-box text-center eb-profile">
+        <header><span class="glyphicon glyphicon-user"></span> 个人资料</header>
+        <div class="eb-box-inner">
+            <header>
+                <img class="avatar avatar-large" src="{{ user.large_avatar }}" alt="" />
+                <h3>{{ user.douban_name }} <small>({{ user.signature }})</small></h3>
+                <p>{{ user.desc }}</p>
+            </header>
+            <footer class="clearfix">
+                <div class="pull-left"><span class="glyphicon glyphicon-time"></span> 第 {{ user.id }} 名用户</div>
+                <div class="pull-right"><a href="{{ user.douban_alt }}" title="豆瓣页面" target="_blank">
+                    <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                </a> </div>
+            </footer>
+        </div>
+    </div>
 </div>
-<div class="sidebar col-md-3">
-
+<div class="eb-sidebar col-md-4">
+    <div class="eb-box eb-books eb-books-reading">
+         <header><span class="glyphicon glyphicon-book"></span> 在读的书籍列表</header>
+         <section class="eb-box-inner">
+             <script type="text/javascript" src="http://www.douban.com/service/badge/{{ user.douban_uid }}/?selection=latest&amp;picsize=medium&amp;hideself=on&amp;show=dolist&amp;n=4&amp;hidelogo=on&amp;cat=book&amp;columns=3"></script>
+         </section>
+    </div>
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> 读过的书籍列表</header>
+        <section class="eb-box-inner">
+            <script type="text/javascript" src="http://www.douban.com/service/badge/{{ user.douban_uid }}/?selection=latest&amp;picsize=medium&amp;hideself=on&amp;show=collection&amp;n=4&amp;hidelogo=on&amp;cat=book&amp;columns=3"></script>
+        </section>
+    </div>
 </div>
 {% endblock %}

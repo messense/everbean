@@ -5,7 +5,6 @@ import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.assets import ManageAssets
-from livereload import Server
 from everbean import tasks
 from everbean.app import create_app
 from everbean.core import db
@@ -56,6 +55,7 @@ def create_db():
 
 @manager.command
 def livereload():
+    from livereload import Server
     app.debug = True
     server = Server(app)
     server.watch("everbean/*.py")

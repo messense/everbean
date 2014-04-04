@@ -5,7 +5,7 @@ import os
 from flask import Flask, url_for
 from everbean.utils import parse_command_line, parse_config_file
 from everbean.models.user import User
-from everbean.core import db, celery, login_manager, assets, mail
+from everbean.core import db, celery, cache, login_manager, assets, mail
 
 
 def create_app(config=None, envvar="everbean_config"):
@@ -72,6 +72,7 @@ def register_extensions(app):
     from flask.ext.turbolinks import turbolinks
 
     db.init_app(app)
+    cache.init_app(app)
     celery.config_from_object(app.config)
     login_manager.init_app(app)
     mail.init_app(app)

@@ -6,6 +6,13 @@ a:visited {
     text-decoration: none;
     color: #669;
 }
+.everbean img.avatar {
+    border-radius: 100px;
+}
+.everbean img.avatar-large {
+    width: 120px;
+    height: 120px;
+}
 .eb-navbar {
     background: #f6faf9;
     border-top: 4px solid #2aac5e;
@@ -49,6 +56,27 @@ a:visited {
     border-bottom: 1px solid #eee;
 }
 
+.eb-box {
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+.eb-box .eb-box-inner {
+    padding: 10px 0;
+}
+
+.eb-box > header {
+    text-align: left;
+    padding: 10px 0;
+}
+
+.eb-main .eb-books table td {
+    padding: 7px;
+}
+
+.eb-main .eb-books table a img {
+    max-width: 73px;
+}
+
 .eb-footer {
     background: #f6faf9;
     border-top: 1px solid #eee;
@@ -67,8 +95,27 @@ a:visited {
     margin-left: -6px;
 }
 
+@media (min-width: 768px) {
+    .eb-box {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 1px 0 #ccc;
+    }
+    .eb-box > header {
+        padding: 10px 0 10px 10px;
+        background-color: #f6faf9;
+        border-radius: 5px;
+    }
+    .eb-box .eb-box-inner {
+        padding: 10px;
+    }
+    .everbean {
+        background-color: #eee;
+    }
+}
+
 @media (min-width: 992px) {
     .everbean .container {
-        width: 960px;
+        width: 970px;
     }
 }

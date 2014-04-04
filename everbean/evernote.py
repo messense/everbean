@@ -1,7 +1,6 @@
 # coding: utf-8
 from __future__ import absolute_import
 from flask import current_app
-from flask.ext.login import current_user
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
@@ -33,11 +32,10 @@ def get_evernote_client(app=None, is_i18n=True, token=None):
     return client
 
 
-def find_note(note_store, guid, token=None):
-    token = token or current_user.evernote_access_token
+def find_note(note_store, guid):
     note = None
     try:
-        note = note_store.getNote(token, guid, False, False, False, False)
+        note = note_store.getNote(guid, False, False, False, False)
     except Errors.EDAMUserException, eue:
         current_app.logger.warning('[find_note] EDAMUserException code: %i, '
                                    'paramter: %s' % (eue.errorCode, eue.parameter))
@@ -47,31 +45,29 @@ def find_note(note_store, guid, token=None):
     return note
 
 
-def create_notebook(note_store, name, token=None):
-    token = token or current_user.evernote_access_token
+def create_notebook(note_store, name):
     notebook = Types.Notebook()
     if name is None:
         return notebook
     notebook.name = to_str(name)
     try:
-        notebook = note_store.createNotebook(token, notebook)
+        notebook = note_store.createNotebook(notebook)
     except Errors.EDAMUserException, eue:
         current_app.logger.warning('[create_notebook] EDAMUserException code: %i, '
                                    'paramter: %s' % (eue.errorCode, eue.parameter))
     return notebook
 
 
-def get_notebook(note_store, guid=None, name=None, token=None):
-    token = token or current_user.evernote_access_token
+def get_notebook(note_store, guid=None, name=None):
     if guid is None:
         if name is not None:
-            return create_notebook(note_store, name, token)
+            return create_notebook(note_store, name)
         else:
-            return note_store.getDefaultNotebook(token)
+            return note_store.getDefaultNotebook()
     error = False
     notebook = None
     try:
-        notebook = note_store.getNotebook(token, guid)
+        notebook = note_store.getNotebook(guid)
     except Errors.EDAMUserException, eue:
         current_app.logger.warning('[get_notebook] EDAMUserException code: %i, '
                                    'paramter: %s' % (eue.errorCode, eue.parameter))
@@ -82,7 +78,7 @@ def get_notebook(note_store, guid=None, name=None, token=None):
         error = True
     if error:
         # create the Notebook
-        notebook = create_notebook(note_store, name, token)
+        notebook = create_notebook(note_store, name)
     return notebook
 
 
@@ -100,10 +96,9 @@ def make_note(book, note=None, notebook=None):
     return note
 
 
-def create_note(note_store, note, token=None):
-    token = token or current_user.evernote_access_token
+def create_note(note_store, note):
     try:
-        note = note_store.createNote(token, note)
+        note = note_store.createNote(note)
     except Errors.EDAMUserException, eue:
         current_app.logger.warning('[create_note] EDAMUserException code: %i, '
                                    'paramter: %s' % (eue.errorCode, eue.parameter))
@@ -113,10 +108,9 @@ def create_note(note_store, note, token=None):
     return note
 
 
-def update_note(note_store, note, token=None):
-    token = token or current_user.evernote_access_token
+def update_note(note_store, note):
     try:
-        note = note_store.updateNote(token, note)
+        note = note_store.updateNote(note)
     except Errors.EDAMUserException, eue:
         current_app.logger.warning('[update_note] EDAMUserException code: %i, '
                                    'paramter: %s' % (eue.errorCode, eue.parameter))
@@ -126,7 +120,7 @@ def update_note(note_store, note, token=None):
     return note
 
 
-def create_or_update_note(note_store, note, token=None):
+def create_or_update_note(note_store, note):
     if note.guid is None:
-        return create_note(note_store, note, token)
-    return update_note(note_store, note, token)
+        return create_note(note_store, note)
+    return update_note(note_store, note)

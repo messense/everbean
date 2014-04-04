@@ -40,9 +40,9 @@
             {% if current_user.is_anonymous() %}
             <li class="visible-sm visible-md visible-lg"><a href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_24.png') }}" alt="使用豆瓣登录" /></a>
             {% else %}
-            <li><a href="{{ url_for('user.index', uid=current_user.douban_uid) }}" title="个人中心"><img class="avatar-small" src="{{ current_user.avatar }}" />{{ current_user.douban_name }}</a></li>
+            <li><a href="{{ url_for('user.index', uid=current_user.douban_uid) }}" title="个人中心" data-no-turbolink><img class="avatar avatar-small" src="{{ current_user.avatar }}" />{{ current_user.douban_name }}</a></li>
             <li{% if request.endpoint == 'account.settings' %} class="active"{% endif %}><a href="{{ url_for('account.settings') }}" title="设置"><span class="glyphicon glyphicon-cog"></span> 设置</a> </li>
-            <li><a href="{{ url_for('account.logout') }}" title="登出"><span class="glyphicon glyphicon-log-out"></span> 登出</a> </li>
+            <li><a href="{{ url_for('account.logout') }}" title="登出" data-no-turbolink><span class="glyphicon glyphicon-log-out"></span> 登出</a> </li>
             {% endif %}
           </ul>
         </nav>

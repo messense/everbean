@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 from celery import Celery
+from flask.ext.cache import Cache
 from flask.ext.djangoquery import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment, Bundle
@@ -14,6 +15,9 @@ celery = Celery()
 
 # flask-login
 login_manager = LoginManager()
+
+# flask-cache
+cache = Cache()
 
 # flask-mail
 mail = Mail()

@@ -6,6 +6,17 @@ from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 
 
+class ObjectDict(dict):
+
+    def __getattr__(self, key):
+        if key in self:
+            return self[key]
+        return None
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+
 def to_unicode(value):
     if isinstance(value, unicode):
         return value

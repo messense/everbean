@@ -5,10 +5,9 @@ from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
 from douban_client.api.error import DoubanAPIError
-import evernote.edam.type.ttypes as Types
 from everbean.core import mail, db, celery
 from everbean.models import Book
-from everbean.utils import get_douban_client, get_books_from_annotations, get_douban_annotations, to_str
+from everbean.utils import get_douban_client, get_books_from_annotations, get_douban_annotations
 from everbean.evernote import get_evernote_client, get_notebook, find_note, make_note, create_or_update_note
 
 
@@ -137,14 +136,14 @@ def sync_book_notes(user, book):
     token = user.evernote_access_token
     en = get_evernote_client(app, user.is_i18n, token)
     note_store = en.get_note_store()
-    notebook = get_notebook(note_store, user.evernote_notebook, app.config['EVERNOTE_NOTEBOOK_NAME'], token)
+    notebook = get_notebook(note_store, user.evernote_notebook, app.config['EVERNOTE_NOTEBOOK_NAME'])
     if not user.evernote_notebook:
         user.evernote_notebook = notebook.guid
         db.session.add(user)
         db.session.commit()
     note = None
     if the_book.evernote_guid:
-        note = find_note(note_store, the_book.evernote_guid, token)
+        note = find_note(note_store, the_book.evernote_guid)
     # Attention: make_note should pass a dict book not a models.Book book
     note = make_note(book, note, notebook)
     if note.guid:
@@ -154,7 +153,7 @@ def sync_book_notes(user, book):
         if updated >= book_updated:
             return
     # sync to evernote
-    note = create_or_update_note(note_store, note, token)
+    note = create_or_update_note(note_store, note)
     # sync guid to database
     if note and hasattr(note, 'guid'):
         the_book.evernote_guid = note.guid
