@@ -5,8 +5,8 @@ from flask import request, redirect, current_app as app
 from flask.ext.login import logout_user, \
     current_user, login_required
 from everbean.core import db
-from everbean.utils import get_douban_client
-from everbean.evernote import get_evernote_client
+from everbean.ext.douban import get_douban_client
+from everbean.ext.evernote import get_evernote_client
 
 bp = Blueprint('account', __name__, url_prefix='/account')
 

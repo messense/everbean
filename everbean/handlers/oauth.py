@@ -5,11 +5,12 @@ from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required, login_user
 from everbean.core import db
 from everbean.models import User
-from everbean.utils import get_douban_client
-from everbean.evernote import get_evernote_client
+from everbean.ext.douban import get_douban_client
+from everbean.ext.evernote import get_evernote_client
 from everbean import tasks
 
 bp = Blueprint('oauth', __name__, url_prefix='/oauth')
+
 
 @bp.route('/douban')
 def douban():
@@ -54,6 +55,7 @@ def douban():
 
     # sync books to database for the first time
     tasks.sync_books.delay(user)
+    tasks.import_douban_annotations.delay(user)
 
     return redirect(url_for('home.index'))
 

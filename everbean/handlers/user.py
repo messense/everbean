@@ -5,6 +5,7 @@ from everbean.models import User
 
 bp = Blueprint('user', __name__, url_prefix='/u')
 
+
 @bp.route('/<uid>')
 @login_required
 def index(uid=None):

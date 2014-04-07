@@ -4,11 +4,11 @@ import time
 from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
-from douban_client.api.error import DoubanAPIError
 from everbean.core import mail, db, celery
-from everbean.models import Book
-from everbean.utils import get_douban_client, get_books_from_annotations, get_douban_annotations
-from everbean.evernote import get_evernote_client, get_notebook, find_note, make_note, create_or_update_note
+from everbean.models import User, Note
+from everbean.ext.douban import get_douban_client, import_annotations, import_books
+from everbean.ext.evernote import get_evernote_client, get_notebook, find_note, \
+    make_note, create_or_update_note
 
 
 @celery.task
@@ -45,93 +45,19 @@ def refresh_douban_access_token(user):
 @celery.task
 def sync_books(user):
     """ Sync reading status books """
-    client = get_douban_client(app, user.douban_access_token)
-    entrypoint = 'user/%s/collections?count=100&status=reading' % user.douban_uid
-    try:
-        books = client.book.get(entrypoint)
-    except DoubanAPIError, e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
-        return
-    collections = books['collections']
-    book_ids = []
-    # update database
-    for book in collections:
-        book_ids.append(int(book['book_id']))
-        the_book = Book.query.filter_by(user_id=user.id, douban_id=book['book_id']).first()
-        if the_book:
-            # update book
-            the_book.status = book['status']
-            the_book.enable_sync = user.enable_sync
-            the_book.updated = datetime.strptime(book['updated'], '%Y-%m-%d %H:%M:%S')
-        else:
-            # create a new book record
-            the_book = Book()
-            the_book.user_id = user.id
-            the_book.douban_id = int(book['book_id'])
-            the_book.status = book['status']
-            the_book.author = ', '.join(book['book']['author'])
-            the_book.cover = book['book']['images']['medium']
-            the_book.enable_sync = user.enable_sync
-            the_book.pubdate = book['book']['pubdate']
-            the_book.summary = book['book']['summary']
-            the_book.title = book['book']['title']
-            the_book.updated = datetime.strptime(book['updated'], '%Y-%m-%d %H:%M:%S')
-
-        db.session.add(the_book)
-        db.session.commit()
-    # clean database
-    old_books = Book.query.filter_by(user_id=user.id).all()
-    for book in old_books:
-        if book.status == 'read':
-            continue
-        if book.douban_id not in book_ids and not book.evernote_guid:
-            db.session.delete(book)
-
-    db.session.commit()
+    import_books(app, user)
 
 
 @celery.task
-def sync_notes(user):
-    if not user.enable_sync:
-        return
-    annotations = get_douban_annotations(app, user)
-    books = get_books_from_annotations(annotations)
-
-    # now we can sync notes to evernote
-    for book_id in books:
-        book = books[book_id]
-        sync_book_notes.delay(user, book)
+def import_douban_annotations(user):
+    import_annotations(app, user)
 
 
 @celery.task
-def sync_book_notes(user, book):
-    if not user.evernote_access_token:
+def sync_book_notes(user_id, book, notes):
+    user = User.query.get(user_id)
+    if not user or not user.evernote_access_token or not notes:
         return
-    the_book = Book.query.filter_by(douban_id=book['book_id']).first()
-    if the_book:
-        pass
-    else:
-        client = get_douban_client(app, user.douban_access_token)
-        try:
-            a_book = client.book.get(book['book_id'])
-        except DoubanAPIError, e:
-            app.logger.error('DoubanAPIError status: %s' % e.status)
-            app.logger.error('DoubanAPIError reason: %s' % e.reason)
-            return
-        the_book = Book()
-        the_book.user_id = user.id
-        the_book.douban_id = int(book['book_id'])
-        the_book.status = a_book['current_user_collection']['status']
-        the_book.author = ', '.join(a_book['author'])
-        the_book.cover = a_book['images']['medium']
-        the_book.enable_sync = True
-        the_book.pubdate = a_book['pubdate']
-        the_book.summary = a_book['summary']
-        the_book.title = a_book['title']
-    # update book updated time
-    the_book.updated = book['updated']
-
     # generate evernote format note
     token = user.evernote_access_token
     en = get_evernote_client(app, user.is_i18n, token)
@@ -142,10 +68,12 @@ def sync_book_notes(user, book):
         db.session.add(user)
         db.session.commit()
     note = None
+    the_book = user.user_books.filter_by(book_id=book.id).first()
+    if not the_book:
+        return
     if the_book.evernote_guid:
         note = find_note(note_store, the_book.evernote_guid)
-    # Attention: make_note should pass a dict book not a models.Book book
-    note = make_note(book, note, notebook)
+    note = make_note(book, notes, note, notebook)
     if note.guid:
         # note.updated is milliseconds, should convert it to seconds
         updated = note.updated / 1000
@@ -157,6 +85,19 @@ def sync_book_notes(user, book):
     # sync guid to database
     if note and hasattr(note, 'guid'):
         the_book.evernote_guid = note.guid
+    the_book.updated = datetime.now()
 
     db.session.add(the_book)
+    db.session.add(user)
     db.session.commit()
+
+
+def sync_notes(user):
+    if not user.enable_sync:
+        return
+    books = user.books
+    # now we can sync notes to evernote
+    for book in books:
+        notes = Note.query.filter_by(user_id=user.id, book_id=book.id).order_by(Note.created.asc()).all()
+        if notes:
+            sync_book_notes.delay(user.id, book, notes)

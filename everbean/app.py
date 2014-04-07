@@ -4,7 +4,7 @@ from __future__ import print_function, with_statement, absolute_import
 import os
 from flask import Flask, url_for
 from everbean.utils import parse_command_line, parse_config_file
-from everbean.models.user import User
+from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
 
 

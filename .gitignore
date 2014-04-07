@@ -54,6 +54,7 @@ docs/_build/
 
 .DS_Store
 .idea/
+.vagrant
 # config file
 config.py
 everbean/static/.webassets-cache
