@@ -34,35 +34,8 @@ def to_str(value):
     return value
 
 
-def parse_command_line(app, args=None, final=True):
-    if args is None:
-        args = sys.argv
-    config = dict()
-    for i in range(1, len(args)):
-        # All things after the last option are command line arguments
-        if not args[i].startswith("-"):
-            break
-        if args[i] == "--":
-            break
-        arg = args[i].lstrip("-")
-        name, equals, value = arg.partition
-        name = name.replace('-', '_').upper()
-        if not name in app.config:
-            app.logger.warning('Unrecognized command line option: %r' % name)
-        # convert to bool
-        if value == 'True':
-            value = True
-        if value == 'False':
-            value = False
-        config[name] = value
-        if final:
-            app.config[name] = value
-
-    return config
-
-
 def parse_config_file(app, filename):
-    if not os.path.exists(filename):
+    if not filename or not os.path.exists(filename):
         app.logger.warning('Configuration file %s does not exist.' % filename)
         return
     if filename.endswith('.py'):

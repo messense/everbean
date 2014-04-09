@@ -2,8 +2,8 @@
 # coding=utf-8
 from __future__ import print_function, with_statement, absolute_import
 import os
-from flask import Flask, url_for
-from everbean.utils import parse_command_line, parse_config_file
+from flask import Flask, url_for, render_template
+from everbean.utils import parse_config_file
 from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
 
@@ -23,6 +23,9 @@ def create_app(config=None, envvar="everbean_config"):
     register_blueprints(app)
     setup_extensions(app)
 
+    if not app.debug:
+        register_errorhandlers(app)
+
     return app
 
 
@@ -33,22 +36,13 @@ def load_configuration(app, config, envvar):
         # if current directory has a config.py file, try to load it
         cwd = os.path.join(os.getcwd(), 'config.py')
         if os.path.exists(cwd):
-            config = cwd
-    if config is not None:
-        parse_config_file(app, config)
+            parse_config_file(app, cwd)
 
     if envvar is not None:
         try:
             app.config.from_envvar(envvar)
         except RuntimeError:
             pass
-
-    cfg = parse_command_line(app, None, final=False)
-    if cfg.get('SETTINGS'):
-        parse_config_file(app, cfg['SETTINGS'])
-    # update app.config with command line arguments
-    app.config.update(cfg)
-
     # check config
     for name in (
             'DOUBAN_API_KEY', 'DOUBAN_API_SECRET', 'DOUBAN_REDIRECT_URI', 'EVERNOTE_CONSUMER_KEY',
@@ -66,6 +60,16 @@ def register_hooks(app):
     @app.teardown_appcontext
     def teardown_app(error):
         pass
+
+
+def register_errorhandlers(app):
+    @app.errorhandler(404)
+    def page_note_found(e):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('500.html'), 500
 
 
 def register_extensions(app):

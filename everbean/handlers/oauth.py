@@ -91,7 +91,7 @@ def evernote():
 
         # sync notes for the first time
         c_user = User.query.filter_by(id=current_user.id).first()
-        tasks.sync_notes.delay(c_user)
+        tasks.sync_notes(c_user)
         if is_i18n:
             flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
         else:

@@ -4,7 +4,7 @@ from datetime import datetime
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
-from everbean.models import User, Book, Note, UserBook
+from everbean.models import Book, Note, UserBook
 
 
 def get_douban_client(app, token=None):
@@ -159,3 +159,29 @@ def import_annotations(app, user, client=None):
                 the_book.notes.append(note)
                 db.session.flush()
         db.session.commit()
+
+
+def create_annotation(app, user, note, client=None):
+    if note.douban_id:
+        return note
+    client = client or get_douban_client(app, user.douban_access_token)
+    entrypoint = '%s/annotations' % note.book_id
+    privacy = 'public'
+    if note.private:
+        privacy = 'private'
+    data = dict(
+        content=note.content,
+        privacy=privacy
+    )
+    if note.page_no > 0:
+        data['page'] = note.page_no
+    else:
+        data['chapter'] = note.chapter
+    try:
+        result = client.book.post(entrypoint, **data)
+    except DoubanAPIError, e:
+        app.logger.error('DoubanAPIError status: %s' % e.status)
+        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        return False
+
+    return note
