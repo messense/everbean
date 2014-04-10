@@ -16,7 +16,7 @@ def login():
     """Redirect to douban.com to login"""
     if current_user.is_authenticated():
         return redirect(url_for('home.index'))
-    client = get_douban_client(app)
+    client = get_douban_client()
     return redirect(client.authorize_url)
 
 
@@ -39,7 +39,7 @@ def bind():
     token = app.config['EVERNOTE_SANDBOX_TOKEN']
     if app.debug and app.config['EVERNOTE_SANDBOX'] and token:
         # using evernote sandox for development
-        client = get_evernote_client(app, token=token)
+        client = get_evernote_client(token=token)
         user_store = client.get_user_store()
         user = user_store.getUser()
         username = user.username
@@ -61,7 +61,7 @@ def bind():
         is_i18n = True if tp == '1' else False
         session['is_i18n'] = is_i18n
 
-        client = get_evernote_client(app, is_i18n)
+        client = get_evernote_client(is_i18n)
         request_token = client.get_request_token(app.config['EVERNOTE_REDIRECT_URI'])
         session['evernote_oauth_token_secret'] = request_token['oauth_token_secret']
         return redirect(client.get_authorize_url(request_token))

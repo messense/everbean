@@ -1,15 +1,14 @@
 # coding=utf-8
 from __future__ import absolute_import
 from collections import OrderedDict
-from flask import current_app
+from flask import current_app as app
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 from everbean.utils import to_str
 
 
-def get_evernote_service_host(app=None, is_i18n=True):
-    app = app or current_app
+def get_evernote_service_host(is_i18n=True):
     if app.config['EVERNOTE_SANDBOX']:
         return 'sandbox.evernote.com'
     if is_i18n:
@@ -18,8 +17,7 @@ def get_evernote_service_host(app=None, is_i18n=True):
         return 'app.yinxiang.com'
 
 
-def get_evernote_client(app=None, is_i18n=True, token=None):
-    app = app or current_app
+def get_evernote_client(is_i18n=True, token=None):
     if token:
         client = EvernoteClient(token=token,
                                 sandbox=app.config['EVERNOTE_SANDBOX'],
@@ -37,11 +35,11 @@ def find_note(note_store, guid):
     try:
         note = note_store.getNote(guid, False, False, False, False)
     except Errors.EDAMUserException, eue:
-        current_app.logger.warning('[find_note] EDAMUserException code: %i, '
-                                   'paramter: %s' % (eue.errorCode, eue.parameter))
+        app.logger.warning('[find_note] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
     except Errors.EDAMNotFoundException:
-        current_app.logger.warning('[find_note] EDAMNotFoundException: '
-                                   'Invalid note GUID (%s).' % guid)
+        app.logger.warning('[find_note] EDAMNotFoundException: '
+                           'Invalid note GUID (%s).' % guid)
     return note
 
 
@@ -53,8 +51,8 @@ def create_notebook(note_store, name):
     try:
         notebook = note_store.createNotebook(notebook)
     except Errors.EDAMUserException, eue:
-        current_app.logger.warning('[create_notebook] EDAMUserException code: %i, '
-                                   'paramter: %s' % (eue.errorCode, eue.parameter))
+        app.logger.warning('[create_notebook] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
     return notebook
 
 
@@ -69,12 +67,12 @@ def get_notebook(note_store, guid=None, name=None):
     try:
         notebook = note_store.getNotebook(guid)
     except Errors.EDAMUserException, eue:
-        current_app.logger.warning('[get_notebook] EDAMUserException code: %i, '
-                                   'paramter: %s' % (eue.errorCode, eue.parameter))
+        app.logger.warning('[get_notebook] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
         error = True
     except Errors.EDAMNotFoundException:
-        current_app.logger.warning('[get_notebook] EDAMNotFoundException: '
-                                   'Invalid notebook GUID (%s).' % guid)
+        app.logger.warning('[get_notebook] EDAMNotFoundException: '
+                           'Invalid notebook GUID (%s).' % guid)
         error = True
     if error:
         # create the Notebook
@@ -86,11 +84,11 @@ def create_note(note_store, note):
     try:
         note = note_store.createNote(note)
     except Errors.EDAMUserException, eue:
-        current_app.logger.warning('[create_note] EDAMUserException code: %i, '
-                                   'paramter: %s' % (eue.errorCode, eue.parameter))
+        app.logger.warning('[create_note] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
     except Errors.EDAMNotFoundException:
-        current_app.logger.warning('[create_note] EDAMNotFoundException: '
-                                   'Invalid notebook GUID (%s).' % note.notebookGuid)
+        app.logger.warning('[create_note] EDAMNotFoundException: '
+                           'Invalid notebook GUID (%s).' % note.notebookGuid)
     return note
 
 
@@ -98,11 +96,11 @@ def update_note(note_store, note):
     try:
         note = note_store.updateNote(note)
     except Errors.EDAMUserException, eue:
-        current_app.logger.warning('[update_note] EDAMUserException code: %i, '
-                                   'paramter: %s' % (eue.errorCode, eue.parameter))
+        app.logger.warning('[update_note] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
     except Errors.EDAMNotFoundException:
-        current_app.logger.warning('[update_note] EDAMNotFoundException: '
-                                   'Invalid notebook or note GUID.')
+        app.logger.warning('[update_note] EDAMNotFoundException: '
+                           'Invalid notebook or note GUID.')
     return note
 
 

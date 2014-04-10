@@ -22,7 +22,7 @@ def send_mail(messages):
 
 @celery.task
 def refresh_douban_access_token(user):
-    client = get_douban_client(app)
+    client = get_douban_client()
     client.refresh_token(user.douban_refresh_token)
     me = client.user.me
     if 'id' in me:
@@ -45,12 +45,12 @@ def refresh_douban_access_token(user):
 @celery.task
 def sync_books(user):
     """ Sync reading status books """
-    import_books(app, user)
+    import_books(user)
 
 
 @celery.task
 def import_douban_annotations(user):
-    import_annotations(app, user)
+    import_annotations(user)
 
 
 @celery.task
@@ -60,7 +60,7 @@ def sync_book_notes(user_id, book, notes):
         return
     # generate evernote format note
     token = user.evernote_access_token
-    en = get_evernote_client(app, user.is_i18n, token)
+    en = get_evernote_client(user.is_i18n, token)
     note_store = en.get_note_store()
     notebook = get_notebook(note_store, user.evernote_notebook, app.config['EVERNOTE_NOTEBOOK_NAME'])
     if not user.evernote_notebook:

@@ -25,7 +25,7 @@ def douban():
         flash(u'豆瓣 OAuth 登录失败！', 'error')
         return redirect(url_for('home.index'))
 
-    client = get_douban_client(app)
+    client = get_douban_client()
     client.auth_with_code(code)
 
     me = client.user.me
@@ -64,7 +64,7 @@ def douban():
 @login_required
 def evernote():
     is_i18n = bool(session['is_i18n'])
-    client = get_evernote_client(app, is_i18n)
+    client = get_evernote_client(is_i18n)
     oauth_token = request.args.get('oauth_token')
     oauth_token_secret = session['evernote_oauth_token_secret']
     oauth_verifier = request.args.get('oauth_verifier')
@@ -79,7 +79,7 @@ def evernote():
     app.logger.debug('evernote auth_token: %s' % auth_token)
 
     if auth_token:
-        client = get_evernote_client(app, token=auth_token)
+        client = get_evernote_client(token=auth_token)
         user_store = client.get_user_store()
         user = user_store.getUser()
 

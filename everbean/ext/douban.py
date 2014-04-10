@@ -1,13 +1,14 @@
 # coding=utf-8
 from __future__ import absolute_import
 from datetime import datetime
+from flask import current_app as app
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
 
 
-def get_douban_client(app, token=None):
+def get_douban_client(token=None):
     client = DoubanClient(app.config['DOUBAN_API_KEY'],
                           app.config['DOUBAN_API_SECRET'],
                           app.config['DOUBAN_REDIRECT_URI'],
@@ -17,9 +18,9 @@ def get_douban_client(app, token=None):
     return client
 
 
-def get_douban_books(app, user, client=None, books=None,
+def get_douban_books(user, client=None, books=None,
                      start=0, count=100, recursive=True):
-    client = client or get_douban_client(app, user.douban_access_token)
+    client = client or get_douban_client(user.douban_access_token)
     books = books or []
     entrypoint = 'user/%s/collections?count=%i&start=%i'
     try:
@@ -35,13 +36,13 @@ def get_douban_books(app, user, client=None, books=None,
         return books
     start += count
     # retrieve books recursively
-    books = get_douban_books(app, user, client, books, start, count)
+    books = get_douban_books(user, client, books, start, count)
     return books
 
 
-def get_douban_annotations(app, user, client=None, annotations=None,
+def get_douban_annotations(user, client=None, annotations=None,
                            start=0, count=100, format='html', recursive=True):
-    client = client or get_douban_client(app, user.douban_access_token)
+    client = client or get_douban_client(user.douban_access_token)
     annotations = annotations or []
     entrypoint = 'user/%s/annotations?count=%i&start=%i&format=%s&order=collect'
     try:
@@ -58,7 +59,7 @@ def get_douban_annotations(app, user, client=None, annotations=None,
         return annotations
     start += count
     # retrieve annotations recursively
-    annotations = get_douban_annotations(app, user, client, annotations, start, count, format)
+    annotations = get_douban_annotations(user, client, annotations, start, count, format)
     return annotations
 
 
@@ -91,9 +92,9 @@ def get_books_from_annotations(annotations):
     return books
 
 
-def import_books(app, user, client=None):
-    client = client or get_douban_client(app, user.douban_access_token)
-    books = get_douban_books(app, user, client)
+def import_books(user, client=None):
+    client = client or get_douban_client(user.douban_access_token)
+    books = get_douban_books(user, client)
     for book in books:
         the_book = Book.query.filter_by(douban_id=book['book_id']).first()
         if not the_book:
@@ -116,9 +117,9 @@ def import_books(app, user, client=None):
         db.session.commit()
 
 
-def import_annotations(app, user, client=None):
-    client = client or get_douban_client(app, user.douban_access_token)
-    annotations = get_douban_annotations(app, user, client)
+def import_annotations(user, client=None):
+    client = client or get_douban_client(user.douban_access_token)
+    annotations = get_douban_annotations(user, client)
     books = get_books_from_annotations(annotations)
     for book in books.itervalues():
         the_book = Book.query.filter_by(douban_id=book['id']).first()
@@ -161,11 +162,11 @@ def import_annotations(app, user, client=None):
         db.session.commit()
 
 
-def create_annotation(app, user, note, client=None):
+def create_annotation(user, note, client=None):
     if note.douban_id:
         return note
-    client = client or get_douban_client(app, user.douban_access_token)
-    entrypoint = '%s/annotations' % note.book_id
+    client = client or get_douban_client(user.douban_access_token)
+    entrypoint = '/v2/book/%s/annotations' % note.book.douban_id
     privacy = 'public'
     if note.private:
         privacy = 'private'
@@ -178,10 +179,59 @@ def create_annotation(app, user, note, client=None):
     else:
         data['chapter'] = note.chapter
     try:
-        result = client.book.post(entrypoint, **data)
+        result = client.book._post(entrypoint, **data)
     except DoubanAPIError, e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return False
 
+    note.douban_id = result['id']
+    note.summary = result['summary']
+    db.session.add(note)
+    db.session.commit()
     return note
+
+
+def update_annotation(user, note, client=None):
+    if not note.douban_id:
+        return False
+    client = client or get_douban_client(user.douban_access_token)
+    entrypoint = '/v2/book/annotation/%s' % note.douban_id
+    privacy = 'public'
+    if note.private:
+        privacy = 'private'
+    data = dict(
+        content=note.content,
+        privacy=privacy
+    )
+    if note.page_no > 0:
+        data['page'] = note.page_no
+    else:
+        data['chapter'] = note.chapter
+    try:
+        result = client.book._put(entrypoint, **data)
+    except DoubanAPIError, e:
+        app.logger.error('DoubanAPIError status: %s' % e.status)
+        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        return False
+
+    note.summary = result['summary']
+    db.session.add(note)
+    db.session.commit()
+    return note
+
+
+def delete_annotation(user, note, client=None):
+    if not note.douban_id:
+        return False
+    client = client or get_douban_client(user.douban_access_token)
+    entrypoint = '/v2/book/annotation/%s' % note.douban_id
+    try:
+        client.book._delete(entrypoint)
+    except DoubanAPIError, e:
+        app.logger.error('DoubanAPIError status: %s' % e.status)
+        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        return False
+    except ValueError:
+        return True
+    return True
