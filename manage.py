@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function
+
+_has_gevent = True
+try:
+    import gevent
+except ImportError:
+    _has_gevent = False
+if _has_gevent:
+    from gevent import monkey
+    # apply gevent monkey patch
+    monkey.patch_all()
+
 import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -25,6 +36,8 @@ manager.add_command("assets", ManageAssets())
 
 def run_dev(profile_log=None):
     """Runs a development server."""
+    app.debug = True
+
     from werkzeug.serving import run_simple
     from werkzeug.debug import DebuggedApplication
     from werkzeug.contrib.profiler import ProfilerMiddleware

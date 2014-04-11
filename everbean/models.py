@@ -30,6 +30,9 @@ class User(db.Model, UserMixin):
     evernote_notebook = Column(String(36))
     is_i18n = Column(Boolean, default=False)
     enable_sync = Column(Boolean, default=True, index=True)
+    email = Column(String(50), unique=True)
+    email_verify_code = Column(CHAR(32), unique=True)
+    email_verified = Column(Boolean, default=False, index=True)
 
     # user - books Many-to-many
     books = association_proxy('user_books', 'book')

@@ -2,7 +2,8 @@
 # coding=utf-8
 from __future__ import print_function, with_statement, absolute_import
 import os
-from flask import Flask, url_for, render_template
+import time
+from flask import Flask, url_for, render_template, g
 from everbean.utils import parse_config_file
 from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
@@ -55,11 +56,16 @@ def load_configuration(app, config, envvar):
 def register_hooks(app):
     @app.before_request
     def before_request():
-        pass
+        g.start_time = time.time()
 
-    @app.teardown_appcontext
-    def teardown_app(error):
-        pass
+    @app.after_request
+    def after_request(response):
+        diff = int((time.time() - g.start_time) * 1000)  # to get a time in ms
+        if response.response and response.content_type.startswith('text/html') and \
+                response.status_code == 200 and response.response[0].find('__EXECUTION_TIME__') != -1:
+            response.response[0] = response.response[0].replace('__EXECUTION_TIME__', str(diff))
+            response.headers["Content-Length"] = len(response.response[0])
+        return response
 
 
 def register_errorhandlers(app):

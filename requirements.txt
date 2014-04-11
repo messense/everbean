@@ -1,3 +1,4 @@
+fabric
 Flask
 alembic
 cssmin
