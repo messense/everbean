@@ -23,8 +23,8 @@ Sync notes from book.douban.com to Evernote
 
 ## Database creation
 
-run `python manage.py create_db` to automatically create database structure for the first time.
+run `python manage.py syncdb` to automatically create database structure for the first time.
 
 ## Database migration
 
-run `python manage.py db migrate` to migrate database to the latest version.
+run `python manage.py db upgrade` to migrate database to the latest version.
