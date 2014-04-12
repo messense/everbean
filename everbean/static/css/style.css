@@ -6,6 +6,34 @@ a:visited {
     text-decoration: none;
     color: #669;
 }
+.book-list {
+    padding-left: 0;
+}
+.book {
+    position: relative;
+    float: left;
+    width: 90px;
+    margin: 0 15px 20px 0;
+    list-style: none;
+}
+.book .book-title a {
+    color: #37a;
+}
+.book .book-title a:hover {
+    color: #37a;
+}
+.book .book-title h3 {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.book .book-cover {
+    height: 140px;
+    margin-bottom: 12px;
+}
 .everbean img.avatar {
     border-radius: 100px;
 }
@@ -107,7 +135,7 @@ a:visited {
         border-radius: 5px;
     }
     .eb-box .eb-box-inner {
-        padding: 10px;
+        padding: 20px;
     }
     .everbean {
         background-color: #eee;
@@ -117,5 +145,8 @@ a:visited {
 @media (min-width: 992px) {
     .everbean .container {
         width: 970px;
+    }
+    .book {
+        margin-right: 54px;
     }
 }

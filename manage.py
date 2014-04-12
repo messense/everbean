@@ -36,12 +36,13 @@ manager.add_command("assets", ManageAssets())
 
 def run_dev(profile_log=None):
     """Runs a development server."""
-    app.debug = True
-
     from werkzeug.serving import run_simple
     from werkzeug.debug import DebuggedApplication
     from werkzeug.contrib.profiler import ProfilerMiddleware
 
+    app.debug = True
+    # print real sql when debugging
+    app.config["SQLALCHEMY_ECHO"] = True
     port = int(app.config['PORT'])
 
     if profile_log:
@@ -83,6 +84,13 @@ def livereload():
     server.watch("everbean/static/css/*.css")
     server.watch("everbean/static/js/*.js")
     server.serve(port=app.config['PORT'])
+
+
+@manager.command
+def clear_cache():
+    from everbean.core import cache
+    with app.app_context():
+        cache.clear()
 
 
 @manager.command

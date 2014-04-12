@@ -10,8 +10,11 @@
     {% endassets %}
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!--[if IE 6]>
+	<script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
     <![endif]-->
     {% assets "js_all" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -41,8 +44,8 @@
             <li class="visible-sm visible-md visible-lg"><a href="{{ url_for('account.login') }}" title="登录"><img src="{{ static_url('images/login_with_douban_24.png') }}" alt="使用豆瓣登录" /></a>
             {% else %}
             <li><a href="{{ url_for('user.index', uid=current_user.douban_uid) }}" title="个人中心" data-no-turbolink><img class="avatar avatar-small" src="{{ current_user.avatar }}" />{{ current_user.douban_name }}</a></li>
-            <li{% if request.endpoint == 'account.settings' %} class="active"{% endif %}><a href="{{ url_for('account.settings') }}" title="设置"><span class="glyphicon glyphicon-cog"></span> 设置</a> </li>
-            <li><a href="{{ url_for('account.logout') }}" title="登出" data-no-turbolink><span class="glyphicon glyphicon-log-out"></span> 登出</a> </li>
+            <li{% if request.endpoint == 'account.settings' %} class="active"{% endif %}><a href="{{ url_for('account.settings') }}" title="设置"><span class="glyphicon glyphicon-cog hidden-xs"></span><span class="visible-xs"><span class="glyphicon glyphicon-cog"></span> 设置</span></a> </li>
+            <li><a href="{{ url_for('account.logout') }}" title="登出" data-no-turbolink><span class="glyphicon glyphicon-log-out hidden-xs"></span><span class="visible-xs"><span class="glyphicon glyphicon-log-out"></span> 登出</span></a> </li>
             {% endif %}
           </ul>
         </nav>

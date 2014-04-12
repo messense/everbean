@@ -1,1 +1,62 @@
 {% extends 'layout.html' %}
+{% block main %}
+<div class="eb-content col-md-12">
+    {% if books.reading %}
+    <div class="eb-box eb-books eb-books-reading">
+         <header><span class="glyphicon glyphicon-book"></span> 大家在读的书籍</header>
+         <section class="eb-box-inner">
+            <ul class="book-list clearfix">
+             {% for book in books.reading %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
+         </section>
+    </div>
+    {% endif %}
+    {% if books.read %}
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> 大家读过的书籍</header>
+        <section class="eb-box-inner clearfix">
+            <ul class="book-list clearfix">
+            {% for book in books.read %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
+        </section>
+    </div>
+    {% endif %}
+    {% if books.wish %}
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> 大家想读的书籍</header>
+        <section class="eb-box-inner clearfix">
+            <ul class="book-list clearfix">
+            {% for book in books.wish %}
+             <div class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </div>
+             {% endfor %}
+             </ul>
+        </section>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

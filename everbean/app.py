@@ -4,6 +4,7 @@ from __future__ import print_function, with_statement, absolute_import
 import os
 import time
 from flask import Flask, url_for, render_template, g
+from jinja2 import MemcachedBytecodeCache
 from everbean.utils import parse_config_file
 from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
@@ -46,7 +47,8 @@ def load_configuration(app, config, envvar):
             pass
     # check config
     for name in (
-            'DOUBAN_API_KEY', 'DOUBAN_API_SECRET', 'DOUBAN_REDIRECT_URI', 'EVERNOTE_CONSUMER_KEY',
+            'DOUBAN_API_KEY', 'DOUBAN_API_SECRET',
+            'DOUBAN_REDIRECT_URI', 'EVERNOTE_CONSUMER_KEY',
             'EVERNOTE_CONSUMER_SECRET',
             'SQLALCHEMY_DATABASE_URI'):
         if not app.config[name]:
@@ -99,6 +101,7 @@ def register_extensions(app):
 
 def setup_extensions(app):
     @login_manager.user_loader
+    @cache.memoize(300)
     def load_user(user_id):
         return User.query.filter_by(douban_id=user_id).first()
 
@@ -110,6 +113,8 @@ def register_template_utils(app):
     def static_url(f):
         # shortcut for url_for('static', filename=xxx)
         return url_for('static', filename=f)
+
+    app.jinja_env.bytecode_cache = MemcachedBytecodeCache(cache)
 
 
 def register_blueprints(app):

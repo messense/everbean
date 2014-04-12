@@ -61,14 +61,19 @@ class UserBook(db.Model):
 
     # bidirectional attribute/collection of "user"/"user_books"
     user = relationship(User,
-                        backref=backref("user_books",
-                                        lazy="dynamic",
-                                        cascade="all, delete-orphan"
+                        backref=backref('user_books',
+                                        lazy='dynamic',
+                                        cascade='all, delete-orphan'
                                         )
                         )
 
-    # reference to the "Keyword" object
-    book = relationship("Book")
+    # reference to the "Book" object
+    book = relationship("Book",
+                        backref=backref('user_books',
+                                        lazy='dynamic',
+                                        cascade='all, delete-orphan'
+                                        )
+                        )
 
     def __init__(self, user, book, updated=None, status='reading',
                  enable_sync=True, evernote_guid=None):
