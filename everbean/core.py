@@ -39,4 +39,3 @@ css_all = Bundle('css/bootstrap.min.css',
                  output='css/all.css')
 
 assets.register('css_all', css_all)
-

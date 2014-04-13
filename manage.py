@@ -4,13 +4,12 @@ from __future__ import print_function
 
 _has_gevent = True
 try:
-    import gevent
+    import gevent.monkey
 except ImportError:
     _has_gevent = False
 if _has_gevent:
-    from gevent import monkey
     # apply gevent monkey patch
-    monkey.patch_all()
+    gevent.monkey.patch_all()
 
 import time
 from flask.ext.script import Manager
@@ -103,7 +102,8 @@ def cronjob():
 
 def refresh_access_token():
     expires_time = int(time.time()) - 86400
-    users = User.query.filter_by(enable_sync=True, douban_expires_at__lte=expires_time).all()
+    users = User.query.filter_by(enable_sync=True,
+                                 douban_expires_at__lte=expires_time).all()
     for user in users:
         tasks.refresh_douban_access_token.delay(user)
 
@@ -115,7 +115,8 @@ def sync_books():
 
 
 def sync_notes():
-    users = User.query.filter(User.enable_sync == True, User.evernote_access_token != None).all()
+    users = User.query.filter(User.enable_sync == True,
+                              User.evernote_access_token != None).all()
     for user in users:
         tasks.sync_notes(user)
 

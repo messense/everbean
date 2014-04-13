@@ -41,6 +41,7 @@ def parse_config_file(app, filename):
         try:
             app.config.from_pyfile(filename)
         except IOError:
-            app.logger.warning("Cannot load configuration from python file %s" % filename)
+            app.logger.warning("Cannot load configuration "
+                               "from python file %s" % filename)
     else:
         app.config.from_object(filename)

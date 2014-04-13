@@ -1,5 +1,11 @@
 recursive-include everbean/static *
 recursive-include everbean/templates *
+recursive-include tests *
 include README.md
 include requirements.txt
 include optional-requirements.txt
+
+exclude everbean/static/js/all.js
+exclude everbean/static/css/all.css
+recursive-exclude * .DS_Store
+recursive-exclude everbean/static/.webassets-cache *

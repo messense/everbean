@@ -56,7 +56,8 @@ def load_configuration(app, config, envvar):
             'EVERNOTE_CONSUMER_SECRET',
             'SQLALCHEMY_DATABASE_URI'):
         if not app.config[name]:
-            print("Configuration %s is not set, application may not work as expected." % name)
+            print("Configuration %s is not set, "
+                  "application may not work as expected." % name)
 
 
 def register_hooks(app):
@@ -67,9 +68,13 @@ def register_hooks(app):
     @app.after_request
     def after_request(response):
         diff = int((time.time() - g.start_time) * 1000)  # to get a time in ms
-        if response.response and response.content_type.startswith('text/html') and \
-                response.status_code == 200 and response.response[0].find('__EXECUTION_TIME__') != -1:
-            response.response[0] = response.response[0].replace('__EXECUTION_TIME__', str(diff))
+        resp = response.response[0]
+        symble = '__EXECUTION_TIME__'
+        if response.response and \
+                response.content_type.startswith('text/html') and \
+                response.status_code == 200 and \
+                resp.find(symble) != -1:
+            response.response[0] = resp.replace(symble, str(diff))
             response.headers["Content-Length"] = len(response.response[0])
         return response
 
@@ -131,5 +136,3 @@ def register_blueprints(app):
     app.register_blueprint(account.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(oauth.bp)
-
-

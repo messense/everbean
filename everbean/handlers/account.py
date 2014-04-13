@@ -27,6 +27,7 @@ def logout():
         logout_user()
     return redirect(url_for('home.index'))
 
+
 @bp.route('/settings')
 @login_required
 def settings():
@@ -36,17 +37,17 @@ def settings():
 @bp.route('/bind')
 @login_required
 def bind():
-    token = app.config['EVERNOTE_SANDBOX_TOKEN']
-    if app.debug and app.config['EVERNOTE_SANDBOX'] and token:
+    sandbox_token = app.config['EVERNOTE_SANDBOX_TOKEN']
+    if app.debug and app.config['EVERNOTE_SANDBOX'] and sandbox_token:
         # using evernote sandox for development
-        client = get_evernote_client(token=token)
+        client = get_evernote_client(token=sandbox_token)
         user_store = client.get_user_store()
         user = user_store.getUser()
         username = user.username
 
-        #c_user = User.query.filter_by(id=current_user.id).first_or_404()
+        # c_user = User.query.filter_by(id=current_user.id).first_or_404()
         current_user.evernote_username = username
-        current_user.evernote_access_token = token
+        current_user.evernote_access_token = sandbox_token
         current_user.is_i18n = True
         db.session.add(current_user)
         db.session.commit()
@@ -62,7 +63,6 @@ def bind():
         session['is_i18n'] = is_i18n
 
         client = get_evernote_client(is_i18n)
-        request_token = client.get_request_token(app.config['EVERNOTE_REDIRECT_URI'])
-        session['evernote_oauth_token_secret'] = request_token['oauth_token_secret']
-        return redirect(client.get_authorize_url(request_token))
-
+        token = client.get_request_token(app.config['EVERNOTE_REDIRECT_URI'])
+        session['evernote_oauth_token_secret'] = token['oauth_token_secret']
+        return redirect(client.get_authorize_url(token))

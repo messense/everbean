@@ -46,4 +46,3 @@ MAIL_PORT = 25
 MAIL_USERNAME = ''
 # mail password
 MAIL_PASSWORD = ''
-

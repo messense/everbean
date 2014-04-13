@@ -9,7 +9,7 @@ import evernote.edam.error.ttypes as Errors
 from everbean.utils import to_str
 
 
-def get_evernote_service_host(is_i18n=True):
+def get_service_host(is_i18n=True):
     if app.config['EVERNOTE_SANDBOX']:
         return 'sandbox.evernote.com'
     if is_i18n:
@@ -22,12 +22,14 @@ def get_evernote_client(is_i18n=True, token=None):
     if token:
         client = EvernoteClient(token=token,
                                 sandbox=app.config['EVERNOTE_SANDBOX'],
-                                service_host=get_evernote_service_host(app, is_i18n))
+                                service_host=get_service_host(is_i18n))
     else:
-        client = EvernoteClient(consumer_key=app.config['EVERNOTE_CONSUMER_KEY'],
-                                consumer_secret=app.config['EVERNOTE_CONSUMER_SECRET'],
+        consumer_key = 'EVERNOTE_CONSUMER_KEY'
+        consumer_secret = 'EVERNOTE_CONSUMER_SECRET'
+        client = EvernoteClient(consumer_key=app.config[consumer_key],
+                                consumer_secret=app.config[consumer_secret],
                                 sandbox=app.config['EVERNOTE_SANDBOX'],
-                                service_host=get_evernote_service_host(app, is_i18n))
+                                service_host=get_service_host(is_i18n))
     return client
 
 
@@ -122,7 +124,10 @@ def generate_enml_makeup(book, notes=None, template='evernote/default.xml'):
             annotations[chapter] = []
         annotations[chapter].append(note)
 
-    return render_template(template, book=book, notes=annotations, created=datetime.now())
+    return render_template(template,
+                           book=book,
+                           notes=annotations,
+                           created=datetime.now())
 
 
 def make_note(book, notes=None, note=None, notebook=None):

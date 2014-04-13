@@ -6,7 +6,8 @@ from flask import current_app as app
 from flask.ext.mail import Message
 from everbean.core import mail, db, celery
 from everbean.models import User, Note
-from everbean.ext.douban import get_douban_client, import_annotations, import_books
+from everbean.ext.douban import get_douban_client, \
+    import_annotations, import_books
 from everbean.ext.evernote import get_evernote_client, get_notebook, find_note, \
     make_note, create_or_update_note
 
@@ -39,7 +40,8 @@ def refresh_douban_access_token(user):
         db.session.add(user)
         db.session.commit()
     else:
-        app.logger.warning('Refresh token for user %s error.' % user.douban_uid)
+        app.logger.warning('Refresh token for user %s error.' %
+                           user.douban_uid)
 
 
 @celery.task
@@ -62,7 +64,9 @@ def sync_book_notes(user_id, book, notes):
     token = user.evernote_access_token
     en = get_evernote_client(user.is_i18n, token)
     note_store = en.get_note_store()
-    notebook = get_notebook(note_store, user.evernote_notebook, app.config['EVERNOTE_NOTEBOOK_NAME'])
+    notebook = get_notebook(note_store,
+                            user.evernote_notebook,
+                            app.config['EVERNOTE_NOTEBOOK_NAME'])
     if not user.evernote_notebook:
         user.evernote_notebook = notebook.guid
         db.session.add(user)
@@ -98,6 +102,7 @@ def sync_notes(user):
     books = user.books
     # now we can sync notes to evernote
     for book in books:
-        notes = Note.query.filter_by(user_id=user.id, book_id=book.id).order_by(Note.created.asc()).all()
+        notes = Note.query.filter_by(user_id=user.id, book_id=book.id)\
+            .order_by(Note.created.asc()).all()
         if notes:
             sync_book_notes.delay(user.id, book, notes)

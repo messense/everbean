@@ -44,9 +44,15 @@ def get_douban_annotations(user, client=None, annotations=None,
                            start=0, count=100, format='html', recursive=True):
     client = client or get_douban_client(user.douban_access_token)
     annotations = annotations or []
-    entrypoint = 'user/%s/annotations?count=%i&start=%i&format=%s&order=collect'
+    entrypoint = 'user/%s/annotations?count=%i' \
+                 '&start=%i&format=%s&order=collect'
     try:
-        annos = client.book.get(entrypoint % (user.douban_uid, count, start, format))
+        annos = client.book.get(entrypoint % (user.douban_uid,
+                                              count,
+                                              start,
+                                              format
+                                              )
+                                )
     except DoubanAPIError, e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
@@ -59,7 +65,12 @@ def get_douban_annotations(user, client=None, annotations=None,
         return annotations
     start += count
     # retrieve annotations recursively
-    annotations = get_douban_annotations(user, client, annotations, start, count, format)
+    annotations = get_douban_annotations(user,
+                                         client,
+                                         annotations,
+                                         start,
+                                         count,
+                                         format)
     return annotations
 
 
@@ -83,7 +94,8 @@ def get_books_from_annotations(annotations):
             'chapter': annotation['chapter'],
             'summary': annotation['summary'],
             'content': annotation['content'],
-            'time': datetime.strptime(annotation['time'], '%Y-%m-%d %H:%M:%S'),
+            'time': datetime.strptime(annotation['time'],
+                                      '%Y-%m-%d %H:%M:%S'),
             'page_no': int(annotation['page_no']),
             'privacy': int(annotation['privacy']),
         }
@@ -108,9 +120,11 @@ def import_books(user, client=None):
             the_book.summary = book['book']['summary']
             db.session.add(the_book)
             db.session.commit()
-        user_book = UserBook.query.filter_by(user_id=user.id, book_id=the_book.id).first()
+        user_book = UserBook.query.filter_by(user_id=user.id,
+                                             book_id=the_book.id).first()
+        # if not User.query.filter(id == user.id,
+        #                          User.books.any(id=the_book.id)):
         if not user_book:
-        #if not User.query.filter(id == user.id, User.books.any(id=the_book.id)):
             UserBook(user, the_book, datetime.now(), book['status'])
             db.session.add(user)
             db.session.flush()
@@ -134,14 +148,17 @@ def import_annotations(user, client=None):
             the_book.summary = book['summary']
             db.session.add(the_book)
             db.session.commit()
-        user_book = UserBook.query.filter_by(user_id=user.id, book_id=the_book.id).first()
+        user_book = UserBook.query.filter_by(user_id=user.id,
+                                             book_id=the_book.id).first()
+        # if not User.query.filter(id == user.id,
+        #                          User.books.any(id=the_book.id)):
         if not user_book:
-        #if not User.query.filter(id == user.id, User.books.any(id=the_book.id)):
             UserBook(user, the_book)
             db.session.add(user)
             db.session.commit()
         for annotation in book['annotations']:
-            note = Note.query.filter_by(douban_id=annotation['id'], user_id=user.id).first()
+            note = Note.query.filter_by(douban_id=annotation['id'],
+                                        user_id=user.id).first()
             if not note:
                 # create the note
                 note = Note()
