@@ -38,7 +38,11 @@ def load_configuration(app, config, envvar):
         # if current directory has a config.py file, try to load it
         cwd = os.path.join(os.getcwd(), 'config.py')
         if os.path.exists(cwd):
-            parse_config_file(app, cwd)
+            config = cwd
+    if isinstance(config, dict):
+        app.config.update(config)
+    else:
+        parse_config_file(app, config)
 
     if envvar is not None:
         try:

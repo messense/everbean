@@ -11,6 +11,7 @@ livereload
 Mysql-Python
 SqlAlchemy
 pylibmc
+nose
 Flask-WTF
 Flask-Cache
 Flask-SqlAlchemy
