@@ -1,6 +1,7 @@
 # coding=utf-8
 from __future__ import with_statement
 import os
+import nose
 from datetime import datetime
 from everbean.app import create_app
 from everbean.ext.evernote import generate_enml_makeup
@@ -59,3 +60,7 @@ def test_enml_makeup():
         assert '__DEFAULT__' not in makeup
         assert '<span style="font-weight:bold; background-color:white;position:relative;">Chapter 1</span>' in makeup
         assert '<a href="http://www.douban.com" style="text-decoration:none">' in makeup
+
+
+if __name__ == '__main__':
+    nose.runmodule()

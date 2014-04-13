@@ -1,5 +1,6 @@
 # coding=utf-8
 import os
+import nose
 from everbean.app import create_app
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -38,3 +39,7 @@ def test_load_config_from_dict():
     with app.app_context():
         assert app.config['DOUBAN_API_KEY'] == 'test'
         assert app.config['EVERNOTE_CONSUMER_KEY'] == 'test'
+
+
+if __name__ == '__main__':
+    nose.runmodule()

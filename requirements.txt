@@ -8,6 +8,7 @@ douban-client
 evernote
 gunicorn
 livereload
+coverage
 Mysql-Python
 SqlAlchemy
 pylibmc

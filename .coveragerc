@@ -1,0 +1,5 @@
+[run]
+include = everbean/*
+omit =
+  migrations
+  conf

@@ -58,6 +58,7 @@ docs/_build/
 .vagrant
 # config file
 config.py
+!tests/config.py
 everbean/static/.webassets-cache
 everbean/static/css/all.css
 everbean/static/js/all.js
