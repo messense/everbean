@@ -1,0 +1,22 @@
+{% macro form_field(field) %}
+  <div class="form-group {% if field.errors %}form-error{% endif %}">
+    {{ field.label }}
+    {% if field.description %}
+      {{ field(placeholder=field.description, class_='form-control') }}
+    {% else %}
+      {{ field(placeholder=field.label.text, class='form-control') }}
+    {% endif %}
+    {% if field.errors %}
+      <p class="form-field-error">{{ field.errors[0] }}</p>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro checkbox_field(field) %}
+  <div class="form-group">
+    <div class="checkbox">
+      {{ field }}
+      {{ field.label }}
+    </div>
+  </div>
+{% endmacro %}

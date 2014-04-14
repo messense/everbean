@@ -68,13 +68,12 @@ def register_hooks(app):
     @app.after_request
     def after_request(response):
         diff = int((time.time() - g.start_time) * 1000)  # to get a time in ms
-        resp = response.response[0]
         symble = '__EXECUTION_TIME__'
         if response.response and \
                 response.content_type.startswith('text/html') and \
                 response.status_code == 200 and \
-                resp.find(symble) != -1:
-            response.response[0] = resp.replace(symble, str(diff))
+                response.response[0].find(symble) != -1:
+            response.response[0] = response.response[0].replace(symble, str(diff))
             response.headers["Content-Length"] = len(response.response[0])
         return response
 

@@ -79,7 +79,7 @@ def evernote():
     app.logger.debug('evernote auth_token: %s' % auth_token)
 
     if auth_token:
-        client = get_evernote_client(token=auth_token)
+        client = get_evernote_client(is_i18n, auth_token)
         user_store = client.get_user_store()
         user = user_store.getUser()
 

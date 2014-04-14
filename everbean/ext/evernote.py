@@ -46,6 +46,16 @@ def find_note(note_store, guid):
     return note
 
 
+def get_notebooks(note_store):
+    notebooks = []
+    try:
+        notebooks = note_store.listNotebooks()
+    except Errors.EDAMUserException, eue:
+        app.logger.warning('[get_notebooks] EDAMUserException code: %i, '
+                           'paramter: %s' % (eue.errorCode, eue.parameter))
+    return notebooks
+
+
 def create_notebook(note_store, name):
     notebook = Types.Notebook()
     if name is None:
