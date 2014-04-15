@@ -123,8 +123,9 @@ def create_or_update_note(note_store, note):
     return update_note(note_store, note)
 
 
-def generate_enml_makeup(book, notes=None, template='evernote/default.xml'):
+def generate_enml_makeup(book, notes=None, template='default'):
     notes = notes or book.notes
+    template = 'evernote/%s.xml' % template
     annotations = OrderedDict()
     for note in notes:
         chapter = note.chapter
@@ -140,8 +141,8 @@ def generate_enml_makeup(book, notes=None, template='evernote/default.xml'):
                            created=datetime.now())
 
 
-def make_note(book, notes=None, note=None, notebook=None):
-    makeup = generate_enml_makeup(book, notes)
+def make_note(book, notes=None, note=None, notebook=None, template='default'):
+    makeup = generate_enml_makeup(book, notes, template)
 
     note = note or Types.Note()
     note.title = to_str(book.title)

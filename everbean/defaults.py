@@ -1,7 +1,7 @@
 # coding=utf-8
 # configuration file
 
-SETTINGS = ''
+SITE_URL = ''
 
 # douban api key
 DOUBAN_API_KEY = ''

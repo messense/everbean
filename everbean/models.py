@@ -33,6 +33,7 @@ class User(db.Model, UserMixin):
     email = Column(String(50), unique=True)
     email_verify_code = Column(CHAR(32), unique=True)
     email_verified = Column(Boolean, default=False, index=True)
+    template = Column(String(20), default='default')
 
     # user - books Many-to-many
     books = association_proxy('user_books', 'book')

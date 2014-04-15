@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, \
 from flask import request, redirect, current_app as app
 from flask.ext.login import logout_user, \
     current_user, login_required
+from flask.ext.mail import Message
 from werkzeug.security import gen_salt
 from everbean.core import db
 from everbean.ext.douban import get_douban_client
@@ -61,11 +62,22 @@ def settings():
                                           for nb in _notebooks]
     if form.validate_on_submit():
         if form.email.data:
-            current_user.email = form.email.data
+            current_user.email = form.email.data.strip().lower()
             current_user.email_verify_code = gen_salt(32)
             current_user.email_verified = False
-            # Todo: send verification E-mail
-            
+            # send verification E-mail
+            msg = Message(
+                '[Everbean] 电子邮件验证',
+                recipients=[current_user.email]
+            )
+            url = ''.join([
+                app.config['SITE_URL'],
+                url_for('account.verfify'),
+                '?code=',
+                current_user.email_verify_code
+            ])
+            msg.html = render_template('email/verify.html', user=current_user, url=url)
+            tasks.send_mail.delay(msg)
             flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
         current_user.enable_sync = form.enable_sync.data
         current_user.evernote_notebook = form.evernote_notebook.data
@@ -106,6 +118,22 @@ def bind():
         token = client.get_request_token(app.config['EVERNOTE_REDIRECT_URI'])
         session['evernote_oauth_token_secret'] = token['oauth_token_secret']
         return redirect(client.get_authorize_url(token))
+
+
+@bp.route('/unbind')
+@login_required
+def unbind():
+    if current_user.evernote_access_token:
+        service_name = u'印象笔记'
+        if current_user.is_i18n:
+            service_name = u'Evernote'
+        username = current_user.evernote_username
+        current_user.evernote_username = ''
+        current_user.evernote_access_token = ''
+        db.session.add(current_user)
+        db.session.commit()
+        flash(u'已经解除本帐户与 %s 帐号 %s 的绑定。' % (service_name, username), 'success')
+    return redirect(url_for('account.settings'))
 
 
 @bp.route('/verify')

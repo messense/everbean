@@ -14,6 +14,10 @@ from everbean.ext.evernote import get_evernote_client, get_notebook, find_note, 
 
 @celery.task
 def send_mail(messages):
+    if not (app.config['MAIL_SERVER'] and
+            app.config['MAIL_USERNAME'] and
+            app.config['MAIL_PASSWORD']):
+        return False
     if isinstance(messages, Message):
         messages = [messages, ]
     with mail.connect() as conn:
@@ -64,9 +68,11 @@ def sync_book_notes(user_id, book, notes):
     token = user.evernote_access_token
     en = get_evernote_client(user.is_i18n, token)
     note_store = en.get_note_store()
-    notebook = get_notebook(note_store,
-                            user.evernote_notebook,
-                            app.config['EVERNOTE_NOTEBOOK_NAME'])
+    notebook = get_notebook(
+        note_store,
+        user.evernote_notebook,
+        app.config['EVERNOTE_NOTEBOOK_NAME']
+    )
     if not user.evernote_notebook:
         user.evernote_notebook = notebook.guid
         db.session.add(user)
@@ -77,7 +83,13 @@ def sync_book_notes(user_id, book, notes):
         return
     if the_book.evernote_guid:
         note = find_note(note_store, the_book.evernote_guid)
-    note = make_note(book, notes, note, notebook)
+    note = make_note(
+        book,
+        notes,
+        note,
+        notebook,
+        template=user.template
+    )
     if note.guid:
         # note.updated is milliseconds, should convert it to seconds
         updated = note.updated / 1000
@@ -102,7 +114,7 @@ def sync_notes(user):
     books = user.books
     # now we can sync notes to evernote
     for book in books:
-        notes = Note.query.filter_by(user_id=user.id, book_id=book.id)\
+        notes = Note.query.filter_by(user_id=user.id, book_id=book.id) \
             .order_by(Note.created.asc()).all()
         if notes:
             sync_book_notes.delay(user.id, book, notes)

@@ -1,5 +1,7 @@
 # configuration file
 
+SITE_URL = ''
+
 # douban api key
 DOUBAN_API_KEY = ''
 # douban api secret
