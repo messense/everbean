@@ -1,5 +1,5 @@
 {% macro form_field(field) %}
-  <div class="form-group {% if field.errors %}form-error{% endif %}">
+  <div class="form-group {% if field.errors %}has-error{% endif %}">
     {{ field.label }}
     {% if field.description %}
       {{ field(placeholder=field.description, class_='form-control') }}
@@ -7,7 +7,7 @@
       {{ field(placeholder=field.label.text, class='form-control') }}
     {% endif %}
     {% if field.errors %}
-      <p class="form-field-error">{{ field.errors[0] }}</p>
+      <p class="help-block">{{ field.errors[0] }}</p>
     {% endif %}
   </div>
 {% endmacro %}
@@ -19,4 +19,16 @@
       {{ field.label }}
     </div>
   </div>
+{% endmacro %}
+
+{% macro radio_field(field) %}
+    <div class="form-group">
+    {{ field.label }}&nbsp;&nbsp;
+    {% for subfield in field %}
+        <label class="radio-inline">
+        {{ subfield }}
+        {{ subfield.label }}
+        </label>
+    {% endfor %}
+    </div>
 {% endmacro %}

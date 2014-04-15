@@ -2,31 +2,33 @@
 {% from 'mixin.html' import form_field, checkbox_field %}
 {% block title %}设置 - Everbean{% endblock %}
 {% block main %}
-<div class="eb-box">
-    <header><span class="glyphicon glyphicon-cog"></span> 帐号设置</header>
-    <section class="eb-box-inner">
-        <form action="" method="post">
-        {% if current_user.evernote_access_token %}
-            {% if current_user.is_i18n %}
-                {% set service_name = 'Evernote' %}
-            {% else %}
-                {% set service_name = '印象笔记' %}
-            {% endif %}
-            <div class="form-group">
-                <p>
-                    <label>已绑定的 {{ service_name }} 帐号：</label>
-                    {{ current_user.evernote_username }}
-                    <a href="{{ url_for('account.unbind') }}" title="解除绑定">解除绑定</a>
-                </p>
-            </div>
-        {% endif %}
-            {{ form.hidden_tag() }}
-            {{ form_field(form.email) }}
-            {{ checkbox_field(form.enable_sync) }}
-            {{ form_field(form.evernote_notebook) }}
-            <button type="reset" class="btn btn-default">重&nbsp;&nbsp;置</button>
-            <button type="submit" class="btn btn-default pull-right">提交更改</button>
-        </form>
-    </section>
+<div class="col-md-12">
+    <div class="eb-box">
+        <header><span class="glyphicon glyphicon-cog"></span> 帐号设置</header>
+        <section class="eb-box-inner">
+            <form action="" method="post">
+                {% if current_user.evernote_access_token %}
+                    {% if current_user.is_i18n %}
+                        {% set service_name = 'Evernote' %}
+                    {% else %}
+                        {% set service_name = '印象笔记' %}
+                    {% endif %}
+                    <div class="form-group">
+                        <p>
+                            <label>已绑定的 {{ service_name }} 帐号：</label>
+                            {{ current_user.evernote_username }}
+                            <a href="{{ url_for('account.unbind') }}" title="解除绑定">解除绑定</a>
+                        </p>
+                    </div>
+                {% endif %}
+                {{ form.hidden_tag() }}
+                {{ form_field(form.email) }}
+                {{ checkbox_field(form.enable_sync) }}
+                {{ form_field(form.evernote_notebook) }}
+                <button type="reset" class="btn btn-default">重&nbsp;&nbsp;置</button>
+                <button type="submit" class="btn btn-default pull-right">提交更改</button>
+            </form>
+        </section>
+    </div>
 </div>
 {% endblock %}

@@ -2,14 +2,13 @@
 # coding=utf-8
 from __future__ import print_function
 
-_has_gevent = True
 try:
     import gevent.monkey
-except ImportError:
-    _has_gevent = False
-if _has_gevent:
     # apply gevent monkey patch
     gevent.monkey.patch_all()
+except ImportError:
+    pass
+
 
 import time
 from flask.ext.script import Manager

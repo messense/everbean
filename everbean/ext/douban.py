@@ -1,11 +1,15 @@
 # coding=utf-8
 from __future__ import absolute_import
+import re
 from datetime import datetime
 from flask import current_app as app
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
+from everbean.utils import to_unicode
+
+_QUOTE_RE = re.compile(r'<原文开始>(.+)</原文结束>', re.S)
 
 
 def get_douban_client(token=None):
@@ -167,7 +171,7 @@ def import_annotations(user, client=None):
                 note.book_id = the_book.id
                 note.chapter = annotation['chapter'][:100]
                 note.summary = annotation['summary']
-                note.content = annotation['content']
+                note.content_html = annotation['content']
                 note.created = annotation['time']
                 note.updated = annotation['time']
                 note.page_no = annotation['page_no']
@@ -177,6 +181,18 @@ def import_annotations(user, client=None):
                 the_book.notes.append(note)
                 db.session.flush()
         db.session.commit()
+
+
+def get_annotation(user, douban_id, client=None, format='text'):
+    client = client or get_douban_client(user.douban_access_token)
+    entrypoint = 'annotation/%s?format=%s' % (douban_id, format)
+    annotation = None
+    try:
+        annotation = client.book.get(entrypoint)
+    except DoubanAPIError, e:
+        app.logger.error('DoubanAPIError status: %s' % e.status)
+        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+    return annotation
 
 
 def create_annotation(user, note, client=None):
@@ -204,6 +220,8 @@ def create_annotation(user, note, client=None):
 
     note.douban_id = result['id']
     note.summary = result['summary']
+    annotation = get_annotation(user, note.douban_id, client, format='html')
+    note.content_html = annotation['content']
     db.session.add(note)
     db.session.commit()
     return note
@@ -233,6 +251,8 @@ def update_annotation(user, note, client=None):
         return False
 
     note.summary = result['summary']
+    annotation = get_annotation(user, note.douban_id, client, format='html')
+    note.content_html = annotation['content']
     db.session.add(note)
     db.session.commit()
     return note
@@ -252,3 +272,13 @@ def delete_annotation(user, note, client=None):
     except ValueError:
         return True
     return True
+
+
+def content_to_html(content):
+    def _make_quote(match):
+        text = match.group(1)
+        return '<blockquote><q>%s</q></blockquote>' % text
+
+    content = _QUOTE_RE.sub(_make_quote, content)
+
+    return content

@@ -125,6 +125,7 @@ class Note(db.Model):
     chapter = Column(String(100))
     summary = Column(Text)
     content = Column(Text)
+    content_html = Column(Text)
     page_no = Column(Integer, default=0)
     created = Column(DateTime, default=datetime.now, index=True)
     updated = Column(DateTime)

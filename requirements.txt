@@ -9,6 +9,7 @@ evernote
 gunicorn
 livereload
 coverage
+latexcodec
 Mysql-Python
 SqlAlchemy
 pylibmc

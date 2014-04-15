@@ -109,7 +109,6 @@ def register_extensions(app):
 
 def setup_extensions(app):
     @login_manager.user_loader
-    @cache.memoize(300)
     def load_user(user_id):
         return User.query.filter_by(douban_id=user_id).first()
 
@@ -130,8 +129,10 @@ def register_blueprints(app):
     from everbean.handlers import account
     from everbean.handlers import user
     from everbean.handlers import oauth
+    from everbean.handlers import note
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(oauth.bp)
+    app.register_blueprint(note.bp)

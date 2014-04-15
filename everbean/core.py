@@ -29,6 +29,7 @@ js_all = Bundle('js/jquery.min.js',
                 'js/turbolinks.js',
                 'js/bootstrap.min.js',
                 'js/turbolinks-indicter.js',
+                'js/everbean.js',
                 filters='rjsmin',
                 output='js/all.js')
 assets.register('js_all', js_all)

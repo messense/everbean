@@ -34,7 +34,7 @@ def logout():
     return redirect(url_for('home.index'))
 
 
-@bp.route('/settings')
+@bp.route('/settings', methods=("GET", "POST"))
 @login_required
 def settings():
     def _get_notebooks(is_i18n, token):
