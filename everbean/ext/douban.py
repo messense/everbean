@@ -13,10 +13,12 @@ _QUOTE_RE = re.compile(r'<原文开始>(.+)</原文结束>', re.S)
 
 
 def get_douban_client(token=None):
-    client = DoubanClient(app.config['DOUBAN_API_KEY'],
-                          app.config['DOUBAN_API_SECRET'],
-                          app.config['DOUBAN_REDIRECT_URI'],
-                          app.config['DOUBAN_API_SCOPE'])
+    client = DoubanClient(
+        app.config['DOUBAN_API_KEY'],
+        app.config['DOUBAN_API_SECRET'],
+        app.config['DOUBAN_REDIRECT_URI'],
+        app.config['DOUBAN_API_SCOPE']
+    )
     if token:
         client.auth_with_token(token)
     return client
@@ -28,7 +30,13 @@ def get_douban_books(user, client=None, books=None,
     books = books or []
     entrypoint = 'user/%s/collections?count=%i&start=%i'
     try:
-        result = client.book.get(entrypoint % (user.douban_uid, count, start))
+        result = client.book.get(
+            entrypoint % (
+                user.douban_uid,
+                count,
+                start
+            )
+        )
     except DoubanAPIError, e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
@@ -45,18 +53,21 @@ def get_douban_books(user, client=None, books=None,
 
 
 def get_douban_annotations(user, client=None, annotations=None,
-                           start=0, count=100, format='html', recursive=True):
+                           start=0, count=100, format='html',
+                           recursive=True):
     client = client or get_douban_client(user.douban_access_token)
     annotations = annotations or []
     entrypoint = 'user/%s/annotations?count=%i' \
                  '&start=%i&format=%s&order=collect'
     try:
-        annos = client.book.get(entrypoint % (user.douban_uid,
-                                              count,
-                                              start,
-                                              format
-                                              )
-                                )
+        annos = client.book.get(
+            entrypoint % (
+                user.douban_uid,
+                count,
+                start,
+                format
+            )
+        )
     except DoubanAPIError, e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
@@ -69,12 +80,10 @@ def get_douban_annotations(user, client=None, annotations=None,
         return annotations
     start += count
     # retrieve annotations recursively
-    annotations = get_douban_annotations(user,
-                                         client,
-                                         annotations,
-                                         start,
-                                         count,
-                                         format)
+    annotations = get_douban_annotations(
+        user, client, annotations,
+        start, count, format
+    )
     return annotations
 
 
@@ -112,7 +121,9 @@ def import_books(user, client=None):
     client = client or get_douban_client(user.douban_access_token)
     books = get_douban_books(user, client)
     for book in books:
-        the_book = Book.query.filter_by(douban_id=book['book_id']).first()
+        the_book = Book.query.filter_by(
+            douban_id=book['book_id']
+        ).first()
         if not the_book:
             # create the book
             the_book = Book()
@@ -124,8 +135,11 @@ def import_books(user, client=None):
             the_book.summary = book['book']['summary']
             db.session.add(the_book)
             db.session.commit()
-        user_book = UserBook.query.filter_by(user_id=user.id,
-                                             book_id=the_book.id).first()
+
+        user_book = UserBook.query.filter_by(
+            user_id=user.id,
+            book_id=the_book.id
+        ).first()
         # if not User.query.filter(id == user.id,
         #                          User.books.any(id=the_book.id)):
         if not user_book:
@@ -152,8 +166,11 @@ def import_annotations(user, client=None):
             the_book.summary = book['summary']
             db.session.add(the_book)
             db.session.commit()
-        user_book = UserBook.query.filter_by(user_id=user.id,
-                                             book_id=the_book.id).first()
+
+        user_book = UserBook.query.filter_by(
+            user_id=user.id,
+            book_id=the_book.id
+        ).first()
         # if not User.query.filter(id == user.id,
         #                          User.books.any(id=the_book.id)):
         if not user_book:
@@ -161,8 +178,10 @@ def import_annotations(user, client=None):
             db.session.add(user)
             db.session.commit()
         for annotation in book['annotations']:
-            note = Note.query.filter_by(douban_id=annotation['id'],
-                                        user_id=user.id).first()
+            note = Note.query.filter_by(
+                douban_id=annotation['id'],
+                user_id=user.id
+            ).first()
             if not note:
                 # create the note
                 note = Note()
@@ -251,7 +270,10 @@ def update_annotation(user, note, client=None):
         return False
 
     note.summary = result['summary']
-    annotation = get_annotation(user, note.douban_id, client, format='html')
+    annotation = get_annotation(user,
+                                note.douban_id,
+                                client,
+                                format='html')
     note.content_html = annotation['content']
     db.session.add(note)
     db.session.commit()

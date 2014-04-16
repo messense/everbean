@@ -11,18 +11,21 @@ bp = Blueprint('home', __name__, url_prefix='/')
 def index():
     @cache.cached(timeout=300, key_prefix='reading_books_12')
     def _reading_books():
-        return Book.query.filter(Book.user_books.any(status='reading'))\
-            .limit(12).all()
+        return Book.query.filter(
+            Book.user_books.any(status='reading')
+        ).limit(12).all()
 
     @cache.cached(timeout=300, key_prefix='read_books_12')
     def _read_books():
-        return Book.query.filter(Book.user_books.any(status='read'))\
-            .limit(12).all()
+        return Book.query.filter(
+            Book.user_books.any(status='read')
+        ).limit(12).all()
 
     @cache.cached(timeout=300, key_prefix='wish_books_12')
     def _wish_books():
-        return Book.query.filter(Book.user_books.any(status='wish'))\
-            .limit(12).all()
+        return Book.query.filter(
+            Book.user_books.any(status='wish')
+        ).limit(12).all()
 
     books = ObjectDict()
     books.reading = _reading_books()

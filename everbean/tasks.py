@@ -114,7 +114,9 @@ def sync_notes(user):
     books = user.books
     # now we can sync notes to evernote
     for book in books:
-        notes = Note.query.filter_by(user_id=user.id, book_id=book.id) \
-            .order_by(Note.created.asc()).all()
+        notes = Note.query.filter_by(
+            user_id=user.id,
+            book_id=book.id
+        ).order_by(Note.created.asc()).all()
         if notes:
             sync_book_notes.delay(user.id, book, notes)

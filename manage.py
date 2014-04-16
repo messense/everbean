@@ -49,7 +49,9 @@ def run_dev(profile_log=None):
     else:
         wsgi = DebuggedApplication(app)
 
-    run_simple('0.0.0.0', port, wsgi, use_reloader=True, use_debugger=True)
+    run_simple('0.0.0.0', port, wsgi,
+               use_reloader=True,
+               use_debugger=True)
 
 
 @manager.command
@@ -101,8 +103,10 @@ def cronjob():
 
 def refresh_access_token():
     expires_time = int(time.time()) - 86400
-    users = User.query.filter_by(enable_sync=True,
-                                 douban_expires_at__lte=expires_time).all()
+    users = User.query.filter_by(
+        enable_sync=True,
+        douban_expires_at__lte=expires_time
+    ).all()
     for user in users:
         tasks.refresh_douban_access_token.delay(user)
 
@@ -114,8 +118,10 @@ def sync_books():
 
 
 def sync_notes():
-    users = User.query.filter(User.enable_sync == True,
-                              User.evernote_access_token != None).all()
+    users = User.query.filter(
+        User.enable_sync == True,
+        User.evernote_access_token != None
+    ).all()
     for user in users:
         tasks.sync_notes(user)
 

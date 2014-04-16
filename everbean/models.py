@@ -38,10 +38,13 @@ class User(db.Model, UserMixin):
     # user - books Many-to-many
     books = association_proxy('user_books', 'book')
     # user - notes One-to-many
-    notes = relationship("Note", backref="user",
-                         cascade="all, delete-orphan",
-                         lazy="dynamic",
-                         order_by=lambda: Note.created.asc())
+    notes = relationship(
+        'Note',
+        backref='user',
+        cascade='all, delete-orphan',
+        lazy="dynamic",
+        order_by=lambda: Note.created.asc()
+    )
 
     def get_id(self):
         return self.douban_id
@@ -61,22 +64,27 @@ class UserBook(db.Model):
     enable_sync = Column(Boolean, default=True, index=True)
 
     # bidirectional attribute/collection of "user"/"user_books"
-    user = relationship(User,
-                        backref=backref('user_books',
-                                        lazy='dynamic',
-                                        cascade='all, delete-orphan'
-                                        )
-                        )
+    user = relationship(
+        User,
+        backref=backref(
+            'user_books',
+            lazy='dynamic',
+            cascade='all, delete-orphan'
+        )
+    )
 
     # reference to the "Book" object
-    book = relationship("Book",
-                        backref=backref('user_books',
-                                        lazy='dynamic',
-                                        cascade='all, delete-orphan'
-                                        )
-                        )
+    book = relationship(
+        'Book',
+        backref=backref(
+            'user_books',
+            lazy='dynamic',
+            cascade='all, delete-orphan'
+        )
+    )
 
-    def __init__(self, user, book, updated=None, status='reading',
+    def __init__(self, user, book,
+                 updated=None, status='reading',
                  enable_sync=True, evernote_guid=None):
         self.user = user
         self.book = book
@@ -100,10 +108,13 @@ class Book(db.Model):
     pubdate = Column(String(20))
     summary = Column(Text)
 
-    notes = relationship("Note", backref="book",
-                         cascade="all, delete-orphan",
-                         lazy="dynamic",
-                         order_by=lambda: Note.created.asc())
+    notes = relationship(
+        'Note',
+        backref='book',
+        cascade='all, delete-orphan',
+        lazy="dynamic",
+        order_by=lambda: Note.created.asc()
+    )
 
     @property
     def alt(self):

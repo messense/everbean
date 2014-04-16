@@ -2,7 +2,8 @@
 from datetime import datetime
 from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
-from flask.ext.login import current_user, login_required, login_user
+from flask.ext.login import current_user, login_required
+from flask.ext.login import login_user
 from everbean.core import db
 from everbean.models import User
 from everbean.ext.douban import get_douban_client
@@ -73,9 +74,11 @@ def evernote():
         flash(u'绑定 Evernote 失败！', 'error')
         return redirect(url_for('account.bind'))
 
-    auth_token = client.get_access_token(oauth_token,
-                                         oauth_token_secret,
-                                         oauth_verifier)
+    auth_token = client.get_access_token(
+        oauth_token,
+        oauth_token_secret,
+        oauth_verifier
+    )
     app.logger.debug('evernote auth_token: %s' % auth_token)
 
     if auth_token:

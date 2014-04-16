@@ -51,11 +51,3 @@ class CreateNoteForm(Form):
         DataRequired(),
         Length(min=16, message=u'笔记内容长度必须大于 15 字。')
     ])
-
-    def validate_chapter_and_page(self):
-        if not (self.chapter or self.page_no > 0):
-            raise ValidationError('章节和页数必须填写其中一个！')
-        if self.chapter and self.page_no > 0:
-            raise ValidationError('章节和页数只能填写其中一个！')
-        if self.page_no > 0 and len(str(self.page_no)) > 6:
-            raise ValidationError('页数不能超过 6 位数字。')

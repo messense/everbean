@@ -73,7 +73,8 @@ def register_hooks(app):
                 response.content_type.startswith('text/html') and \
                 response.status_code == 200 and \
                 response.response[0].find(symble) != -1:
-            response.response[0] = response.response[0].replace(symble, str(diff))
+            response.response[0] = response.response[0]\
+                .replace(symble, str(diff))
             response.headers["Content-Length"] = len(response.response[0])
         return response
 

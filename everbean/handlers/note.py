@@ -1,6 +1,6 @@
 # coding=utf-8
-from flask import (Blueprint, render_template,
-                   flash, redirect, url_for)
+from flask import Blueprint, render_template
+from flask import flash, redirect, url_for
 from flask.ext.login import current_user, login_required
 from everbean.models import Book, Note
 from everbean.core import cache
@@ -50,7 +50,7 @@ def create(book_id):
         else:
             flash(u'撰写笔记失败！', 'error')
 
-    return render_template('note/create.html', books=books, book=book, form=form)
-
-
-
+    return render_template('note/create.html',
+                           books=books,
+                           book=book,
+                           form=form)

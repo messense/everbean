@@ -1,11 +1,11 @@
 # coding=utf-8
-from flask import Blueprint, render_template, \
-    flash, url_for, session
-from flask import request, redirect, current_app as app
-from flask.ext.login import logout_user, \
-    current_user, login_required
-from flask.ext.mail import Message
 from werkzeug.security import gen_salt
+from flask import Blueprint, render_template
+from flask import flash, url_for, session
+from flask import request, redirect, current_app as app
+from flask.ext.login import logout_user, current_user
+from flask.ext.login import login_required
+from flask.ext.mail import Message
 from everbean.core import db
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client, get_notebooks
@@ -55,8 +55,10 @@ def settings():
         if 'evernote_notebooks' in session:
             _notebooks = session['evernote_notebooks']
         else:
-            _notebooks = _get_notebooks(current_user.is_i18n,
-                                        current_user.evernote_access_token)
+            _notebooks = _get_notebooks(
+                current_user.is_i18n,
+                current_user.evernote_access_token
+            )
             session['evernote_notebooks'] = _notebooks
         form.evernote_notebook.choices = [(nb['guid'], nb['name'])
                                           for nb in _notebooks]
@@ -76,7 +78,9 @@ def settings():
                 '?code=',
                 current_user.email_verify_code
             ])
-            msg.html = render_template('email/verify.html', user=current_user, url=url)
+            msg.html = render_template('email/verify.html',
+                                       user=current_user,
+                                       url=url)
             tasks.send_mail.delay(msg)
             flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
         current_user.enable_sync = form.enable_sync.data
