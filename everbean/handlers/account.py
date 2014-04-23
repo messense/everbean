@@ -6,11 +6,11 @@ from flask import request, redirect, current_app as app
 from flask.ext.login import logout_user, current_user
 from flask.ext.login import login_required
 from flask.ext.mail import Message
-from everbean.core import db
+from everbean.core import db, cache
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client, get_notebooks
 from everbean.forms import SettingsForm
-from everbean.utils import ObjectDict, to_unicode
+from everbean.utils import to_unicode
 from everbean.models import User
 import everbean.tasks as tasks
 
@@ -37,13 +37,17 @@ def logout():
 @bp.route('/settings', methods=("GET", "POST"))
 @login_required
 def settings():
-    def _get_notebooks(is_i18n, token):
-        client = get_evernote_client(is_i18n, token)
+    @cache.memoize(300)
+    def _get_notebooks(user):
+        client = get_evernote_client(
+            user.is_i18n,
+            user.evernote_access_token
+        )
         note_store = client.get_note_store()
         notebooks = []
         result = get_notebooks(note_store)
         for item in result:
-            notebook = ObjectDict(
+            notebook = dict(
                 guid=item.guid,
                 name=to_unicode(item.name)
             )
@@ -52,14 +56,7 @@ def settings():
 
     form = SettingsForm(obj=current_user)
     if current_user.evernote_access_token:
-        if 'evernote_notebooks' in session:
-            _notebooks = session['evernote_notebooks']
-        else:
-            _notebooks = _get_notebooks(
-                current_user.is_i18n,
-                current_user.evernote_access_token
-            )
-            session['evernote_notebooks'] = _notebooks
+        _notebooks = _get_notebooks(current_user)
         form.evernote_notebook.choices = [(nb['guid'], nb['name'])
                                           for nb in _notebooks]
     if form.validate_on_submit():
@@ -87,6 +84,7 @@ def settings():
         current_user.evernote_notebook = form.evernote_notebook.data
         db.session.add(current_user)
         db.session.commit()
+        flash(u'帐号设置保存成功！', 'success')
     return render_template('account/settings.html', form=form)
 
 

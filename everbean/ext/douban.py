@@ -7,9 +7,23 @@ from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
-from everbean.utils import to_unicode
 
 _QUOTE_RE = re.compile(r'<原文开始>(.+)</原文结束>', re.S)
+
+
+def small_book_cover(url):
+    url = url.replace('mpic/', 'spic/')
+    return url.replace('lpic/', 'spic/')
+
+
+def medium_book_cover(url):
+    url = url.replace('spic/', 'mpic/')
+    return url.replace('lpic/', 'mpic/')
+
+
+def large_book_cover(url):
+    url = url.replace('mpic/', 'lpic/')
+    return url.replace('spic/', 'lpic/')
 
 
 def get_douban_client(token=None):

@@ -12,25 +12,102 @@
             </header>
             <footer class="clearfix">
                 <div class="pull-left"><span class="glyphicon glyphicon-time"></span> 第 {{ user.id }} 名用户</div>
-                <div class="pull-right"><a href="{{ user.douban_alt }}" title="豆瓣页面" target="_blank">
-                    <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
-                </a> </div>
+                <div class="pull-right">
+                    <a href="{{ user.douban_alt }}" title="豆瓣页面" target="_blank">
+                        <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                    </a>
+                </div>
             </footer>
+        </div>
+    </div>
+    <div class="eb-box eb-notes">
+        <header><span class="glyphicon glyphicon-bookmark"></span> 最近撰写的笔记</header>
+        <div class="eb-box-inner">
+            {% if notes %}
+            <ul class="note-list">
+            {% for note in notes %}
+            <li class="note" id="note-{{ note.id }}">
+                <div class="note-chapter">
+                    <a class="note-book" href="">《{{ note.book.title }}》</a> -
+                    <a href="">
+                        {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
+                    </a>
+                </div>
+                <div class="note-content">{{ note.content_html|safe }}</div>
+                <div class="note-meta">
+                    <time datetime="{{ note.created.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                        {{ note.created.strftime('%Y-%m-%d %H:%M:%S') }}
+                    </time>
+                    {% if note.douban_id %}
+                    <a class="note-douban" href="{{ note.douban_alt }}" title="豆瓣笔记页面" target="_blank">
+                        <img width="16" height="16" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                    </a>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
         </div>
     </div>
 </div>
 <div class="eb-sidebar col-md-4">
+{% if books.reading %}
     <div class="eb-box eb-books eb-books-reading">
          <header><span class="glyphicon glyphicon-book"></span> 在读的书籍列表</header>
          <section class="eb-box-inner">
-             <script type="text/javascript" src="http://www.douban.com/service/badge/{{ user.douban_uid }}/?selection=latest&amp;picsize=medium&amp;hideself=on&amp;show=dolist&amp;n=4&amp;hidelogo=on&amp;cat=book&amp;columns=3"></script>
+            <ul class="book-list clearfix">
+             {% for book in books.reading %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
          </section>
     </div>
+{% endif %}
+{% if books.wish %}
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> 想读的书籍列表</header>
+        <section class="eb-box-inner">
+            <ul class="book-list clearfix">
+            {% for book in books.read %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
+        </section>
+    </div>
+{% endif %}
+{% if books.read %}
     <div class="eb-box eb-books eb-books-read">
         <header><span class="glyphicon glyphicon-book"></span> 读过的书籍列表</header>
         <section class="eb-box-inner">
-            <script type="text/javascript" src="http://www.douban.com/service/badge/{{ user.douban_uid }}/?selection=latest&amp;picsize=medium&amp;hideself=on&amp;show=collection&amp;n=4&amp;hidelogo=on&amp;cat=book&amp;columns=3"></script>
+            <ul class="book-list clearfix">
+            {% for book in books.wish %}
+             <div class="book">
+                <div class="book-cover">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                </div>
+             </div>
+             {% endfor %}
+             </ul>
         </section>
     </div>
+{% endif %}
 </div>
 {% endblock %}

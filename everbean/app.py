@@ -10,7 +10,7 @@ from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
 
 
-def create_app(config=None, envvar="everbean_config"):
+def create_app(config=None, envvar="everbean_config", debug=False):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     app = Flask(
         __name__,
@@ -18,7 +18,7 @@ def create_app(config=None, envvar="everbean_config"):
         template_folder="templates"
     )
 
-    load_configuration(app, config, envvar)
+    load_configuration(app, config, envvar, debug)
     register_extensions(app)
     register_hooks(app)
     register_template_utils(app)
@@ -31,7 +31,7 @@ def create_app(config=None, envvar="everbean_config"):
     return app
 
 
-def load_configuration(app, config, envvar):
+def load_configuration(app, config, envvar, debug):
     # load default configuration first
     app.config.from_object('everbean.defaults')
     if config is None:
@@ -49,6 +49,9 @@ def load_configuration(app, config, envvar):
             app.config.from_envvar(envvar)
         except RuntimeError:
             pass
+    # reset debug
+    if debug:
+        app.debug = True
     # check config
     for name in (
             'DOUBAN_API_KEY', 'DOUBAN_API_SECRET',
@@ -117,12 +120,19 @@ def setup_extensions(app):
 
 
 def register_template_utils(app):
+    from everbean.ext.douban import small_book_cover
+    from everbean.ext.douban import medium_book_cover
+    from everbean.ext.douban import large_book_cover
+
     @app.template_global('static_url')
     def static_url(f):
         # shortcut for url_for('static', filename=xxx)
         return url_for('static', filename=f)
 
     app.jinja_env.bytecode_cache = MemcachedBytecodeCache(cache)
+    app.jinja_env.filters['small_book_cover'] = small_book_cover
+    app.jinja_env.filters['medium_book_cover'] = medium_book_cover
+    app.jinja_env.filters['large_book_cover'] = large_book_cover
 
 
 def register_blueprints(app):

@@ -1,33 +1,31 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function
-
 try:
     import gevent.monkey
     # apply gevent monkey patch
     gevent.monkey.patch_all()
 except ImportError:
     pass
-
-
 import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.assets import ManageAssets
+from flask.ext.failsafe import failsafe
 from everbean import tasks
-from everbean.app import create_app
 from everbean.core import db
 from everbean.models import User
 
-app = create_app()
 
+@failsafe
+def create_app_for_manager():
+    from everbean.app import create_app
+    return create_app()
+
+app = create_app_for_manager()
 manager = Manager(app)
 
-manager.add_option('-c', '--config', dest='config', required=False)
-manager.add_option('-e', '--envvar', dest='envvar', required=False)
-
 migrate = Migrate(app, db)
-
 manager.add_command("db", MigrateCommand)
 manager.add_command("assets", ManageAssets())
 

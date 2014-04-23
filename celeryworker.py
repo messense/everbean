@@ -2,19 +2,19 @@
 # coding=utf-8
 from __future__ import with_statement
 from everbean.app import create_app
-from everbean.core import celery
+from everbean.core import celery as app
 
 
-app = create_app()
+flask = create_app()
 
-TaskBase = celery.Task
+TaskBase = app.Task
 
 
 class ContextTask(TaskBase):
     abstract = True
 
     def __call__(self, *args, **kwargs):
-        with app.app_context():
+        with flask.app_context():
             return TaskBase.__call__(self, *args, **kwargs)
 
-celery.Task = ContextTask
+app.Task = ContextTask

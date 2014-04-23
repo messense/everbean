@@ -19,9 +19,9 @@ a:visited {
     margin: 0 18px 20px 0;
     list-style: none;
 }
-.book:nth-child(6n) {
+.book:nth-child(6n), .book:last-child {
         margin-right: 0;
-    }
+}
 .book .book-title a {
     color: #37a;
 }
@@ -45,6 +45,29 @@ a:visited {
     width: 90px;
     height: 140px;
 }
+.note-list {
+    padding-left: 0;
+}
+.note {
+    position: relative;
+    list-style: none;
+    margin-bottom: 10px;
+}
+.note .note-content blockquote {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+.note .note-meta time {
+    color: #808080;
+    font-size: 12px;
+}
+.note .note-meta .note-douban {
+    position: absolute;
+    right: 0;
+    border-bottom: 0;
+    background: none;
+}
+
 .eb-book-info ul {
     padding-left: 0;
     text-align: center;
@@ -136,12 +159,17 @@ a:visited {
     filter: alpha(opacity=20);
 }
 
-.eb-main .eb-books table td {
-    padding: 7px;
+.eb-sidebar .book {
+    margin-right: 44px;
+    width: 64px;
 }
-
-.eb-main .eb-books table a img {
-    max-width: 73px;
+.eb-sidebar .book .book-cover {
+    width: 64px;
+    height: 100px;
+}
+.eb-sidebar .book .book-cover img {
+    width: 64px;
+    height: 100px;
 }
 
 .eb-footer {
@@ -182,6 +210,15 @@ a:visited {
     .book {
         margin-right: 21px;
     }
+    .eb-sidebar .book {
+        margin-right: 52px;
+    }
+    .eb-sidebar .book:nth-child(3n) {
+        margin-right: 52px;
+    }
+    .eb-sidebar .book:last-child {
+        margin-right: 0;
+    }
 }
 
 @media (min-width: 992px) {
@@ -191,5 +228,10 @@ a:visited {
     .book {
         margin-right: 65px;
     }
-
+    .eb-sidebar .book {
+        margin-right: 24px;
+    }
+    .eb-sidebar .book:nth-child(3n) {
+        margin-right: 0;
+    }
 }

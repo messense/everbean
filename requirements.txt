@@ -2,6 +2,9 @@ fabric
 Flask
 alembic
 cssmin
+pytz
+billiard
+kombu
 celery
 jsmin
 douban-client
@@ -21,6 +24,7 @@ Flask-Login
 Flask-Script
 Flask-Migrate
 Flask-DebugToolbar
+Flask-Failsafe
 Flask-Turbolinks
 Flask-Assets
 Flask-Mail
