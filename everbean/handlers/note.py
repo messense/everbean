@@ -54,3 +54,12 @@ def create(book_id):
                            books=books,
                            book=book,
                            form=form)
+
+
+@bp.route('/<int:note_id>')
+def index(note_id):
+    note = Note.query.get_or_404(note_id)
+    user = note.user
+    return render_template('note/index.html',
+                           note=note,
+                           user=user)

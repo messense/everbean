@@ -140,10 +140,12 @@ def register_blueprints(app):
     from everbean.handlers import account
     from everbean.handlers import user
     from everbean.handlers import oauth
+    from everbean.handlers import book
     from everbean.handlers import note
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
     app.register_blueprint(user.bp)
     app.register_blueprint(oauth.bp)
+    app.register_blueprint(book.bp)
     app.register_blueprint(note.bp)
