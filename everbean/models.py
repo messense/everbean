@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
         backref='user',
         cascade='all, delete-orphan',
         lazy="dynamic",
-        order_by=lambda: Note.created.asc()
+        order_by=lambda: Note.created.desc()
     )
 
     def get_id(self):
@@ -113,7 +113,7 @@ class Book(db.Model):
         backref='book',
         cascade='all, delete-orphan',
         lazy="dynamic",
-        order_by=lambda: Note.created.asc()
+        order_by=lambda: Note.created.desc()
     )
 
     @property

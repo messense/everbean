@@ -13,7 +13,7 @@
             <footer class="clearfix">
                 <div class="pull-left"><span class="glyphicon glyphicon-time"></span> 第 {{ user.id }} 名用户</div>
                 <div class="pull-right">
-                    <a href="{{ user.douban_alt }}" title="豆瓣页面" target="_blank">
+                    <a href="{{ user.douban_alt }}" title="豆瓣页面">
                         <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
                     </a>
                 </div>
@@ -39,7 +39,7 @@
                         {{ note.created.strftime('%Y-%m-%d %H:%M:%S') }}
                     </time>
                     {% if note.douban_id %}
-                    <a class="note-douban" href="{{ note.douban_alt }}" title="豆瓣笔记页面" target="_blank">
+                    <a class="note-douban" href="{{ note.alt }}" title="豆瓣笔记页面">
                         <img width="16" height="16" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
                     </a>
                     {% endif %}
@@ -60,10 +60,10 @@
              {% for book in books.reading %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -79,10 +79,10 @@
             {% for book in books.read %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -98,10 +98,10 @@
             {% for book in books.wish %}
              <div class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </div>
              {% endfor %}

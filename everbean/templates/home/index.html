@@ -9,10 +9,10 @@
              {% for book in books.reading %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -28,10 +28,10 @@
             {% for book in books.read %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -47,10 +47,10 @@
             {% for book in books.wish %}
              <div class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </div>
              {% endfor %}

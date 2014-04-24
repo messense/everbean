@@ -45,6 +45,15 @@ a:visited {
     width: 90px;
     height: 140px;
 }
+.book-title {
+    margin-top: 0;
+    font-size: 20px;
+}
+.book-intro span {
+    font-size: 12px;
+    margin-right: 5px;
+    color: #666;
+}
 .note-list {
     padding-left: 0;
 }
