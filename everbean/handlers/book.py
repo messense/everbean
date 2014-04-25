@@ -35,10 +35,9 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
-            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='wish')
-        ).limit(9).all()
+        ).limit(12).all()
 
     @cache.memoize(300)
     def _get_reading_users(bk_id):
@@ -48,10 +47,9 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
-            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='reading')
-        ).limit(9).all()
+        ).limit(12).all()
 
     @cache.memoize(300)
     def _get_read_users(bk_id):
@@ -61,10 +59,21 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
-            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='read')
-        ).limit(9).all()
+        ).limit(12).all()
+
+    @cache.memoize(300)
+    def _get_noted_users(bk_id):
+        return User.query.options(load_only(
+            'id',
+            'douban_uid',
+            'douban_name',
+            'avatar',
+            'large_avatar',
+        )).filter(
+            User.notes.any(book_id=bk_id)
+        ).limit(12).all()
 
     book = _get_book(book_id)
     notes = _get_notes(book_id)
@@ -72,6 +81,7 @@ def index(book_id):
     users.wish = _get_wish_users(book_id)
     users.reading = _get_reading_users(book_id)
     users.read = _get_read_users(book_id)
+    users.noted = _get_noted_users(book_id)
 
     return render_template(
         'book/index.html',

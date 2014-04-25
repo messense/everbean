@@ -55,6 +55,32 @@ def settings():
             notebooks.append(notebook)
         return notebooks
 
+    def send_verification_mail(user):
+        msg = Message(
+            sender=app.config['DEFAULT_MAIL_SENDER'],
+            subject='[Everbean] 电子邮件验证',
+            recipients=[user.email, ]
+        )
+        url = ''.join([
+            app.config['SITE_URL'],
+            url_for('account.verify'),
+            '?code=',
+            user.email_verify_code
+        ])
+        msg.html = render_template('email/verify.html',
+                                   user=user,
+                                   url=url)
+        tasks.send_mail.delay(msg)
+        flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
+
+    if current_user.email and not current_user.email_verified:
+        resend = request.args.get('resend', False)
+        if resend:
+            send_verification_mail(current_user)
+        else:
+            flash(u'您的电子邮件地址尚未验证，请查看您的邮箱并点击其中的链接完成验证。'
+                  u'没有收到验证邮件？请点击<a href="?resend=true">这里</a>重新发送验证邮件。', 'warning')
+
     form = SettingsForm(obj=current_user)
     form.template.choices = get_available_templates()
     if current_user.evernote_access_token:
@@ -62,26 +88,14 @@ def settings():
         form.evernote_notebook.choices = [(nb['guid'], nb['name'])
                                           for nb in _notebooks]
     if form.validate_on_submit():
-        if form.email.data:
-            current_user.email = form.email.data.strip().lower()
+        email = form.email.data.strip().lower()
+        if email and current_user.email != email:
+            # current user has no email or change email
+            current_user.email = email
             current_user.email_verify_code = gen_salt(32)
             current_user.email_verified = False
             # send verification E-mail
-            msg = Message(
-                '[Everbean] 电子邮件验证',
-                recipients=[current_user.email]
-            )
-            url = ''.join([
-                app.config['SITE_URL'],
-                url_for('account.verfify'),
-                '?code=',
-                current_user.email_verify_code
-            ])
-            msg.html = render_template('email/verify.html',
-                                       user=current_user,
-                                       url=url)
-            tasks.send_mail.delay(msg)
-            flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
+            send_verification_mail(current_user)
         form.populate_obj(current_user)
         db.session.add(current_user)
         db.session.commit()

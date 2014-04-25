@@ -46,3 +46,5 @@ MAIL_PORT = 25
 MAIL_USERNAME = ''
 # mail password
 MAIL_PASSWORD = ''
+# default mail sender
+DEFAULT_MAIL_SENDER = 'admin@example.com'

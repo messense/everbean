@@ -1,3 +1,6 @@
+.everbean {
+    font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+}
 a:link {
     text-decoration: none;
     color: #396;
@@ -16,7 +19,7 @@ a:visited {
     position: relative;
     float: left;
     width: 90px;
-    margin: 0 18px 20px 0;
+    margin: 0 6px 20px 0;
     list-style: none;
 }
 .book:nth-child(6n), .book:last-child {
@@ -59,6 +62,10 @@ a:visited {
     list-style: none;
     margin-bottom: 10px;
 }
+.note .note-content {
+    font-size: 14px;
+    line-height: 1.8em;
+}
 .note .note-content blockquote {
     font-size: 14px;
     margin-bottom: 0;
@@ -76,8 +83,20 @@ a:visited {
 
 .user {
     list-style: none;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 48px;
 }
-
+.eb-main .user > a:hover {
+    color: #37a;
+}
+.user .user-name {
+    width: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 5px;
+}
 .eb-book-info ul {
     padding-left: 0;
     text-align: center;
@@ -94,6 +113,12 @@ a:visited {
     width: 120px;
     height: 120px;
 }
+.everbean img.avatar-small {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+}
+
 .eb-navbar {
     background: #f6faf9;
     border-top: 4px solid #2aac5e;
@@ -118,11 +143,6 @@ a:visited {
     left: 50%;
     margin-top: -5px;
     margin-left: -8px;
-}
-.eb-navbar img.avatar-small {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
 }
 
 .eb-main a:hover {
@@ -170,7 +190,7 @@ a:visited {
 }
 
 .eb-sidebar .book {
-    margin-right: 44px;
+    margin-right: 22px;
     width: 64px;
 }
 .eb-sidebar .book .book-cover {
@@ -218,7 +238,7 @@ a:visited {
         background-color: #eee;
     }
     .book {
-        margin-right: 21px;
+        margin-right: 27px;
     }
     .eb-sidebar .book {
         margin-right: 52px;
@@ -236,7 +256,7 @@ a:visited {
         width: 970px;
     }
     .book {
-        margin-right: 65px;
+        margin-right: 71px;
     }
     .eb-sidebar .book {
         margin-right: 24px;

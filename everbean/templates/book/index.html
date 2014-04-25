@@ -6,10 +6,10 @@
         <header><span class="glyphicon glyphicon-user"></span> 书籍详情</header>
         <div class="eb-box-inner">
             <section class="book-info clearfix">
-                <div class="book-cover col-md-3">
+                <div class="book-cover col-xs-5 col-md-3">
                     <img src="{{ book.cover|medium_book_cover }}" />
                 </div>
-                <div class="book-intro col-md-9">
+                <div class="book-intro col-xs-7 col-md-9">
                     <h3 class="book-title">{{ book.title }}</h3>
                     <p class="book-author">
                         <span>作者</span> {{ book.author }}
@@ -32,12 +32,13 @@
             <ul class="note-list">
             {% for note in notes %}
             <li class="note" id="note-{{ note.id }}">
-                <div class="note-author">
-                    <a href="{{ note.user.absolute_url }}"
-                </div>
                 <div class="note-chapter">
                     <a href="{{ url_for('note.index', note_id=note.id) }}">
                         {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
+                    </a>&nbsp;<span style="font-size: 12px; color: #666;">by</span>&nbsp;
+                    <a href="{{ note.user.absolute_url }}" title="{{ note.user.douban_name }}">
+                        <img class="avatar avatar-small" src="{{ note.user.avatar }}" alt="">
+                        <span class="user-name">{{ note.user.douban_name }}</span>
                     </a>
                 </div>
                 <div class="note-content">{{ note.content_html|safe }}</div>
@@ -61,6 +62,23 @@
     </div>
 </div>
 <div class="eb-sidebar col-md-4">
+{% if users.noted %}
+    <div class="eb-box eb-books eb-books-reading">
+         <header><span class="glyphicon glyphicon-user"></span> 写过笔记的用户</header>
+         <section class="eb-box-inner">
+            <ul class="user-list clearfix">
+             {% for user in users.noted %}
+             <li class="user">
+                <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
+                    <img src="{{ user.avatar }}" alt="">
+                    <p class="user-name">{{ user.douban_name }}</p>
+                </a>
+             </li>
+             {% endfor %}
+             </ul>
+         </section>
+    </div>
+{% endif %}
 {% if users.reading %}
     <div class="eb-box eb-books eb-books-reading">
          <header><span class="glyphicon glyphicon-user"></span> 在读的用户</header>
@@ -71,7 +89,6 @@
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
                     <p class="user-name">{{ user.douban_name }}</p>
-                    <p class="user-signature">{{ user.signature }}</p>
                 </a>
              </li>
              {% endfor %}
@@ -88,8 +105,7 @@
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
-                    <span class="user-name">{{ user.douban_name }}</span>
-                    <span class="user-signature">{{ user.signature }}</span>
+                    <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
              {% endfor %}
@@ -106,8 +122,7 @@
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
-                    <span class="user-name">{{ user.douban_name }}</span>
-                    <span class="user-signature">{{ user.signature }}</span>
+                    <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
              {% endfor %}
