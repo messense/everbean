@@ -35,6 +35,7 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
+            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='wish')
         ).limit(9).all()
@@ -47,6 +48,7 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
+            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='reading')
         ).limit(9).all()
@@ -59,6 +61,7 @@ def index(book_id):
             'douban_name',
             'avatar',
             'large_avatar',
+            'signature',
         )).filter(
             User.user_books.any(book_id=bk_id, status='read')
         ).limit(9).all()

@@ -37,6 +37,7 @@ def logout():
 @bp.route('/settings', methods=("GET", "POST"))
 @login_required
 def settings():
+    from everbean.ext.evernote import get_available_templates
     @cache.memoize(300)
     def _get_notebooks(user):
         client = get_evernote_client(
@@ -55,6 +56,7 @@ def settings():
         return notebooks
 
     form = SettingsForm(obj=current_user)
+    form.template.choices = get_available_templates()
     if current_user.evernote_access_token:
         _notebooks = _get_notebooks(current_user)
         form.evernote_notebook.choices = [(nb['guid'], nb['name'])
@@ -80,8 +82,7 @@ def settings():
                                        url=url)
             tasks.send_mail.delay(msg)
             flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
-        current_user.enable_sync = form.enable_sync.data
-        current_user.evernote_notebook = form.evernote_notebook.data
+        form.populate_obj(current_user)
         db.session.add(current_user)
         db.session.commit()
         flash(u'帐号设置保存成功！', 'success')

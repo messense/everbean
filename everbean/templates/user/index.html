@@ -28,8 +28,8 @@
             {% for note in notes %}
             <li class="note" id="note-{{ note.id }}">
                 <div class="note-chapter">
-                    <a class="note-book" href="{{ url_for('book.index', book_id=note.book.id) }}">《{{ note.book.title }}》</a> -
-                    <a href="{{ url_for('note.index', note_id=note.id) }}">
+                    <a class="note-book" href="{{ note.book.absolute_url }}">《{{ note.book.title }}》</a> -
+                    <a href="{{ note.absolute_url }}">
                         {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
                     </a>
                 </div>
@@ -60,10 +60,10 @@
              {% for book in books.reading %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -76,13 +76,13 @@
         <header><span class="glyphicon glyphicon-book"></span> 想读的书籍列表</header>
         <section class="eb-box-inner">
             <ul class="book-list clearfix">
-            {% for book in books.read %}
+            {% for book in books.wish %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </li>
              {% endfor %}
@@ -95,13 +95,13 @@
         <header><span class="glyphicon glyphicon-book"></span> 读过的书籍列表</header>
         <section class="eb-box-inner">
             <ul class="book-list clearfix">
-            {% for book in books.wish %}
+            {% for book in books.read %}
              <div class="book">
                 <div class="book-cover">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-title">
-                    <a href="{{ url_for('book.index', book_id=book.id) }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
                 </div>
              </div>
              {% endfor %}

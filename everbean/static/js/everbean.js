@@ -12,7 +12,8 @@ jQuery(document).ready(function ($) {
       var book = $(this).parent().parent();
       var target = $(this).attr('data-target');
       $('.js-create-note .eb-book-info ul').html(book.clone(true));
-      $('#create-note').attr('action', '/note/create/' + target)
+      $('.eb-book-info .js-book').removeClass('js-book');
+      $('#create-note').attr('action', '/note/create/' + target);
       $('#book_id').attr('value', target);
       $('.js-create-note').slideDown();
       $('.eb-books-reading').hide();

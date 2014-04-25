@@ -4,7 +4,7 @@ from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required
 from flask.ext.login import login_user
-from everbean.core import db
+from everbean.core import db, cache
 from everbean.models import User
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client
@@ -32,7 +32,9 @@ def douban():
     me = client.user.me
 
     user = User.query.filter_by(douban_id=me['id']).first()
+    is_new_user = False
     if user is None:
+        is_new_user = True
         # register user
         user = User()
         user.created = datetime.now()
@@ -56,7 +58,13 @@ def douban():
 
     # sync books to database for the first time
     tasks.sync_books.delay(user)
-    tasks.import_douban_annotations.delay(user)
+    if is_new_user:
+        tasks.import_douban_annotations.delay(user)
+
+    # clear homepage cache
+    cache.delete('reading_books_12')
+    cache.delete('read_books_12')
+    cache.delete('wish_books_12')
 
     return redirect(url_for('home.index'))
 

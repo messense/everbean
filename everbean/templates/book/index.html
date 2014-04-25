@@ -32,6 +32,9 @@
             <ul class="note-list">
             {% for note in notes %}
             <li class="note" id="note-{{ note.id }}">
+                <div class="note-author">
+                    <a href="{{ note.user.absolute_url }}"
+                </div>
                 <div class="note-chapter">
                     <a href="{{ url_for('note.index', note_id=note.id) }}">
                         {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
@@ -65,9 +68,10 @@
             <ul class="user-list clearfix">
              {% for user in users.reading %}
              <li class="user">
-                <a href="{{ url_for('user.index', uid=user.douban_uid) }}" title="{{ user.douban_name }}">
+                <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
-                    <span>{{ user.douban_name }}</span>
+                    <p class="user-name">{{ user.douban_name }}</p>
+                    <p class="user-signature">{{ user.signature }}</p>
                 </a>
              </li>
              {% endfor %}
@@ -82,9 +86,10 @@
             <ul class="user-list clearfix">
              {% for user in users.wish %}
              <li class="user">
-                <a href="{{ url_for('user.index', uid=user.douban_uid) }}" title="{{ user.douban_name }}">
+                <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
-                    <span>{{ user.douban_name }}</span>
+                    <span class="user-name">{{ user.douban_name }}</span>
+                    <span class="user-signature">{{ user.signature }}</span>
                 </a>
              </li>
              {% endfor %}
@@ -99,9 +104,10 @@
             <ul class="user-list clearfix">
              {% for user in users.read %}
              <li class="user">
-                <a href="{{ url_for('user.index', uid=user.douban_uid) }}" title="{{ user.douban_name }}">
+                <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
                     <img src="{{ user.avatar }}" alt="">
-                    <span>{{ user.douban_name }}</span>
+                    <span class="user-name">{{ user.douban_name }}</span>
+                    <span class="user-signature">{{ user.signature }}</span>
                 </a>
              </li>
              {% endfor %}

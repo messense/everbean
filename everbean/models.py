@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import DateTime, Boolean, CHAR, Text
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.associationproxy import association_proxy
+from flask import url_for
 from flask.ext.login import UserMixin
 from everbean.core import db
 from everbean.utils import to_str
@@ -48,6 +49,10 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return self.douban_id
+
+    @property
+    def absolute_url(self):
+        return url_for('user.index', uid=self.douban_uid)
 
     def __repr__(self):
         return "<User(%s)>" % self.douban_uid
@@ -122,6 +127,10 @@ class Book(db.Model):
             return 'http://book.douban.com/subject/%s' % self.douban_id
         return ''
 
+    @property
+    def absolute_url(self):
+        return url_for('book.index', book_id=self.id)
+
     def __repr__(self):
         return "<Book(%s, '%s')>" % (self.id, to_str(self.title))
 
@@ -147,6 +156,10 @@ class Note(db.Model):
         if self.douban_id:
             return 'http://book.douban.com/annotation/%s/' % self.douban_id
         return ''
+
+    @property
+    def absolute_url(self):
+        return url_for('note.index', note_id=self.id)
 
     def __repr__(self):
         return "<Note(%s, %s, %s)>" % (self.id, self.book_id, self.douban_id)

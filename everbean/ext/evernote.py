@@ -6,7 +6,19 @@ from flask import render_template, current_app as app
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
+from everbean.core import cache
 from everbean.utils import to_str
+
+
+@cache.cached(300, key_prefix='available_templates')
+def get_available_templates():
+    available = app.jinja_env.list_templates()
+    templates = []
+    for tpl in available:
+        if tpl.startswith('evernote/') and tpl.endswith('.xml'):
+            name = tpl.replace('evernote/', '').replace('.xml', '')
+            templates.append((name, name.capitalize()))
+    return templates
 
 
 def get_service_host(is_i18n=True):

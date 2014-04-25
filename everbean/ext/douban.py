@@ -158,9 +158,14 @@ def import_books(user, client=None):
         #                          User.books.any(id=the_book.id)):
         if not user_book:
             UserBook(user, the_book, datetime.now(), book['status'])
-            db.session.add(user)
-            db.session.flush()
-        db.session.commit()
+        else:
+            if user_book.status != book['status']:
+                user_book.status = book['status']
+                user_book.updated = datetime.now()
+        db.session.add(user_book)
+        db.session.add(user)
+        db.session.flush()
+    db.session.commit()
 
 
 def import_annotations(user, client=None):
@@ -181,16 +186,6 @@ def import_annotations(user, client=None):
             db.session.add(the_book)
             db.session.commit()
 
-        user_book = UserBook.query.filter_by(
-            user_id=user.id,
-            book_id=the_book.id
-        ).first()
-        # if not User.query.filter(id == user.id,
-        #                          User.books.any(id=the_book.id)):
-        if not user_book:
-            UserBook(user, the_book)
-            db.session.add(user)
-            db.session.commit()
         for annotation in book['annotations']:
             note = Note.query.filter_by(
                 douban_id=annotation['id'],

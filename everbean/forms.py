@@ -24,6 +24,9 @@ class SettingsForm(Form):
     evernote_notebook = SelectField(u'默认笔记本', validators=[
         Optional(),
     ])
+    template = SelectField(u'笔记模板', choices=[
+        ('default', 'Default'),
+    ], default='default')
 
     def validate_email(self, field):
         mail = field.data.strip().lower()

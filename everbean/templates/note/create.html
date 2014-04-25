@@ -33,10 +33,10 @@
                     {% if book %}
                     <li class="book">
                         <div class="book-cover">
-                            <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
+                            <a href="{{ book.absolute_url }}" title="{{ book.title }}" target="_blank"><img src="{{ book.cover }}" /></a>
                         </div>
                         <div class="book-title">
-                            <a href="{{ book.alt }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
+                            <a href="{{ book.absolute_url }}" title="{{ book.title }}" target="_blank"><h3>{{ book.title }}</h3></a>
                         </div>
                     </li>
                     {% endif %}
@@ -55,12 +55,12 @@
              {% for bk in books %}
              <li class="book">
                 <div class="book-cover">
-                    <a class="js-book" href="#{{ bk.id }}" title="{{ bk.title }}" data-target="{{ bk.id }}">
+                    <a class="js-book" href="{{ bk.absolute_url }}" title="{{ bk.title }}" data-target="{{ bk.id }}" target="_blank">
                         <img src="{{ bk.cover }}" />
                     </a>
                 </div>
                 <div class="book-title">
-                    <a class="js-book" href="#{{ bk.id }}" title="{{ bk.title }}" data-target="{{ bk.id }}">
+                    <a class="js-book" href="{{ bk.absolute_url }}" title="{{ bk.title }}" data-target="{{ bk.id }}" target="_blank">
                         <h3>{{ bk.title }}</h3>
                     </a>
                 </div>
