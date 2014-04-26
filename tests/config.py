@@ -39,9 +39,9 @@ CACHE_KEY_PREFIX = "everbean_"
 BROKER_URL = 'amqp://guest@localhost//'
 
 # mail server
-MAIL_SERVER = ''
+MAIL_SERVER = 'localhost'
 # mail port
-MAIL_PORT = 25
+MAIL_PORT = 1025
 # mail username
 MAIL_USERNAME = ''
 # mail password

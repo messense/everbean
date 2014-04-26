@@ -1,5 +1,72 @@
 {% extends 'layout.html' %}
 {% block title %}笔记详情 - Everbean{% endblock %}
 {% block main %}
-
+<div class="eb-content col-md-8">
+    <div class="eb-box">
+        <header><span class="glyphicon glyphicon-bookmark"></span> 《{{ note.book.title }}》的笔记</header>
+        <div class="eb-box-inner">
+            <div class="note" id="note-{{ note.id }}">
+                <div class="note-chapter">
+                    <a href="{{ note.absolute_url }}">
+                        {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
+                    </a>
+                </div>
+                <div class="note-content">{{ note.content_html|safe }}</div>
+                <div class="note-meta">
+                    <time datetime="{{ note.created.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                        {{ note.created.strftime('%Y-%m-%d %H:%M:%S') }}
+                    </time>
+                    {% if note.douban_id %}
+                    <a class="note-douban" href="{{ note.alt }}" title="豆瓣笔记页面">
+                        <img width="16" height="16" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="eb-sidebar col-md-4">
+    <div class="eb-box">
+        <header><span class="glyphicon glyphicon-book"></span> 书籍详情</header>
+        <div class="eb-box-inner">
+            <section class="book-info clearfix">
+                <div class="book-cover col-xs-4">
+                    <img src="{{ note.book.cover|small_book_cover }}" />
+                </div>
+                <div class="book-intro col-xs-8">
+                    <h3 class="book-title">{{ note.book.title }}</h3>
+                    <p class="book-author">
+                        <span>作者</span> {{ note.book.author }}
+                    </p>
+                    <p>
+                        <span>出版日期</span> {{ note.book.pubdate }}
+                    </p>
+                    <p>
+                        <span>豆瓣链接</span>
+                        <a href="{{ note.book.alt }}" title="豆瓣页面" target="_blank">{{ note.book.douban_id }}</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="eb-box text-center eb-profile">
+        <header><span class="glyphicon glyphicon-user"></span> 作者信息</header>
+        <div class="eb-box-inner">
+            <header>
+                <img class="avatar avatar-large" src="{{ note.user.large_avatar }}" alt="" />
+                <h3>{{ note.user.douban_name }} <small>({{ note.user.signature }})</small></h3>
+                <p>{{ note.user.desc }}</p>
+            </header>
+            <footer class="clearfix">
+                <div class="pull-left"><span class="glyphicon glyphicon-time"></span> #{{ note.user.id }}</div>
+                <div class="pull-right">
+                    <a href="{{ note.user.douban_alt }}" title="豆瓣页面">
+                        <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                    </a>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
 {% endblock %}
