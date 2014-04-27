@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from datetime import datetime
 from flask import Blueprint, render_template
 from flask import flash, redirect, url_for
@@ -57,10 +58,10 @@ def create(book_id):
             db.session.add(user_book)
             db.session.add(note)
             db.session.commit()
-            flash(u'撰写笔记成功！', 'success')
+            flash('撰写笔记成功！', 'success')
             return redirect(url_for('note.create', book_id=book_id))
         else:
-            flash(u'撰写笔记失败！', 'error')
+            flash('撰写笔记失败！', 'error')
 
     return render_template('note/create.html',
                            books=books,

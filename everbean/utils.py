@@ -1,5 +1,7 @@
 # coding: utf-8
+from __future__ import unicode_literals
 import os
+import six
 
 
 class ObjectDict(dict):
@@ -13,24 +15,36 @@ class ObjectDict(dict):
         self[key] = value
 
 
-def to_unicode(value):
-    if isinstance(value, unicode):
-        return value
-    if isinstance(value, basestring):
-        return value.decode('utf-8')
-    if isinstance(value, int):
-        return str(value)
-    if isinstance(value, bytes):
-        return value.decode('utf-8')
-    return value
+def to_text(s, encoding='utf-8', errors='strict'):
+    if isinstance(s, six.text_type):
+        return s
+    if isinstance(s, six.string_types):
+        return six.text_type(s, encoding, errors)
+    else:
+        if six.PY3:
+            if isinstance(s, bytes):
+                return six.text_type(s, encoding, errors)
+            else:
+                return six.text_type(s)
+        elif hasattr(s, '__unicode__'):
+            return six.text_type(s)
+        else:
+            return six.text_type(bytes(s), encoding, errors)
 
 
-def to_str(value):
-    if isinstance(value, unicode):
-        return value.encode('utf-8')
-    if isinstance(value, int):
-        return str(value)
-    return value
+def to_bytes(s, encoding='utf-8', errors='strict'):
+    if isinstance(s, bytes):
+        if encoding == 'utf-8':
+            return s
+        else:
+            return s.decode('utf-8', errors).encode(encoding, errors)
+    if isinstance(s, six.string_types):
+        return s.encode(encoding, errors)
+    else:
+        if six.PY3:
+            return six.text_type(s).encode(encoding)
+        else:
+            return bytes(s)
 
 
 def parse_config_file(app, filename):
@@ -41,7 +55,7 @@ def parse_config_file(app, filename):
         try:
             app.config.from_pyfile(filename)
         except IOError:
-            app.logger.warning("Cannot load configuration "
-                               "from python file %s" % filename)
+            app.logger.warning('Cannot load configuration '
+                               'from python file %s' % filename)
     else:
         app.config.from_object(filename)

@@ -1,7 +1,8 @@
 # coding=utf-8
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import re
 from datetime import datetime
+import six
 from flask import current_app as app
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
@@ -51,7 +52,7 @@ def get_douban_books(user, client=None, books=None,
                 start
             )
         )
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return books
@@ -82,7 +83,7 @@ def get_douban_annotations(user, client=None, annotations=None,
                 format
             )
         )
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return annotations
@@ -172,7 +173,7 @@ def import_annotations(user, client=None):
     client = client or get_douban_client(user.douban_access_token)
     annotations = get_douban_annotations(user, client)
     books = get_books_from_annotations(annotations)
-    for book in books.itervalues():
+    for book in six.itervalues(books):
         the_book = Book.query.filter_by(douban_id=book['id']).first()
         if not the_book:
             # create the book
@@ -217,7 +218,7 @@ def get_annotation(user, douban_id, client=None, format='text'):
     annotation = None
     try:
         annotation = client.book.get(entrypoint)
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
     return annotation
@@ -241,7 +242,7 @@ def create_annotation(user, note, client=None):
         data['chapter'] = note.chapter
     try:
         result = client.book._post(entrypoint, **data)
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return False
@@ -273,7 +274,7 @@ def update_annotation(user, note, client=None):
         data['chapter'] = note.chapter
     try:
         result = client.book._put(entrypoint, **data)
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return False
@@ -296,7 +297,7 @@ def delete_annotation(user, note, client=None):
     entrypoint = '/v2/book/annotation/%s' % note.douban_id
     try:
         client.book._delete(entrypoint)
-    except DoubanAPIError, e:
+    except DoubanAPIError as e:
         app.logger.error('DoubanAPIError status: %s' % e.status)
         app.logger.error('DoubanAPIError reason: %s' % e.reason)
         return False

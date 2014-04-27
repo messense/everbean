@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # configuration file
 
 # douban api key
@@ -31,9 +32,9 @@ SECRET_KEY = 'everbean-dev'
 SQLALCHEMY_DATABASE_URI = 'mysql://root:root@localhost/everbean'
 
 # Cache type
-CACHE_TYPE = "memcached"
+CACHE_TYPE = 'memcached'
 # Cache key prefix
-CACHE_KEY_PREFIX = "everbean_"
+CACHE_KEY_PREFIX = 'everbean_'
 
 # Celery broker url
 BROKER_URL = 'amqp://guest@localhost//'

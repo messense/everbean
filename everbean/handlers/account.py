@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from werkzeug.security import gen_salt
 from flask import Blueprint, render_template
 from flask import flash, url_for, session
@@ -10,7 +11,7 @@ from everbean.core import db, cache
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client, get_notebooks
 from everbean.forms import SettingsForm
-from everbean.utils import to_unicode
+from everbean.utils import to_text
 from everbean.models import User
 import everbean.tasks as tasks
 
@@ -34,7 +35,7 @@ def logout():
     return redirect(url_for('home.index'))
 
 
-@bp.route('/settings', methods=("GET", "POST"))
+@bp.route('/settings', methods=('GET', 'POST'))
 @login_required
 def settings():
     from everbean.ext.evernote import get_available_templates
@@ -50,7 +51,7 @@ def settings():
         for item in result:
             notebook = dict(
                 guid=item.guid,
-                name=to_unicode(item.name)
+                name=to_text(item.name)
             )
             notebooks.append(notebook)
         return notebooks
@@ -71,15 +72,15 @@ def settings():
                                    user=user,
                                    url=url)
         tasks.send_mail.delay(msg)
-        flash(u'一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
+        flash('一封含有电子邮件验证码的邮件已经发送到您的邮箱中，请点击其中的链接完成验证。', 'info')
 
     if current_user.email and not current_user.email_verified:
         resend = request.args.get('resend', False)
         if resend:
             send_verification_mail(current_user)
         else:
-            flash(u'您的电子邮件地址尚未验证，请查看您的邮箱并点击其中的链接完成验证。'
-                  u'没有收到验证邮件？请点击<a href="?resend=true">这里</a>重新发送验证邮件。', 'warning')
+            flash('您的电子邮件地址尚未验证，请查看您的邮箱并点击其中的链接完成验证。'
+                  '没有收到验证邮件？请点击<a href="?resend=true">这里</a>重新发送验证邮件。', 'warning')
 
     form = SettingsForm(obj=current_user)
     form.template.choices = get_available_templates()
@@ -99,7 +100,7 @@ def settings():
         form.populate_obj(current_user)
         db.session.add(current_user)
         db.session.commit()
-        flash(u'帐号设置保存成功！', 'success')
+        flash('帐号设置保存成功！', 'success')
     return render_template('account/settings.html', form=form)
 
 
@@ -121,7 +122,7 @@ def bind():
         db.session.add(current_user)
         db.session.commit()
 
-        flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+        flash('成功绑定 Evernote 账号 %s ！' % user.username, 'success')
         return redirect(url_for('home.index'))
     else:
         tp = request.args.get('type', '0')
@@ -141,15 +142,15 @@ def bind():
 @login_required
 def unbind():
     if current_user.evernote_access_token:
-        service_name = u'印象笔记'
+        service_name = '印象笔记'
         if current_user.is_i18n:
-            service_name = u'Evernote'
+            service_name = 'Evernote'
         username = current_user.evernote_username
         current_user.evernote_username = ''
         current_user.evernote_access_token = ''
         db.session.add(current_user)
         db.session.commit()
-        flash(u'已经解除本帐户与 %s 帐号 %s 的绑定。' % (service_name, username), 'success')
+        flash('已经解除本帐户与 %s 帐号 %s 的绑定。' % (service_name, username), 'success')
     return redirect(url_for('account.settings'))
 
 
@@ -157,18 +158,18 @@ def unbind():
 def verify():
     code = request.args.get('code', '')
     if not code:
-        flash(u'没有有效的电子邮件验证码！', 'error')
+        flash('没有有效的电子邮件验证码！', 'error')
         return redirect(url_for('home.index'))
     user = User.query.filter_by(email_verify_code=code).first()
     if not user:
-        flash(u'无效的电子邮件验证码！', 'error')
+        flash('无效的电子邮件验证码！', 'error')
         return redirect(url_for('home.index'))
     if user.email_verified:
-        flash(u'此电子邮件已经验证通过！', 'info')
+        flash('此电子邮件已经验证通过！', 'info')
         return redirect(url_for('home.index'))
     user.email_verified = True
     db.session.add(user)
     db.session.commit()
 
-    flash(u'电子邮件激活成功！', 'success')
+    flash('电子邮件激活成功！', 'success')
     return redirect(url_for('home.index'))

@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 import os
 import nose
 from everbean.app import create_app

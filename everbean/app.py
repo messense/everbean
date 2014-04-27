@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import print_function, with_statement, absolute_import
+from __future__ import (print_function, with_statement,
+                        absolute_import, unicode_literals)
 import os
 import time
 from flask import Flask, url_for, render_template, g
@@ -10,12 +11,12 @@ from everbean.models import User
 from everbean.core import db, celery, cache, login_manager, assets, mail
 
 
-def create_app(config=None, envvar="everbean_config", debug=False):
+def create_app(config=None, envvar='everbean_config', debug=False):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     app = Flask(
         __name__,
-        static_folder=os.path.join(base_dir, "static"),
-        template_folder="templates"
+        static_folder=os.path.join(base_dir, 'static'),
+        template_folder='templates'
     )
 
     load_configuration(app, config, envvar, debug)
@@ -59,8 +60,8 @@ def load_configuration(app, config, envvar, debug):
             'EVERNOTE_CONSUMER_SECRET',
             'SQLALCHEMY_DATABASE_URI'):
         if not app.config[name]:
-            print("Configuration %s is not set, "
-                  "application may not work as expected." % name)
+            print('Configuration %s is not set, '
+                  'application may not work as expected.' % name)
 
 
 def register_hooks(app):
@@ -71,7 +72,7 @@ def register_hooks(app):
     @app.after_request
     def after_request(response):
         diff = int((time.time() - g.start_time) * 1000)  # to get a time in ms
-        symble = '__EXECUTION_TIME__'
+        symble = b'__EXECUTION_TIME__'
         if response.response and \
                 response.content_type.startswith('text/html') and \
                 response.status_code == 200 and \
@@ -116,7 +117,7 @@ def setup_extensions(app):
     def load_user(user_id):
         return User.query.filter_by(douban_id=user_id).first()
 
-    login_manager.login_view = "account.login"
+    login_manager.login_view = 'account.login'
 
 
 def register_template_utils(app):

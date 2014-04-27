@@ -1,15 +1,27 @@
 # coding=utf-8
-from __future__ import with_statement, absolute_import
+from __future__ import (
+    with_statement,
+    absolute_import,
+    unicode_literals
+)
 import time
 from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
 from everbean.core import mail, db, celery
 from everbean.models import User, Note
-from everbean.ext.douban import get_douban_client, \
-    import_annotations, import_books
-from everbean.ext.evernote import get_evernote_client, get_notebook, find_note, \
-    make_note, create_or_update_note
+from everbean.ext.douban import (
+    get_douban_client,
+    import_annotations,
+    import_books
+)
+from everbean.ext.evernote import (
+    get_evernote_client,
+    get_notebook,
+    find_note,
+    make_note,
+    create_or_update_note
+)
 
 
 @celery.task

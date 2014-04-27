@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import DateTime, Boolean, CHAR, Text
@@ -7,7 +8,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from flask import url_for
 from flask.ext.login import UserMixin
 from everbean.core import db
-from everbean.utils import to_str
+from everbean.utils import to_bytes
 
 
 class User(db.Model, UserMixin):
@@ -55,7 +56,7 @@ class User(db.Model, UserMixin):
         return url_for('user.index', uid=self.douban_uid)
 
     def __repr__(self):
-        return "<User(%s)>" % self.douban_uid
+        return b'<User(%s)>' % self.douban_uid
 
 
 class UserBook(db.Model):
@@ -99,7 +100,7 @@ class UserBook(db.Model):
         self.evernote_guid = evernote_guid
 
     def __repr__(self):
-        return "<UserBook(%s, %s)>" % (self.user_id, self.book_id)
+        return b'<UserBook(%s, %s)>' % (self.user_id, self.book_id)
 
 
 class Book(db.Model):
@@ -132,7 +133,7 @@ class Book(db.Model):
         return url_for('book.index', book_id=self.id)
 
     def __repr__(self):
-        return "<Book(%s, '%s')>" % (self.id, to_str(self.title))
+        return b'<Book(%s, %s)>' % (self.id, to_bytes(self.title))
 
 
 class Note(db.Model):
@@ -162,4 +163,4 @@ class Note(db.Model):
         return url_for('note.index', note_id=self.id)
 
     def __repr__(self):
-        return "<Note(%s, %s, %s)>" % (self.id, self.book_id, self.douban_id)
+        return b'<Note(%s, %s, %s)>' % (self.id, self.book_id, self.douban_id)

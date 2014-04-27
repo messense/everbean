@@ -1,3 +1,4 @@
+six
 fabric
 Flask
 alembic
@@ -8,7 +9,7 @@ kombu
 celery
 jsmin
 douban-client
-evernote
+#evernote
 gunicorn
 livereload
 coverage

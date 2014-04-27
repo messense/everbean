@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 # configuration file
 
 SITE_URL = ''
@@ -23,7 +24,7 @@ EVERNOTE_SANDBOX = True
 # evernote sandbox token
 EVERNOTE_SANDBOX_TOKEN = ''
 # evernote default notebook name
-EVERNOTE_NOTEBOOK_NAME = r'读书笔记'
+EVERNOTE_NOTEBOOK_NAME = '读书笔记'
 
 
 # is debugging
@@ -37,9 +38,9 @@ SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 
 # Cache type
-CACHE_TYPE = "simple"
+CACHE_TYPE = 'simple'
 # Cache key prefix
-CACHE_KEY_PREFIX = "everbean_"
+CACHE_KEY_PREFIX = 'everbean_'
 
 # Celery broker url
 BROKER_URL = ''

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 # configuration file
 
 SITE_URL = ''
@@ -31,9 +32,9 @@ SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 
 # Cache type
-CACHE_TYPE = "simple"
+CACHE_TYPE = 'simple'
 # Cache key prefix
-CACHE_KEY_PREFIX = "everbean_"
+CACHE_KEY_PREFIX = 'everbean_'
 
 # Celery broker url
 BROKER_URL = ''

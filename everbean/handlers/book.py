@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from sqlalchemy.orm import load_only, joinedload
 from flask import Blueprint, render_template
 from flask.ext.login import current_user, login_required

@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 from collections import OrderedDict
 from flask import render_template, current_app as app
@@ -7,7 +7,7 @@ from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 from everbean.core import cache
-from everbean.utils import to_str
+from everbean.utils import to_bytes
 
 
 @cache.cached(300, key_prefix='available_templates')
@@ -53,7 +53,7 @@ def find_note(note_store, guid):
     note = None
     try:
         note = note_store.getNote(guid, False, False, False, False)
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[find_note] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -70,7 +70,7 @@ def get_notebooks(note_store):
     notebooks = []
     try:
         notebooks = note_store.listNotebooks()
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[get_notebooks] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -82,10 +82,10 @@ def create_notebook(note_store, name):
     notebook = Types.Notebook()
     if name is None:
         return notebook
-    notebook.name = to_str(name)
+    notebook.name = to_bytes(name)
     try:
         notebook = note_store.createNotebook(notebook)
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[create_notebook] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -103,7 +103,7 @@ def get_notebook(note_store, guid=None, name=None):
     notebook = None
     try:
         notebook = note_store.getNotebook(guid)
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[get_notebook] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -124,7 +124,7 @@ def get_notebook(note_store, guid=None, name=None):
 def create_note(note_store, note):
     try:
         note = note_store.createNote(note)
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[create_note] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -140,7 +140,7 @@ def create_note(note_store, note):
 def update_note(note_store, note):
     try:
         note = note_store.updateNote(note)
-    except Errors.EDAMUserException, eue:
+    except Errors.EDAMUserException as eue:
         app.logger.warning(
             '[update_note] EDAMUserException code: %i, '
             'paramter: %s' % (eue.errorCode, eue.parameter)
@@ -182,8 +182,8 @@ def make_note(book, notes=None, note=None,
     makeup = generate_enml_makeup(book, notes, template)
 
     note = note or Types.Note()
-    note.title = to_str(book.title)
-    note.content = to_str(makeup)
+    note.title = to_bytes(book.title)
+    note.content = to_bytes(makeup)
     if note.notebookGuid is None and \
             notebook and hasattr(notebook, 'guid'):
         note.notebookGuid = notebook.guid

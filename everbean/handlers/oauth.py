@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from datetime import datetime
 from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
@@ -23,7 +24,7 @@ def douban():
     code = request.args.get('code', '')
     if error or (not code):
         app.logger.warning('Error happened: %s' % error)
-        flash(u'豆瓣 OAuth 登录失败！', 'error')
+        flash('豆瓣 OAuth 登录失败！', 'error')
         return redirect(url_for('home.index'))
 
     client = get_douban_client()
@@ -80,7 +81,7 @@ def evernote():
     oauth_verifier = request.args.get('oauth_verifier')
 
     if not (oauth_token and oauth_token_secret and oauth_verifier):
-        flash(u'绑定 Evernote 失败！', 'error')
+        flash('绑定 Evernote 失败！', 'error')
         return redirect(url_for('account.bind'))
 
     auth_token = client.get_access_token(
@@ -105,13 +106,13 @@ def evernote():
         c_user = User.query.filter_by(id=current_user.id).first()
         tasks.sync_notes(c_user)
         if is_i18n:
-            flash(u'成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+            flash('成功绑定 Evernote 账号 %s ！' % user.username, 'success')
         else:
-            flash(u'成功绑定 印象笔记 账号 %s ！' % user.username, 'success')
+            flash('成功绑定 印象笔记 账号 %s ！' % user.username, 'success')
         return redirect(url_for('home.index'))
     else:
         if is_i18n:
-            flash(u'绑定 Evernote 失败！', 'error')
+            flash('绑定 Evernote 失败！', 'error')
         else:
-            flash(u'绑定 印象笔记 失败！', 'error')
+            flash('绑定 印象笔记 失败！', 'error')
         return redirect(url_for('account.bind'))

@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import unicode_literals
 from flask.ext.wtf import Form
 from flask.ext.login import current_user
 from wtforms import ValidationError
@@ -16,15 +17,15 @@ from everbean.models import User
 
 
 class SettingsForm(Form):
-    enable_sync = BooleanField(u'启用笔记同步')
-    email = TextField(u'电子邮件', validators=[
+    enable_sync = BooleanField('启用笔记同步')
+    email = TextField('电子邮件', validators=[
         Email(),
         Optional(),
     ])
-    evernote_notebook = SelectField(u'默认笔记本', validators=[
+    evernote_notebook = SelectField('默认笔记本', validators=[
         Optional(),
     ])
-    template = SelectField(u'笔记模板', choices=[
+    template = SelectField('笔记模板', choices=[
         ('default', 'Default'),
     ], default='default')
 
@@ -36,21 +37,21 @@ class SettingsForm(Form):
 
 
 class CreateNoteForm(Form):
-    book_id = HiddenField(u'书籍 ID', default=0, validators=[
+    book_id = HiddenField('书籍 ID', default=0, validators=[
         DataRequired()
     ])
-    chapter = TextField(u'章节名', validators=[
+    chapter = TextField('章节名', validators=[
         Optional(),
-        Length(max=100, message=u'章节长度不能超过 100 字。')
+        Length(max=100, message='章节长度不能超过 100 字。')
     ])
-    page_no = IntegerField(u'页 码', default=0, validators=[
+    page_no = IntegerField('页 码', default=0, validators=[
         Optional()
     ])
-    private = RadioField(u'隐 私', choices=[
-        (2, u'所有人可见'),
-        (1, u'仅自己可见')
+    private = RadioField('隐 私', choices=[
+        (2, '所有人可见'),
+        (1, '仅自己可见')
     ], default=2)
-    content = TextAreaField(u'笔记内容', validators=[
+    content = TextAreaField('笔记内容', validators=[
         DataRequired(),
-        Length(min=16, message=u'笔记内容长度必须大于 15 字。')
+        Length(min=16, message='笔记内容长度必须大于 15 字。')
     ])

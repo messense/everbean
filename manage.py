@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
+
 try:
     import gevent.monkey
     # apply gevent monkey patch
@@ -26,8 +27,8 @@ app = create_app_for_manager()
 manager = Manager(app)
 
 migrate = Migrate(app, db)
-manager.add_command("db", MigrateCommand)
-manager.add_command("assets", ManageAssets())
+manager.add_command('db', MigrateCommand)
+manager.add_command('assets', ManageAssets())
 
 
 def run_dev(profile_log=None):
@@ -38,7 +39,7 @@ def run_dev(profile_log=None):
 
     app.debug = True
     # print real sql when debugging
-    app.config["SQLALCHEMY_ECHO"] = True
+    app.config['SQLALCHEMY_ECHO'] = True
     port = int(app.config['PORT'])
 
     if profile_log:
@@ -77,10 +78,10 @@ def livereload():
     from livereload import Server
     app.debug = True
     server = Server(app)
-    server.watch("everbean/*.py")
-    server.watch("everbean/templates/*.html")
-    server.watch("everbean/static/css/*.css")
-    server.watch("everbean/static/js/*.js")
+    server.watch('everbean/*.py')
+    server.watch('everbean/templates/*.html')
+    server.watch('everbean/static/css/*.css')
+    server.watch('everbean/static/js/*.js')
     server.serve(port=app.config['PORT'])
 
 
