@@ -9,11 +9,10 @@ kombu
 celery
 jsmin
 douban-client
-#evernote
+evernote
 gunicorn
 livereload
 coverage
-Mysql-Python
 SqlAlchemy
 pylibmc
 nose
@@ -29,3 +28,4 @@ Flask-Failsafe
 Flask-Turbolinks
 Flask-Assets
 Flask-Mail
+http://cdn.mysql.com/Downloads/Connector-Python/mysql-connector-python-1.1.6.zip#md5=026e4a4b8731da33d73f0542349594fd

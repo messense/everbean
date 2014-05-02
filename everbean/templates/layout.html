@@ -21,7 +21,7 @@
     {% endassets %}
   </head>
   <body class="everbean">
-    <header class="navbar navbar-static-top eb-navbar" id="top" role="banner">
+    <header class="navbar navbar-fixed-top eb-navbar" id="top" role="banner">
       <img id="loading" src="{{ static_url('images/loading.gif') }}" alt="" />
       <div class="container">
         <div class="navbar-header">
@@ -84,7 +84,7 @@
     <div class="eb-flashes">
         <div class="container">
         {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissable">
+            <div class="alert alert-{% if category == 'error' %}danger{% else %}{{ category }}{% endif %} alert-dismissable">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                 {{ message|safe }}
             </div>
