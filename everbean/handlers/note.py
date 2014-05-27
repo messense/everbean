@@ -7,7 +7,7 @@ from flask.ext.login import current_user, login_required
 from everbean.models import Book, Note, UserBook
 from everbean.core import db, cache
 from everbean.forms import CreateNoteForm, EditNoteForm
-from everbean.ext.douban import create_annotation
+from everbean.ext.douban import create_annotation, update_annotation
 
 bp = Blueprint('note', __name__, url_prefix='/note')
 
@@ -54,7 +54,6 @@ def create(book_id):
         if note and note.douban_id:
             user_book.updated = datetime.now()
             db.session.add(user_book)
-            db.session.add(note)
             db.session.commit()
             # TODO: sync note to evernote
             flash('撰写笔记成功！', 'success')
@@ -89,7 +88,13 @@ def edit(note_id):
         note.page_no = form.page_no.data
         note.content = form.content.data
         note.private = True if form.private.data == 1 else False
-        # TODO: save and update note
+        # TODO: Make update annotation async
+        note = update_annotation(current_user, note)
+        if note:
+            flash('编辑笔记成功！', 'success')
+            return redirect(url_for('note.index', note_id=note.id))
+        else:
+            flash('编辑笔记失败！', 'error')
     return render_template('note/edit.html',
                            note=note,
                            form=form)
