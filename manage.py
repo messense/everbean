@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function, unicode_literals
-
-try:
-    import gevent.monkey
-    # apply gevent monkey patch
-    gevent.monkey.patch_all()
-except ImportError:
-    pass
 import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -69,20 +62,9 @@ def syncdb():
     try:
         db.create_all()
         print('Database creation succeed.')
-    except:
+    except Exception as e:
         print('Database creation failed.')
-
-
-@manager.command
-def livereload():
-    from livereload import Server
-    app.debug = True
-    server = Server(app)
-    server.watch('everbean/*.py')
-    server.watch('everbean/templates/*.html')
-    server.watch('everbean/static/css/*.css')
-    server.watch('everbean/static/js/*.js')
-    server.serve(port=app.config['PORT'])
+        print('Exception message: %s' % e.message)
 
 
 @manager.command
@@ -93,13 +75,6 @@ def clear_cache():
 
 
 @manager.command
-def cronjob():
-    # refresh access token one day before access token expires
-    refresh_access_token()
-    sync_books()
-    sync_notes()
-
-
 def refresh_access_token():
     expires_time = int(time.time()) - 86400
     users = User.query.filter_by(
@@ -110,12 +85,14 @@ def refresh_access_token():
         tasks.refresh_douban_access_token.delay(user)
 
 
+@manager.command
 def sync_books():
     users = User.query.filter_by(enable_sync=True).all()
     for user in users:
         tasks.sync_books.delay(user)
 
 
+@manager.command
 def sync_notes():
     users = User.query.filter(
         User.enable_sync == True,

@@ -251,6 +251,7 @@ def create_annotation(user, note, client=None):
     note.summary = result['summary']
     annotation = get_annotation(user, note.douban_id, client, format='html')
     note.content_html = annotation['content']
+    note.updated = datetime.now()
     db.session.add(note)
     db.session.commit()
     return note
@@ -285,6 +286,7 @@ def update_annotation(user, note, client=None):
                                 client,
                                 format='html')
     note.content_html = annotation['content']
+    note.updated = datetime.now()
     db.session.add(note)
     db.session.commit()
     return note

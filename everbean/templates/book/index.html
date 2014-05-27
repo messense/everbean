@@ -62,6 +62,14 @@
     </div>
 </div>
 <div class="eb-sidebar col-md-4">
+{% if current_user %}
+    <div class="eb-box">
+        <header><span class="glyphicon glyphicon-user"></span> 操作</header>
+        <section class="eb-box-inner">
+            <a class="btn btn-default" href="{{ url_for('note.create', book_id=book.id) }}">撰写笔记</a>
+        </section>
+    </div>
+{% endif %}
 {% if users.noted %}
     <div class="eb-box eb-books eb-books-reading">
          <header><span class="glyphicon glyphicon-user"></span> 写过笔记的用户</header>

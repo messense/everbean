@@ -1,0 +1,4 @@
+PY=/home/messense/projects/everbean/bin/python
+SCRIPT=/home/messense/projects/everbean/manage.py
+# m h  dom mon dow   command
+0 0 * * * $PY $SCRIPT refresh_access_token

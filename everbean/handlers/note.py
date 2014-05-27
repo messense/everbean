@@ -43,6 +43,7 @@ def create(book_id):
         note = Note(
             user_id=current_user.id,
             book_id=book_id,
+            book=book,
             chapter=form.chapter.data.strip(),
             page_no=form.page_no.data,
             content=form.content.data,
@@ -55,6 +56,7 @@ def create(book_id):
             db.session.add(user_book)
             db.session.add(note)
             db.session.commit()
+            # TODO: sync note to evernote
             flash('撰写笔记成功！', 'success')
             return redirect(url_for('note.create', book_id=book_id))
         else:
