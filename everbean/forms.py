@@ -55,3 +55,21 @@ class CreateNoteForm(Form):
         DataRequired(),
         Length(min=16, message='笔记内容长度必须大于 15 字。')
     ])
+
+
+class EditNoteForm(Form):
+    chapter = TextField('章节名', validators=[
+        Optional(),
+        Length(max=100, message='章节长度不能超过 100 字。')
+    ])
+    page_no = IntegerField('页 码', default=0, validators=[
+        Optional()
+    ])
+    private = RadioField('隐 私', choices=[
+        (2, '所有人可见'),
+        (1, '仅自己可见')
+    ], default=2)
+    content = TextAreaField('笔记内容', validators=[
+        DataRequired(),
+        Length(min=16, message='笔记内容长度必须大于 15 字。')
+    ])

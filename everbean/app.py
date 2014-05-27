@@ -84,6 +84,10 @@ def register_hooks(app):
 
 
 def register_errorhandlers(app):
+    @app.errorhandler(403)
+    def forbidden(e):
+        return render_template('403.html'), 403
+
     @app.errorhandler(404)
     def page_note_found(e):
         return render_template('404.html'), 404

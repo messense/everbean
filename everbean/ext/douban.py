@@ -158,7 +158,7 @@ def import_books(user, client=None):
         # if not User.query.filter(id == user.id,
         #                          User.books.any(id=the_book.id)):
         if not user_book:
-            UserBook(user, the_book, datetime.now(), book['status'])
+            user_book = UserBook(user, the_book, datetime.now(), book['status'])
         else:
             if user_book.status != book['status']:
                 user_book.status = book['status']

@@ -44,6 +44,7 @@ CACHE_KEY_PREFIX = 'everbean_'
 
 # Celery broker url
 BROKER_URL = ''
+CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
 # mail server
 MAIL_SERVER = ''
