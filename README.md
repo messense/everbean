@@ -3,6 +3,7 @@ Everbean
 Sync notes from book.douban.com to Evernote
 
 [![Build Status](https://travis-ci.org/messense/everbean.svg?branch=develop)](https://travis-ci.org/messense/everbean)
+[![Coverage Status](https://coveralls.io/repos/messense/everbean/badge.png)](https://coveralls.io/r/messense/everbean)
 
 ## Installation
 

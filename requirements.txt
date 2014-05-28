@@ -11,10 +11,8 @@ jsmin
 douban-client
 evernote
 gunicorn
-coverage
 SqlAlchemy
 pylibmc
-nose
 Flask-WTF
 Flask-Cache
 Flask-SqlAlchemy

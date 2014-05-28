@@ -1,0 +1,6 @@
+-r requirements.txt
+cov-core
+coverage
+coveralls
+nose-cov
+nose
