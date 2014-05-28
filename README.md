@@ -1,39 +1,52 @@
 Everbean
 ===========
-
 Sync notes from book.douban.com to Evernote
 
 [![Build Status](https://travis-ci.org/messense/everbean.svg?branch=develop)](https://travis-ci.org/messense/everbean)
 
 ## Installation
 
-* Install dependencies with pip:
+1. Clone or download this repository to your local disk and change directory to that directory.
+2. Install dependencies using pip:
 
-    pip install -U -r requirements.txt
+        pip install -r requirements.txt
+        # install optional dependencies if you want a better performance
+        pip install -r optional-requirements.txt
 
-* Install optional dependencies with pip if you want a better performance:
+3. Now you are good to go
 
-    pip install -U -r optional-requirements.txt
+## Configuration
 
-* Copy config-sample.py to config.py and apply your modification, then set environment var `everbean_config` to the path of config.py:
-
-    export everbean_config=/path/to/your/config.py
-
-* Now we can start the server:
-
-    python wsgi.py
-
-Or:
-
-    python manage.py runserver
+Copy `config-sample.py` or rename it to `config.py`, then make the changes as you wish.
 
 ## Database creation
 
-run `python manage.py syncdb` to automatically create database structure for the first time.
+Run `python manage.py syncdb` to automatically create database structure for the first time.
 
 ## Database migration
 
-run `python manage.py db upgrade` to migrate database to the latest version.
+Run
+
+    python manage.py db upgrade
+    python manage.py syncdb
+
+to migrate database to the latest version.
+
+## Clear cache
+
+Run `python manage.py clear_cache` to clear any existing caches in memcached.
+
+## Start a server for development
+
+Run `python manage.py runserver` to start a local server for development.
+
+## Start Celery worker
+
+Run `celery worker --app=celeryworker.app -l info` to start Celery woker process.
+
+## Deployment
+
+Check out [conf](conf/) directory for `nginx.conf`, `supervisor.conf` and `crontab` configuration.
 
 ## License
 

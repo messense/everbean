@@ -24,7 +24,7 @@ EVERNOTE_SANDBOX = True
 # evernote sandbox token
 EVERNOTE_SANDBOX_TOKEN = ''
 # evernote default notebook name
-EVERNOTE_NOTEBOOK_NAME = '读书笔记'
+EVERNOTE_NOTEBOOK_NAME = 'Everbean'
 
 
 # is debugging
