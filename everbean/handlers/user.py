@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from sqlalchemy.orm import joinedload
 from flask import Blueprint, render_template
+
 from flask.ext.login import current_user, login_required
 from everbean.core import cache
 from everbean.models import User, Book, Note
@@ -55,3 +56,48 @@ def index(uid):
         books=books,
         notes=notes
     )
+
+
+@bp.route('/<uid>/wish')
+@bp.route('/<uid>/wish/<int:page>')
+def wish(uid, page=1):
+    if current_user.is_authenticated() and current_user.douban_uid == uid:
+        user = current_user
+    else:
+        user = User.query.filter_by(douban_uid=uid).first_or_404()
+    pager = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='wish')
+    ).paginate(page)
+    return render_template('user/wish.html',
+                           user=user,
+                           pager=pager)
+
+
+@bp.route('/<uid>/reading')
+@bp.route('/<uid>/reading/<int:page>')
+def reading(uid, page=1):
+    if current_user.is_authenticated() and current_user.douban_uid == uid:
+        user = current_user
+    else:
+        user = User.query.filter_by(douban_uid=uid).first_or_404()
+    pager = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='reading')
+    ).paginate(page)
+    return render_template('user/reading.html',
+                           user=user,
+                           pager=pager)
+
+
+@bp.route('/<uid>/read')
+@bp.route('/<uid>/read/<int:page>')
+def read(uid, page=1):
+    if current_user.is_authenticated() and current_user.douban_uid == uid:
+        user = current_user
+    else:
+        user = User.query.filter_by(douban_uid=uid).first_or_404()
+    pager = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='read')
+    ).paginate(page)
+    return render_template('user/read.html',
+                           user=user,
+                           pager=pager)

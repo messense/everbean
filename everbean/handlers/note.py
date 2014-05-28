@@ -55,7 +55,7 @@ def create(book_id):
             user_book.updated = datetime.now()
             db.session.add(user_book)
             db.session.commit()
-            # TODO: sync note to evernote
+            # TODO: sync note to evernote after create
             flash('撰写笔记成功！', 'success')
             return redirect(url_for('note.create', book_id=book_id))
         else:
@@ -91,6 +91,7 @@ def edit(note_id):
         # TODO: Make update annotation async
         note = update_annotation(current_user, note)
         if note:
+            # TODO: sync note to evernote after edit
             flash('编辑笔记成功！', 'success')
             return redirect(url_for('note.index', note_id=note.id))
         else:

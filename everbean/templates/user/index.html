@@ -54,7 +54,7 @@
 <div class="eb-sidebar col-md-4">
 {% if books.reading %}
     <div class="eb-box eb-books eb-books-reading">
-         <header><span class="glyphicon glyphicon-book"></span> 在读的书籍列表</header>
+         <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.reading', uid=user.douban_uid) }}">在读的书籍列表</a></header>
          <section class="eb-box-inner">
             <ul class="book-list clearfix">
              {% for book in books.reading %}
@@ -73,7 +73,7 @@
 {% endif %}
 {% if books.wish %}
     <div class="eb-box eb-books eb-books-read">
-        <header><span class="glyphicon glyphicon-book"></span> 想读的书籍列表</header>
+        <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.wish', uid=user.douban_uid) }}">想读的书籍列表</a></header>
         <section class="eb-box-inner">
             <ul class="book-list clearfix">
             {% for book in books.wish %}
@@ -92,7 +92,7 @@
 {% endif %}
 {% if books.read %}
     <div class="eb-box eb-books eb-books-read">
-        <header><span class="glyphicon glyphicon-book"></span> 读过的书籍列表</header>
+        <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.read', uid=user.douban_uid) }}">读过的书籍列表</a></header>
         <section class="eb-box-inner">
             <ul class="book-list clearfix">
             {% for book in books.read %}
