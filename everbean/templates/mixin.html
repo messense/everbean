@@ -33,18 +33,130 @@
     </div>
 {% endmacro %}
 
-{% macro render_pagination(pagination, endpoint) %}
-    <div class="pagination">
+{% macro render_pagination(pagination, endpoint, uid=None) %}
+    <ul class="pagination">
         {% for page in pagination.iter_pages() %}
             {% if page %}
                 {% if page != pagination.page %}
-                    <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+                    {% if uid %}
+                    <li><a href="{{ url_for(endpoint, uid=uid, page=page) }}">{{ page }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a></li>
+                    {% endif %}
                 {% else %}
-                    <span class="current">{{ page }}</span>
+                    <li class="active"><a href="">{{ page }}</a></li>
                 {% endif %}
             {% else %}
-                <span class="ellipsis">…</span>
+                <li><span class="ellipsis">…</span></li>
             {% endif %}
         {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro render_paged_books(pager) %}
+    <ul class="book-list paged-book-list">
+    {% for book in pager.items %}
+        <li id="book-{{ book.id }}">
+            <section class="book-info clearfix">
+                <div class="book-cover col-xs-5 col-md-3">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|medium_book_cover }}" /></a>
+                </div>
+                <div class="book-intro col-xs-7 col-md-9">
+                    <h3 class="book-title"><a href="{{ book.absolute_url }}" title="{{ book.title }}">{{ book.title }}</a></h3>
+                    <p class="book-author">
+                        <span>作者</span> {{ book.author }}
+                    </p>
+                    <p>
+                        <span>出版日期</span> {{ book.pubdate }}
+                    </p>
+                    <p>
+                        <span>豆瓣链接</span>
+                        <a href="{{ book.alt }}" title="豆瓣页面" target="_blank">{{ book.douban_id }}</a>
+                    </p>
+                </div>
+            </section>
+        </li>
+    {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% macro render_sidebar_books(books, user) %}
+{% if books.reading is defined and books.reading %}
+    <div class="eb-box eb-books eb-books-reading">
+         <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.reading', uid=user.douban_uid) }}">在读的书籍列表</a></header>
+         <section class="eb-box-inner">
+            <ul class="book-list clearfix">
+             {% for book in books.reading %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
+         </section>
+    </div>
+{% endif %}
+{% if books.read is defined and books.read %}
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.read', uid=user.douban_uid) }}">读过的书籍列表</a></header>
+        <section class="eb-box-inner">
+            <ul class="book-list clearfix">
+            {% for book in books.read %}
+             <div class="book">
+                <div class="book-cover">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                </div>
+             </div>
+             {% endfor %}
+             </ul>
+        </section>
+    </div>
+{% endif %}
+{% if books.wish is defined and books.wish %}
+    <div class="eb-box eb-books eb-books-read">
+        <header><span class="glyphicon glyphicon-book"></span> <a href="{{ url_for('user.wish', uid=user.douban_uid) }}">想读的书籍列表</a></header>
+        <section class="eb-box-inner">
+            <ul class="book-list clearfix">
+            {% for book in books.wish %}
+             <li class="book">
+                <div class="book-cover">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                </div>
+                <div class="book-title">
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
+                </div>
+             </li>
+             {% endfor %}
+             </ul>
+        </section>
+    </div>
+{% endif %}
+{% endmacro %}
+
+{% macro render_sidebar_user(user) %}
+    <div class="eb-box text-center eb-profile">
+        <header><span class="glyphicon glyphicon-user"></span> 用户信息</header>
+        <div class="eb-box-inner">
+            <header>
+                <img class="avatar avatar-large" src="{{ user.large_avatar }}" alt="" />
+                <h3>{{ user.douban_name }} <small>({{ user.signature }})</small></h3>
+                <p>{{ user.desc }}</p>
+            </header>
+            <footer class="clearfix">
+                <div class="pull-left"><span class="glyphicon glyphicon-time"></span> #{{ user.id }}</div>
+                <div class="pull-right">
+                    <a href="{{ user.douban_alt }}" title="豆瓣页面">
+                        <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
+                    </a>
+                </div>
+            </footer>
+        </div>
     </div>
 {% endmacro %}

@@ -68,9 +68,18 @@ def wish(uid, page=1):
     pager = Book.query.filter(
         Book.user_books.any(user_id=user.id, status='wish')
     ).paginate(page)
+
+    books = ObjectDict()
+    books.reading = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='reading')
+    ).limit(6).all()
+    books.read = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='read')
+    ).limit(6).all()
     return render_template('user/wish.html',
                            user=user,
-                           pager=pager)
+                           pager=pager,
+                           books=books)
 
 
 @bp.route('/<uid>/reading')
@@ -83,9 +92,18 @@ def reading(uid, page=1):
     pager = Book.query.filter(
         Book.user_books.any(user_id=user.id, status='reading')
     ).paginate(page)
+
+    books = ObjectDict()
+    books.wish = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='wish')
+    ).limit(6).all()
+    books.read = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='read')
+    ).limit(6).all()
     return render_template('user/reading.html',
                            user=user,
-                           pager=pager)
+                           pager=pager,
+                           books=books)
 
 
 @bp.route('/<uid>/read')
@@ -98,6 +116,15 @@ def read(uid, page=1):
     pager = Book.query.filter(
         Book.user_books.any(user_id=user.id, status='read')
     ).paginate(page)
+
+    books = ObjectDict()
+    books.wish = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='wish')
+    ).limit(6).all()
+    books.reading = Book.query.filter(
+        Book.user_books.any(user_id=user.id, status='reading')
+    ).limit(6).all()
     return render_template('user/read.html',
                            user=user,
-                           pager=pager)
+                           pager=pager,
+                           books=books)

@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% from 'mixin.html' import render_sidebar_user %}
 {% block title %}笔记详情 - Everbean{% endblock %}
 {% block main %}
 <div class="eb-content col-md-8">
@@ -50,23 +51,6 @@
             </section>
         </div>
     </div>
-    <div class="eb-box text-center eb-profile">
-        <header><span class="glyphicon glyphicon-user"></span> 作者信息</header>
-        <div class="eb-box-inner">
-            <header>
-                <img class="avatar avatar-large" src="{{ note.user.large_avatar }}" alt="" />
-                <h3>{{ note.user.douban_name }} <small>({{ note.user.signature }})</small></h3>
-                <p>{{ note.user.desc }}</p>
-            </header>
-            <footer class="clearfix">
-                <div class="pull-left"><span class="glyphicon glyphicon-time"></span> #{{ note.user.id }}</div>
-                <div class="pull-right">
-                    <a href="{{ note.user.douban_alt }}" title="豆瓣页面">
-                        <img width="20" height="20" src="{{ static_url('images/douban_icon_32.png') }}" alt="" />
-                    </a>
-                </div>
-            </footer>
-        </div>
-    </div>
+    {{ render_sidebar_user(note.user) }}
 </div>
 {% endblock %}

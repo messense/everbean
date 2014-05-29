@@ -1,5 +1,18 @@
 {% extends 'layout.html' %}
+{% from 'mixin.html' import render_paged_books, render_pagination, render_sidebar_books, render_sidebar_user %}
 {% block title %}{{ user.douban_name }} 读过的书籍{% if pager.page > 1 %} 第{{ pager.page }}页{% endif %} - Everbean{% endblock %}
 {% block main %}
-
+<div class="eb-content col-md-8">
+    <div class="eb-box">
+        <header><span class="glyphicon glyphicon-book"></span> 读过的书籍列表</header>
+        <section class="eb-box-inner">
+            {{ render_paged_books(pager) }}
+            <div class="text-center">{{ render_pagination(pager, 'user.read', user.douban_uid) }}</div>
+        </section>
+    </div>
+</div>
+<div class="eb-sidebar col-md-4">
+    {{ render_sidebar_user(user) }}
+    {{ render_sidebar_books(books, user) }}
+</div>
 {% endblock %}

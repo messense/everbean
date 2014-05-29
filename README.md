@@ -3,7 +3,15 @@ Everbean
 Sync notes from book.douban.com to Evernote
 
 [![Build Status](https://travis-ci.org/messense/everbean.svg?branch=develop)](https://travis-ci.org/messense/everbean)
-[![Coverage Status](https://coveralls.io/repos/messense/everbean/badge.png)](https://coveralls.io/r/messense/everbean)
+[![Coverage Status](https://coveralls.io/repos/messense/everbean/badge.png?branch=develop)](https://coveralls.io/r/messense/everbean)
+
+[![dependencies](https://sourcegraph.com/api/repos/github.com/messense/everbean/badges/dependencies.png)](https://sourcegraph.com/github.com/messense/everbean)
+[![funcs](https://sourcegraph.com/api/repos/github.com/messense/everbean/badges/funcs.png)](https://sourcegraph.com/github.com/messense/everbean)
+[![top func](https://sourcegraph.com/api/repos/github.com/messense/everbean/badges/top-func.png)](https://sourcegraph.com/github.com/messense/everbean)
+
+[![Total views](https://sourcegraph.com/api/repos/github.com/messense/everbean/counters/views.png)](https://sourcegraph.com/github.com/messense/everbean)
+[![Views in the last 24 hours](https://sourcegraph.com/api/repos/github.com/messense/everbean/counters/views-24h.png)](https://sourcegraph.com/github.com/messense/everbean)
+
 
 ## Installation
 
