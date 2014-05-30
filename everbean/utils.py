@@ -1,7 +1,10 @@
 # coding: utf-8
 from __future__ import unicode_literals
 import os
+from functools import wraps
 import six
+from flask import redirect, url_for, flash
+from flask.ext.login import current_user
 
 
 class ObjectDict(dict):
@@ -59,3 +62,14 @@ def parse_config_file(app, filename):
                                'from python file %s' % filename)
     else:
         app.config.from_object(filename)
+
+
+def require_bind_evernote(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_user.is_authenticated() and current_user.evernote_access_token:
+            return func(*args, **kwargs)
+        else:
+            flash('您需要先绑定 Evernote/印象笔记 账号后才能进行操作', 'info')
+            return redirect(url_for('account.bind'))
+    return decorated_view

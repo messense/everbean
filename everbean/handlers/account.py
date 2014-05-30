@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 from werkzeug.security import gen_salt
 from flask import Blueprint, render_template
-from flask import flash, url_for, session
+from flask import flash, url_for, session, abort
 from flask import request, redirect, current_app as app
-from flask.ext.login import logout_user, current_user
+from flask.ext.login import logout_user, current_user, login_user
 from flask.ext.login import login_required
 from flask.ext.mail import Message
 from everbean.core import db, cache
@@ -25,6 +25,19 @@ def login():
         return redirect(url_for('home.index'))
     client = get_douban_client()
     return redirect(client.authorize_url)
+
+
+@bp.route('/fakelogin', methods=('POST', ))
+def fakelogin():
+    if not app.config['TESTING']:
+        abort(403)
+    username = request.form.get('username', None)
+    if username:
+        user = User.query.filter_by(douban_uid=username).first()
+        if user:
+            login_user(user, remember=True)
+            return 'True'
+    return 'False'
 
 
 @bp.route('/logout')
@@ -64,9 +77,7 @@ def settings():
         )
         url = ''.join([
             app.config['SITE_URL'],
-            url_for('account.verify'),
-            '?code=',
-            user.email_verify_code
+            url_for('account.verify', code=user.email_verify_code),
         ])
         msg.html = render_template('email/verify.html',
                                    user=user,
@@ -88,6 +99,8 @@ def settings():
         _notebooks = _get_notebooks(current_user)
         form.evernote_notebook.choices = [(nb['guid'], nb['name'])
                                           for nb in _notebooks]
+    else:
+        form.evernote_notebook.choices = []
     if form.validate_on_submit():
         email = form.email.data.strip().lower()
         if email and current_user.email != email:
@@ -154,9 +167,8 @@ def unbind():
     return redirect(url_for('account.settings'))
 
 
-@bp.route('/verify')
-def verify():
-    code = request.args.get('code', '')
+@bp.route('/verify/<code>')
+def verify(code):
     if not code:
         flash('没有有效的电子邮件验证码！', 'error')
         return redirect(url_for('home.index'))

@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import random
 import unittest
 import tempfile
+from werkzeug.security import gen_salt
+from flask import url_for
 from everbean.app import create_app
 from everbean.core import db
+from everbean.models import User
 
 
 class TestCase(unittest.TestCase):
@@ -35,6 +39,8 @@ class TestCase(unittest.TestCase):
         else:
             config = self.__config__
         self.app = create_app(config, debug=True)
+        self.app.config['TESTING'] = True
+        self.app.config['SERVER_NAME'] = 'localhost'
         self.client = self.app.test_client()
         with self.app.app_context():
             db.create_all()
@@ -42,3 +48,23 @@ class TestCase(unittest.TestCase):
     def pre_tearDown(self):
         os.close(self.db_fd)
         os.unlink(self.db_path)
+
+    def login(self, user):
+        return self.client.post(url_for('account.fakelogin'), data={
+            'username': user.douban_uid,
+        }).data
+
+    def logout(self):
+        self.client.get(url_for('account.logout'))
+
+    def create_user(self, username=None):
+        username = username or gen_salt(6)
+        user = User()
+        user.douban_uid = username
+        user.douban_name = username
+        user.douban_id = random.randint(1, 1000)
+        user.douban_access_token = gen_salt(32)
+        user.douban_refresh_token = gen_salt(32)
+        db.session.add(user)
+        db.session.commit()
+        return user
