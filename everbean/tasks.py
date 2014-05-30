@@ -72,9 +72,16 @@ def import_douban_annotations(user):
 
 
 @celery.task
-def sync_book_notes(user_id, book, notes):
+def sync_book_notes(user_id, book, notes=None):
     user = User.query.get(user_id)
-    if not user or not user.evernote_access_token or not notes:
+    if not user or not user.evernote_access_token:
+        return
+    if notes is None:
+        notes = Note.query.filter_by(
+            user_id=user.id,
+            book_id=book.id
+        ).order_by(Note.created.asc()).all()
+    if not notes:
         return
     # generate evernote format note
     token = user.evernote_access_token

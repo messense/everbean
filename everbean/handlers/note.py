@@ -4,10 +4,12 @@ from datetime import datetime
 from flask import Blueprint, render_template
 from flask import flash, redirect, url_for, abort
 from flask.ext.login import current_user, login_required
+from celery.result import AsyncResult
 from everbean.models import Book, Note, UserBook
 from everbean.core import db, cache
 from everbean.forms import CreateNoteForm, EditNoteForm
 from everbean.ext.douban import create_annotation, update_annotation
+from everbean import tasks
 
 bp = Blueprint('note', __name__, url_prefix='/note')
 
@@ -55,7 +57,16 @@ def create(book_id):
             user_book.updated = datetime.now()
             db.session.add(user_book)
             db.session.commit()
-            # TODO: sync note to evernote after create
+            # sync note to evernote after create
+            cache_key = 'sync_book_notes_%i_%i' % (current_user.id, book_id)
+            last_task_id = cache.get(cache_key)
+            if last_task_id:
+                # cancel last task
+                result = AsyncResult(last_task_id)
+                if result:
+                    result.revoke()
+            result = tasks.sync_book_notes.delay(current_user.id, book, countdown=300)
+            cache.set(cache_key, result.id, timeout=300)
             flash('撰写笔记成功！', 'success')
             return redirect(url_for('note.create', book_id=book_id))
         else:
@@ -91,7 +102,16 @@ def edit(note_id):
         # TODO: Make update annotation async
         note = update_annotation(current_user, note)
         if note:
-            # TODO: sync note to evernote after edit
+            # sync note to evernote after edit
+            cache_key = 'sync_book_notes_%i_%i' % (current_user.id, note.book.id)
+            last_task_id = cache.get(cache_key)
+            if last_task_id:
+                # cancel last task
+                result = AsyncResult(last_task_id)
+                if result:
+                    result.revoke()
+            result = tasks.sync_book_notes.delay(current_user.id, note.book, countdown=300)
+            cache.set(cache_key, result.id, timeout=300)
             flash('编辑笔记成功！', 'success')
             return redirect(url_for('note.index', note_id=note.id))
         else:
