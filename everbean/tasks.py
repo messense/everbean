@@ -137,6 +137,6 @@ def sync_notes(user):
             sync_book_notes.delay(user.id, book, notes)
     if not user.enable_sync:
         return
-    books = user.books.all()
+    books = user.books
     # now we can sync notes to evernote
     map(_sync_notes_of_book, books)
