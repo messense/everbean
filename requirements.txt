@@ -6,6 +6,8 @@ cssmin
 pytz
 billiard
 kombu
+amqp
+anyjson
 celery
 jsmin
 douban-client

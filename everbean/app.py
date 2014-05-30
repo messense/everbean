@@ -4,6 +4,7 @@ from __future__ import (print_function, with_statement,
                         absolute_import, unicode_literals)
 import os
 import time
+import logging
 from flask import Flask, url_for, render_template, g
 from jinja2 import MemcachedBytecodeCache
 from everbean.utils import parse_config_file
@@ -65,6 +66,13 @@ def load_configuration(app, config, envvar, debug):
 
 
 def register_hooks(app):
+    @app.before_first_request
+    def setup_logging():
+        if not app.debug:
+            # In production mode, add log handler to sys.stderr.
+            app.logger.addHandler(logging.StreamHandler())
+            app.logger.setLevel(logging.INFO)
+
     @app.before_request
     def before_request():
         g.start_time = time.time()
