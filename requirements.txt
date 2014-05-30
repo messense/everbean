@@ -15,6 +15,7 @@ evernote
 gunicorn
 SqlAlchemy
 pylibmc
+raven
 Flask-WTF
 Flask-Cache
 Flask-SqlAlchemy
