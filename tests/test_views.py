@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals, with_statement
 import nose
 from flask import url_for
 from werkzeug.security import gen_salt

@@ -5,6 +5,7 @@ from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required
 from flask.ext.login import login_user
+from douban_client.api.error import DoubanAPIError
 from everbean.core import db, cache
 from everbean.models import User
 from everbean.ext.douban import get_douban_client
@@ -30,7 +31,12 @@ def douban():
     client = get_douban_client()
     client.auth_with_code(code)
 
-    me = client.user.me
+    try:
+        me = client.user.me
+    except DoubanAPIError as e:
+        app.logger.warning('Error happened: status(%s), reason(%s)' % (e.status, e.reason))
+        flash('豆瓣 OAuth 登录失败！', 'error')
+        return redirect(url_for('home.index'))
 
     user = User.query.filter_by(douban_id=me['id']).first()
     is_new_user = False

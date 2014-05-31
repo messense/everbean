@@ -1,6 +1,5 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
-import re
 from datetime import datetime
 import six
 from flask import current_app as app
@@ -8,8 +7,7 @@ from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
-
-_QUOTE_RE = re.compile(r'<原文开始>(.+)</原文结束>', re.S)
+from everbean.ext.markdown import douban_to_markdown, markdown_to_html, markdown_to_douban
 
 
 def small_book_cover(url):
@@ -68,7 +66,7 @@ def get_douban_books(user, client=None, books=None,
 
 
 def get_douban_annotations(user, client=None, annotations=None,
-                           start=0, count=100, format='html',
+                           start=0, count=100, format='text',
                            recursive=True):
     client = client or get_douban_client(user.douban_access_token)
     annotations = annotations or []
@@ -171,7 +169,8 @@ def import_books(user, client=None):
 
 def import_annotations(user, client=None):
     client = client or get_douban_client(user.douban_access_token)
-    annotations = get_douban_annotations(user, client)
+    fmt = 'text'
+    annotations = get_douban_annotations(user, client, format=fmt)
     books = get_books_from_annotations(annotations)
     for book in six.itervalues(books):
         the_book = Book.query.filter_by(douban_id=book['id']).first()
@@ -200,7 +199,12 @@ def import_annotations(user, client=None):
                 note.book_id = the_book.id
                 note.chapter = annotation['chapter'][:100]
                 note.summary = annotation['summary']
-                note.content_html = annotation['content']
+                if fmt == 'text':
+                    images = annotation.get('photos', None)
+                    note.content = douban_to_markdown(annotation['content'], images)
+                    note.content_html = markdown_to_html(note.content)
+                else:
+                    note.content_html = annotation['content']
                 note.created = annotation['time']
                 note.updated = annotation['time']
                 note.page_no = annotation['page_no']
@@ -233,7 +237,7 @@ def create_annotation(user, note, client=None):
     if note.private:
         privacy = 'private'
     data = dict(
-        content=note.content,
+        content=markdown_to_douban(note.content),
         privacy=privacy
     )
     if note.page_no > 0:
@@ -249,8 +253,7 @@ def create_annotation(user, note, client=None):
 
     note.douban_id = result['id']
     note.summary = result['summary']
-    annotation = get_annotation(user, note.douban_id, client, format='html')
-    note.content_html = annotation['content']
+    note.content_html = markdown_to_html(note.content)
     note.updated = datetime.now()
     db.session.add(note)
     db.session.commit()
@@ -281,11 +284,7 @@ def update_annotation(user, note, client=None):
         return False
 
     note.summary = result['summary']
-    annotation = get_annotation(user,
-                                note.douban_id,
-                                client,
-                                format='html')
-    note.content_html = annotation['content']
+    note.content_html = markdown_to_html(note.content)
     note.updated = datetime.now()
     db.session.add(note)
     db.session.commit()
@@ -306,13 +305,3 @@ def delete_annotation(user, note, client=None):
     except ValueError:
         return True
     return True
-
-
-def content_to_html(content):
-    def _make_quote(match):
-        text = match.group(1)
-        return '<blockquote><q>%s</q></blockquote>' % text
-
-    content = _QUOTE_RE.sub(_make_quote, content)
-
-    return content
