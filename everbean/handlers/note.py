@@ -119,3 +119,13 @@ def edit(note_id):
     return render_template('note/edit.html',
                            note=note,
                            form=form)
+
+
+@bp.route('/<int:note_id>/delete')
+@login_required
+def delete(note_id):
+    note = Note.query.get_or_404(note_id)
+    if current_user.id != note.user_id:
+        abort(403)
+
+    # TODO: delete note
