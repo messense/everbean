@@ -31,6 +31,8 @@ js_all = Bundle(
     'js/turbolinks.js',
     'js/bootstrap.min.js',
     'js/turbolinks-indicter.js',
+    'js/marked.js',
+    'js/editor.js',
     'js/everbean.js',
     filters='rjsmin',
     output='js/all.js'
@@ -39,9 +41,9 @@ assets.register('js_all', js_all)
 
 css_all = Bundle(
     'css/bootstrap.min.css',
+    'css/editor.css',
     'css/style.css',
     filters='cssmin',
     output='css/all.css'
 )
-
 assets.register('css_all', css_all)

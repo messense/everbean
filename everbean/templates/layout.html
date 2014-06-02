@@ -19,6 +19,7 @@
     {% assets "js_all" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
+    {% block head %}{% endblock %}
   </head>
   <body class="everbean">
     <header class="navbar navbar-fixed-top eb-navbar" id="top" role="banner">

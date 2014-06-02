@@ -15,6 +15,15 @@ jQuery(document).ready(function ($) {
       $('.eb-book-info .js-book').removeClass('js-book');
       $('#create-note').attr('action', '/note/create/' + target);
       $('#book_id').attr('value', target);
+      if ($('.CodeMirror').length == 0) {
+          var editor = new Editor({
+            element: document.getElementById('content'),
+            status: false
+        });
+        editor.render();
+      } else {
+
+      }
       $('.js-create-note').slideDown();
       $('.eb-books-reading').hide();
       return false;
