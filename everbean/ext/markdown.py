@@ -80,7 +80,7 @@ class MarkdownToDoubanRenderer(Renderer):
         return text
 
 
-class MarkdownToHTMLRender(Renderer):
+class MarkdownToHTMLRenderer(Renderer):
     def block_quote(self, text):
         return '<blockquote><q>%s\n</q></blockquote>' % text
 
@@ -121,5 +121,5 @@ def douban_to_markdown(text, images=None):
 
 
 def markdown_to_html(text):
-    md = Markdown(renderer=MarkdownToHTMLRender(), use_xhtml=True)
+    md = Markdown(renderer=MarkdownToHTMLRenderer(), use_xhtml=True)
     return md.render(text)
