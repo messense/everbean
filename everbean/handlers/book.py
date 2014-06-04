@@ -1,12 +1,16 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from sqlalchemy.orm import load_only, joinedload
-from flask import Blueprint, render_template, abort
-from flask.ext.login import current_user, login_required
+from flask import Blueprint, render_template, abort, request
+from flask.ext.login import current_user
 from everbean.models import Book, Note, User
 from everbean.core import cache
 from everbean.utils import ObjectDict
-from everbean.ext.evernote import generate_enml_makeup, enml_to_html
+from everbean.ext.evernote import (
+    generate_enml_makeup,
+    enml_to_html,
+    get_template_name
+)
 
 bp = Blueprint('book', __name__, url_prefix='/book')
 
@@ -119,6 +123,10 @@ def preview(book_id, uid, template='default'):
     ).order_by(Note.created.asc()).all()
     if not notes:
         abort(404)
+
+    template = request.args.get('template', template)
+    template = get_template_name(template)
+
     enml = generate_enml_makeup(book, book_notes, template)
     body = enml_to_html(enml)
     return render_template('book/preview.html',

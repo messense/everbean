@@ -62,11 +62,12 @@
     </div>
 </div>
 <div class="eb-sidebar col-md-4">
-{% if current_user %}
+{% if current_user.is_authenticated() %}
     <div class="eb-box">
         <header><span class="glyphicon glyphicon-user"></span> 操作</header>
         <section class="eb-box-inner">
             <a class="btn btn-default" href="{{ url_for('note.create', book_id=book.id) }}">撰写笔记</a>
+            <a class="btn btn-default" data-no-turbolink target="_blank" href="{{ url_for('book.preview', book_id=book.id, uid=current_user.douban_uid) }}">预览笔记</a>
         </section>
     </div>
 {% endif %}

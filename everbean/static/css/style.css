@@ -2,14 +2,11 @@ body {
     font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
     padding-top: 70px;
 }
-a:link {
+a {
     text-decoration: none;
     color: #396;
 }
-a:visited {
-    text-decoration: none;
-    color: #669;
-}
+
 .pagination>li>a, .pagination>li>span {
     color: #396;
 }
@@ -157,11 +154,6 @@ a:visited {
     margin-left: -8px;
 }
 
-.eb-main a:hover {
-    text-decoration: none;
-    background-color: #396;
-    color: #fff;
-}
 .eb-main a.logo {
     background: none;
     margin-bottom: 20px;

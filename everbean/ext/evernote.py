@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from collections import OrderedDict
 from flask import render_template, current_app as app
+from jinja2 import TemplateNotFound
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
@@ -23,6 +24,16 @@ def get_available_templates():
             name = tpl.replace('evernote/', '').replace('.xml', '')
             templates.append((name, name.capitalize()))
     return templates
+
+
+def get_template_name(template='default'):
+    templates = get_available_templates()
+    tpl_exists = filter(lambda t: t[0] == template, templates)
+    if not tpl_exists:
+        if template == 'default':
+            raise TemplateNotFound(message='default template not found')
+        template = 'default'
+    return template
 
 
 def enml_to_html(enml):

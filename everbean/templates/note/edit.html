@@ -1,6 +1,19 @@
 {% extends 'layout.html' %}
 {% from 'mixin.html' import form_field, radio_field %}
 {% block title %}编辑笔记{% endblock %}
+{% block head %}
+<script type="text/javascript">
+jQuery(document).ready(function ($) {
+    if ($('.CodeMirror').length == 0) {
+        var editor = new Editor({
+            element: document.getElementById('content'),
+            status: false
+        });
+        editor.render();
+    }
+});
+</script>
+{% endblock %}
 {% block main %}
 <div class="js-edit-note">
     <div class="col-sm-9">
@@ -9,7 +22,7 @@
                 <span class="glyphicon glyphicon-edit"></span> 编辑笔记
             </header>
             <div class="eb-box-inner">
-                <form id="create-note" action="" method="post">
+                <form id="edit-note" action="" method="post">
                     {{ form.hidden_tag() }}
                     {{ form_field(form.chapter) }}
                     {{ form_field(form.page_no) }}
