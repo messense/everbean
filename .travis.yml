@@ -2,6 +2,9 @@ language: python
 python:
   - 2.7
 
+services:
+  - memcached
+
 install:
   - pip install -r dev-requirements.txt
 
