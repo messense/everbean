@@ -13,13 +13,13 @@ jsmin
 douban-client
 evernote
 gunicorn
-SqlAlchemy
+SQLAlchemy
 pylibmc
 raven
 mistune
 Flask-WTF
 Flask-Cache
-Flask-SqlAlchemy
+Flask-SQLAlchemy
 Flask-DjangoQuery
 Flask-Login
 Flask-Script

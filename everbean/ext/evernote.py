@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+import re
 from datetime import datetime
 from collections import OrderedDict
 from flask import render_template, current_app as app
@@ -8,6 +9,9 @@ import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 from everbean.core import cache
 from everbean.utils import to_bytes
+
+
+_ENML_BODY_RE = re.compile(r'<\?.*?\?>\s*<!.*?>\s*<en\-note>(.+)</en\-note>', re.I | re.S)
 
 
 @cache.cached(300, key_prefix='available_templates')
@@ -19,6 +23,11 @@ def get_available_templates():
             name = tpl.replace('evernote/', '').replace('.xml', '')
             templates.append((name, name.capitalize()))
     return templates
+
+
+def enml_to_html(enml):
+    html = _ENML_BODY_RE.sub(r'\1', enml)
+    return html.strip()
 
 
 def get_service_host(is_i18n=True):

@@ -77,7 +77,7 @@ def index(book_id):
         ).limit(12).all()
 
     book = _get_book(book_id)
-    notes = _get_notes(book_id)
+    book_notes = _get_notes(book_id)
     users = ObjectDict()
     users.wish = _get_wish_users(book_id)
     users.reading = _get_reading_users(book_id)
@@ -87,6 +87,28 @@ def index(book_id):
     return render_template(
         'book/index.html',
         book=book,
-        notes=notes,
+        notes=book_notes,
         users=users,
     )
+
+
+@bp.route('/<int:book_id>/notes')
+@bp.route('/<int:book_id>/notes/<int:page>')
+def notes(book_id, page=1):
+    book = Book.query.get_or_404(book_id)
+    book_notes = Note.query.options(joinedload('user')).filter_by(
+        book_id=book_id
+    ).order_by(Note.created.desc())
+    pager = book_notes.paginate(page)
+    return render_template('book/notes.html',
+                           book=book,
+                           pager=pager)
+
+
+@bp.route('/<int:book_id>/<uid>/notes')
+def preview(book_id, uid):
+    if current_user.douban_uid == uid:
+        user = current_user
+    else:
+        user = User.query.filter_by(douban_uid=uid).first_or_404()
+    book = Book.query.get_or_404(book_id)

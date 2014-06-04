@@ -8,10 +8,22 @@ from celery.result import AsyncResult
 from everbean.models import Book, Note, UserBook
 from everbean.core import db, cache
 from everbean.forms import CreateNoteForm, EditNoteForm
-from everbean.ext.douban import create_annotation, update_annotation
+from everbean.ext.douban import create_annotation, update_annotation, delete_annotation
 from everbean import tasks
 
 bp = Blueprint('note', __name__, url_prefix='/note')
+
+
+def _sync_user_book_notes(user, book):
+    cache_key = 'sync_book_notes_%i_%i' % (user.id, book.id)
+    last_task_id = cache.get(cache_key)
+    if last_task_id:
+        # cancel last task
+        result = AsyncResult(last_task_id)
+        if result:
+            result.revoke()
+    result = tasks.sync_book_notes.delay(user.id, book, countdown=300)
+    cache.set(cache_key, result.id, timeout=300)
 
 
 @bp.route('/create', defaults={'book_id': 0})
@@ -58,15 +70,7 @@ def create(book_id):
             db.session.add(user_book)
             db.session.commit()
             # sync note to evernote after create
-            cache_key = 'sync_book_notes_%i_%i' % (current_user.id, book_id)
-            last_task_id = cache.get(cache_key)
-            if last_task_id:
-                # cancel last task
-                result = AsyncResult(last_task_id)
-                if result:
-                    result.revoke()
-            result = tasks.sync_book_notes.delay(current_user.id, book, countdown=300)
-            cache.set(cache_key, result.id, timeout=300)
+            _sync_user_book_notes(current_user, book)
             flash('撰写笔记成功！', 'success')
             return redirect(url_for('note.create', book_id=book_id))
         else:
@@ -103,15 +107,7 @@ def edit(note_id):
         note = update_annotation(current_user, note)
         if note:
             # sync note to evernote after edit
-            cache_key = 'sync_book_notes_%i_%i' % (current_user.id, note.book.id)
-            last_task_id = cache.get(cache_key)
-            if last_task_id:
-                # cancel last task
-                result = AsyncResult(last_task_id)
-                if result:
-                    result.revoke()
-            result = tasks.sync_book_notes.delay(current_user.id, note.book, countdown=300)
-            cache.set(cache_key, result.id, timeout=300)
+            _sync_user_book_notes(current_user, note.book)
             flash('编辑笔记成功！', 'success')
             return redirect(url_for('note.index', note_id=note.id))
         else:
@@ -128,4 +124,13 @@ def delete(note_id):
     if current_user.id != note.user_id:
         abort(403)
 
-    # TODO: delete note
+    result = delete_annotation(current_user, note)
+    if result:
+        db.session.delete(note)
+        db.session.commit()
+        # sync note to evernote after delete
+        _sync_user_book_notes(current_user, note.book)
+        flash('笔记删除成功！', 'success')
+    else:
+        flash('笔记删除失败', 'error')
+    return redirect(url_for('note.index', note_id=note_id))
