@@ -13,13 +13,14 @@ $(document).on 'click', '.js-book', ->
   $('.eb-book-info .js-book').removeClass 'js-book'
   $('#create-note').attr 'action', '/note/create/#{target}'
   $('#book_id').attr 'value', target
-  if $('textarea#content').length > 0
-    if $('.CodeMirror').length is 0
-      editor = new Editor({
-        element: document.getElementById('content'),
-        status: false
-      })
-      editor.render()
+
+  if $('#content').length > 0 and $('.CodeMirror').length is 0
+    editor = new Editor({
+      element: document.getElementById('content'),
+      status: false
+    })
+    editor.render()
+
   $('.js-create-note').show()
   $('.eb-books-reading').hide()
   false
