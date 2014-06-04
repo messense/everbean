@@ -1,11 +1,12 @@
 # coding=utf-8
 from __future__ import unicode_literals
 from sqlalchemy.orm import load_only, joinedload
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 from flask.ext.login import current_user, login_required
 from everbean.models import Book, Note, User
 from everbean.core import cache
 from everbean.utils import ObjectDict
+from everbean.ext.evernote import generate_enml_makeup, enml_to_html
 
 bp = Blueprint('book', __name__, url_prefix='/book')
 
@@ -106,9 +107,21 @@ def notes(book_id, page=1):
 
 
 @bp.route('/<int:book_id>/<uid>/notes')
-def preview(book_id, uid):
+def preview(book_id, uid, template='default'):
     if current_user.douban_uid == uid:
         user = current_user
     else:
         user = User.query.filter_by(douban_uid=uid).first_or_404()
     book = Book.query.get_or_404(book_id)
+    book_notes = Note.query.filter_by(
+        user_id=user.id,
+        book_id=book.id
+    ).order_by(Note.created.asc()).all()
+    if not notes:
+        abort(404)
+    enml = generate_enml_makeup(book, book_notes, template)
+    body = enml_to_html(enml)
+    return render_template('book/preview.html',
+                           user=user,
+                           book=book,
+                           body=body)
