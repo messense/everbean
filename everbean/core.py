@@ -27,13 +27,19 @@ mail = Mail()
 assets = Environment()
 
 js_all = Bundle(
-    'js/jquery.min.js',
-    'js/turbolinks.js',
-    'js/bootstrap.min.js',
-    'js/turbolinks-indicter.js',
-    'js/marked.js',
-    'js/editor.js',
-    'js/everbean.js',
+    'js/libs/jquery.min.js',
+    'js/libs/turbolinks.js',
+    'js/libs/bootstrap.min.js',
+    Bundle(
+        'js/coffee/turbolinks-indicter.coffee',
+        filters='coffeescript'
+    ),
+    'js/libs/marked.js',
+    'js/libs/editor.js',
+    Bundle(
+        'js/coffee/everbean.coffee',
+        filters='coffeescript'
+    ),
     filters='rjsmin',
     output='js/all.js'
 )
