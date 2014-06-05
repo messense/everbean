@@ -5,7 +5,7 @@ include README.md
 include requirements.txt
 include optional-requirements.txt
 
-exclude everbean/static/js/all.js
-exclude everbean/static/css/all.css
+exclude everbean/static/js/everbean.js
+exclude everbean/static/css/everbean.css
 recursive-exclude * .DS_Store
 recursive-exclude everbean/static/.webassets-cache *

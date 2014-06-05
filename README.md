@@ -19,7 +19,7 @@ sudo apt-get install build-essential python-software-properties python python-de
 sudo add-apt-repository -y ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get -y install nodejs memcached libmemcached-dev rabbitmq-server mysql-server
-sudo npm install -g coffee-script
+sudo npm install -g coffee-script less
 ```
 
 But on Debian you have to install `nodejs` by yourself according to [Node Installation Wiki](https://github.com/joyent/node/wiki/Installation),
@@ -29,7 +29,7 @@ after that you can install the rest of the softwares by:
 sudo apt-get update
 sudo apt-get install build-essential python-software-properties python python-dev
 sudo apt-get -y install memcached libmemcached-dev rabbitmq-server mysql-server
-sudo npm install -g coffee-script
+sudo npm install -g coffee-script less
 ```
 
 ## Installation
