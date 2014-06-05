@@ -9,6 +9,28 @@ Sync notes from book.douban.com to Evernote
 [![funcs](https://sourcegraph.com/api/repos/github.com/messense/everbean/badges/funcs.png)](https://sourcegraph.com/github.com/messense/everbean)
 [![top func](https://sourcegraph.com/api/repos/github.com/messense/everbean/badges/top-func.png)](https://sourcegraph.com/github.com/messense/everbean)
 
+## Server requirements
+
+Install required softwares on Ubuntu by:
+
+```bash
+sudo apt-get update
+sudo apt-get install build-essential python-software-properties python python-dev
+sudo add-apt-repository -y ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get -y install nodejs memcached libmemcached-dev rabbitmq-server mysql-server
+sudo npm install -g coffee-script
+```
+
+But on Debian you have to install `nodejs` by yourself according to [NodeJs Installation Wiki](https://github.com/joyent/node/wiki/Installation),
+after that you can install the rest of the softwares by:
+
+```bash
+sudo apt-get update
+sudo apt-get install build-essential python-software-properties python python-dev
+sudo apt-get -y install memcached libmemcached-dev rabbitmq-server mysql-server
+sudo npm install -g coffee-script
+```
 
 ## Installation
 

@@ -5,6 +5,8 @@ python:
 services:
   - memcached
 
+cache: apt
+
 install:
   - sudo apt-get install python-software-properties python g++ make
   - sudo add-apt-repository -y ppa:chris-lea/node.js
