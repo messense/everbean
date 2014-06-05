@@ -1,0 +1,57 @@
+@media (min-width: 768px) {
+  .eb-box {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 1px 0 #ccc;
+
+    .eb-box-inner {
+      padding: 20px;
+    }
+
+    > header {
+      padding: 10px 0 10px 10px;
+      background-color: #f6faf9;
+      border-radius: 5px;
+    }
+  }
+
+  .everbean {
+    background-color: #eee;
+  }
+
+  .book {
+    margin-right: 27px;
+  }
+
+  .eb-sidebar {
+    .book {
+      margin-right: 52px;
+
+      &:nth-child(3n) {
+        margin-right: 52px;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .everbean .container {
+    width: 970px;
+  }
+
+  .book {
+    margin-right: 71px;
+  }
+
+  .eb-sidebar .book {
+    margin-right: 24px;
+
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+}

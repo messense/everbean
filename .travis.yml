@@ -12,7 +12,7 @@ install:
   - sudo add-apt-repository -y ppa:chris-lea/node.js
   - sudo apt-get update
   - sudo apt-get -y install nodejs
-  - sudo npm install -g coffee-script
+  - sudo npm install -g coffee-script less
   - pip install -r dev-requirements.txt
 
 script: coverage run setup.py -q nosetests

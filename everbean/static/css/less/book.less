@@ -1,0 +1,87 @@
+@book-color: #37a;
+
+.book-list {
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.paged-book-list li {
+  margin-bottom: 20px;
+}
+
+.book {
+  position: relative;
+  float: left;
+  width: 90px;
+  margin: 0 6px 20px 0;
+  list-style: none;
+
+  &:nth-child(6n), &:last-child {
+    margin-right: 0;
+  }
+
+  .book-title {
+    margin-top: 0;
+    font-size: 20px;
+
+    a {
+      color: @book-color;
+      &:hover {
+        color: @book-color;
+      }
+    }
+    h3 {
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .book-cover {
+    width: 90px;
+    height: 140px;
+    margin-bottom: 12px;
+
+    img {
+      width: 90px;
+      height: 140px;
+    }
+  }
+}
+
+.book-intro span {
+  font-size: 12px;
+  margin-right: 5px;
+  color: #666;
+}
+
+.eb-book-info {
+  ul {
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .book {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.eb-sidebar .book {
+  margin-right: 22px;
+  width: 64px;
+
+  .book-cover {
+    width: 64px;
+    height: 100px;
+
+    img {
+      width: 64px;
+      height: 100px;
+    }
+  }
+}

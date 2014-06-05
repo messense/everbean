@@ -22,7 +22,7 @@ sudo apt-get -y install nodejs memcached libmemcached-dev rabbitmq-server mysql-
 sudo npm install -g coffee-script
 ```
 
-But on Debian you have to install `nodejs` by yourself according to [NodeJs Installation Wiki](https://github.com/joyent/node/wiki/Installation),
+But on Debian you have to install `nodejs` by yourself according to [Node Installation Wiki](https://github.com/joyent/node/wiki/Installation),
 after that you can install the rest of the softwares by:
 
 ```bash
@@ -63,6 +63,10 @@ to migrate database to the latest version.
 ## Clear cache
 
 Run `python manage.py clear_cache` to clear any existing caches in memcached.
+
+## Build assets
+
+Run `python manage.py assets build` to build all required css/javascript assets. This is optional.
 
 ## Start a server for development
 

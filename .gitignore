@@ -62,5 +62,5 @@ docs/_build/
 config.py
 !tests/config.py
 everbean/static/.webassets-cache
-everbean/static/css/all.css
-everbean/static/js/all.js
+everbean/static/css/everbean.css
+everbean/static/js/everbean.js
