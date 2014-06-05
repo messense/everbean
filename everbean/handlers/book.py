@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from sqlalchemy.orm import load_only, joinedload
 from flask import Blueprint, render_template, abort, request
-from flask.ext.login import current_user
+from flask.ext.login import current_user, login_required
 from everbean.models import Book, Note, User
 from everbean.core import cache
 from everbean.utils import ObjectDict
@@ -111,6 +111,7 @@ def notes(book_id, page=1):
 
 
 @bp.route('/<int:book_id>/<uid>/notes')
+@login_required
 def preview(book_id, uid, template='default'):
     if current_user.douban_uid == uid:
         user = current_user

@@ -15,10 +15,9 @@ $(document).on 'click', '.js-book', ->
   $('#book_id').attr 'value', target
 
   if $('#content').length > 0 and $('.CodeMirror').length is 0
-    editor = new Editor({
+    editor = new Editor
       element: document.getElementById('content'),
       status: false
-    })
     editor.render()
 
   $('.js-create-note').show()
