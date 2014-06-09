@@ -67,7 +67,6 @@ def douban():
     tasks.sync_books.delay(user)
     if is_new_user:
         tasks.import_douban_annotations.delay(user)
-        tasks.sync_notes(user)
 
     # clear cache
     cache.clear()

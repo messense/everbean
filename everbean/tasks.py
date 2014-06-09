@@ -56,18 +56,18 @@ def refresh_douban_access_token(user):
         db.session.add(user)
         db.session.commit()
     else:
-        app.logger.warning('Refresh token for user %s error.' %
-                           user.douban_uid)
+        app.logger.error('Refresh token for user %s error.' % user.douban_uid)
 
 
 @celery.task
 def sync_books(user):
-    """ Sync reading status books """
+    app.logger.info('Syncing books for user %s' % user.douban_uid)
     import_books(user)
 
 
 @celery.task
 def import_douban_annotations(user):
+    app.logger.info('Syncing annotations for user %s' % user.douban_uid)
     import_annotations(user)
 
 
