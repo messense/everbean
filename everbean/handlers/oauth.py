@@ -64,9 +64,9 @@ def douban():
     login_user(user, remember=True)
 
     # sync books to database for the first time
-    tasks.sync_books.delay(user)
+    tasks.sync_books.delay(user.id)
     if is_new_user:
-        tasks.import_douban_annotations.delay(user)
+        tasks.import_douban_annotations.delay(user.id)
 
     # clear cache
     cache.clear()

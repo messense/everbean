@@ -38,7 +38,10 @@ def send_mail(messages):
 
 
 @celery.task
-def refresh_douban_access_token(user):
+def refresh_douban_access_token(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return
     client = get_douban_client()
     client.refresh_token(user.douban_refresh_token)
     me = client.user.me
@@ -60,14 +63,18 @@ def refresh_douban_access_token(user):
 
 
 @celery.task
-def sync_books(user):
-    app.logger.info('Syncing books for user %s' % user.douban_uid)
+def sync_books(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return
     import_books(user)
 
 
 @celery.task
-def import_douban_annotations(user):
-    app.logger.info('Syncing annotations for user %s' % user.douban_uid)
+def import_douban_annotations(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return
     import_annotations(user)
 
 

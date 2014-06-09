@@ -82,14 +82,14 @@ def refresh_access_token():
         douban_expires_at__lte=expires_time
     ).all()
     for user in users:
-        tasks.refresh_douban_access_token.delay(user)
+        tasks.refresh_douban_access_token.delay(user.id)
 
 
 @manager.command
 def sync_books():
     users = User.query.filter_by(enable_sync=True).all()
     for user in users:
-        tasks.sync_books.delay(user)
+        tasks.sync_books.delay(user.id)
 
 
 @manager.command
