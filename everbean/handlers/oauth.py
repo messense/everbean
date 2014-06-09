@@ -69,11 +69,6 @@ def douban():
         tasks.import_douban_annotations.delay(user)
         tasks.sync_notes(user)
 
-    # clear homepage cache
-    cache.delete('reading_books_12')
-    cache.delete('read_books_12')
-    cache.delete('wish_books_12')
-
     return redirect(url_for('home.index'))
 
 
