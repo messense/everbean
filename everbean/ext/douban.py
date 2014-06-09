@@ -51,8 +51,8 @@ def get_douban_books(user, client=None, books=None,
             )
         )
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
         return books
     books.extend(result['collections'])
     total = result['total']
@@ -82,8 +82,8 @@ def get_douban_annotations(user, client=None, annotations=None,
             )
         )
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
         return annotations
     annotations.extend(annos['annotations'])
     total = annos['total']
@@ -223,8 +223,8 @@ def get_annotation(user, douban_id, client=None, format='text'):
     try:
         annotation = client.book.get(entrypoint)
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
     return annotation
 
 
@@ -247,8 +247,8 @@ def create_annotation(user, note, client=None):
     try:
         result = client.book._post(entrypoint, **data)
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
         return False
 
     note.douban_id = result['id']
@@ -279,8 +279,8 @@ def update_annotation(user, note, client=None):
     try:
         result = client.book._put(entrypoint, **data)
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
         return False
 
     note.summary = result['summary']
@@ -299,8 +299,8 @@ def delete_annotation(user, note, client=None):
     try:
         client.book._delete(entrypoint)
     except DoubanAPIError as e:
-        app.logger.error('DoubanAPIError status: %s' % e.status)
-        app.logger.error('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s' % e.status)
+        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
         return False
     except ValueError:
         return True

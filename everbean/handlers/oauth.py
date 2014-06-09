@@ -69,6 +69,9 @@ def douban():
         tasks.import_douban_annotations.delay(user)
         tasks.sync_notes(user)
 
+    # clear cache
+    cache.clear()
+
     return redirect(url_for('home.index'))
 
 

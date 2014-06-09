@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
-from everbean.core import mail, db, celery, cache
+from everbean.core import mail, db, celery
 from everbean.models import User, Note
 from everbean.ext.douban import (
     get_douban_client,
@@ -64,13 +64,11 @@ def refresh_douban_access_token(user):
 def sync_books(user):
     """ Sync reading status books """
     import_books(user)
-    cache.clear()
 
 
 @celery.task
 def import_douban_annotations(user):
     import_annotations(user)
-    cache.clear()
 
 
 @celery.task
@@ -142,4 +140,3 @@ def sync_notes(user):
     books = user.books
     # now we can sync notes to evernote
     map(_sync_notes_of_book, books)
-    cache.clear()
