@@ -62,10 +62,10 @@ def test_enml_makeup():
         makeup = generate_enml_makeup(book, notes)
         assert '<en-note>' in makeup
         assert '</en-note>' in makeup
-        assert '<h2 style="font-size:18pt; text-align:right;">%s</h2>' % \
-               book.title in makeup
-        assert '<h5 style="font-size:12pt; text-align:right; color:gray;">%s</h5>' % \
-               book.author in makeup
+        assert '<h2 style="font-size:18pt; text-align:right;">' \
+               '{title}</h2>'.format(title=book.title) in makeup
+        assert '<h5 style="font-size:12pt; text-align:right; color:gray;">' \
+               '{author}</h5>'.format(author=book.author) in makeup
         assert '__DEFAULT__' not in makeup
         assert '<span style="font-weight:bold; background-color:white;' \
                'position:relative;">Chapter 1</span>' in makeup

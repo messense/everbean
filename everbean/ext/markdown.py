@@ -11,16 +11,19 @@ _DOUBAN_IMAGE_RE = re.compile('<图片(\d+)>')
 
 class MarkdownToDoubanRenderer(Renderer):
     def block_quote(self, text):
-        return '<原文开始>\n%s</原文结束>' % text
+        return '<原文开始>\n{text}</原文结束>'.format(text=text)
 
     def block_code(self, code, lang=None):
         if not lang:
             return code
         code = code.rstrip()
-        return '<代码开始 lang="%s">\n%s\n</代码结束>' % (lang, code)
+        return '<代码开始 lang="{lang}">\n{code}\n</代码结束>'.format(
+            lang=lang,
+            code=code
+        )
 
     def image(self, src, title, text):
-        return '<%s>' % text
+        return '<{text}>'.format(text=text)
 
     def block_html(self, html):
         return ''
@@ -38,7 +41,7 @@ class MarkdownToDoubanRenderer(Renderer):
         return text
 
     def paragraph(self, text):
-        return '%s\n' % text
+        return '{text}\n'.format(text=text)
 
     def table(self, header, body):
         return ''
@@ -82,7 +85,7 @@ class MarkdownToDoubanRenderer(Renderer):
 
 class MarkdownToHTMLRenderer(Renderer):
     def block_quote(self, text):
-        return '<blockquote>%s\n</blockquote>' % text
+        return '<blockquote>{text}\n</blockquote>'.format(text=text)
 
 
 def markdown_to_douban(text):
@@ -97,20 +100,26 @@ def douban_to_markdown(text, images=None):
         bq = m.group(1)
         bq = re.sub(r'^\n', '', bq)
         bq = re.sub(r'\n$', '', bq)
-        return '> %s' % bq
+        return '> {quote}'.format(quote=bq)
 
     def _code(m):
         lang = m.group(1)
         code = m.group(2)
         if not code.startswith('\n'):
-            code = '\n%s' % code
+            code = '\n{code}'.format(code=code)
         if not code.endswith('\n'):
-            code = '%s\n' % code
-        return '```%s%s```' % (lang, code)
+            code = '{code}\n'.format(code=code)
+        return '```{lang}{code}```'.format(
+            lang=lang,
+            code=code
+        )
 
     def _image(m):
         _id = m.group(1)
-        return '![图片%s](%s)' % (_id, images[_id])
+        return '![图片{id}]({url})'.format(
+            id=_id,
+            url=images[_id]
+        )
 
     text = to_text(text)
     text = _DOUBAN_QUOTE_RE.sub(_quote, text)

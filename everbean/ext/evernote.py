@@ -75,13 +75,14 @@ def find_note(note_store, guid):
         note = note_store.getNote(guid, False, False, False, False)
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[find_note] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
     except Errors.EDAMNotFoundException:
         app.logger.exception(
-            '[find_note] EDAMNotFoundException: '
-            'Invalid note GUID (%s).' % guid
+            'EDAMNotFoundException: Invalid note GUID (%s).',
+            guid
         )
     return note
 
@@ -92,8 +93,9 @@ def get_notebooks(note_store):
         notebooks = note_store.listNotebooks()
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[get_notebooks] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
     return notebooks
 
@@ -107,8 +109,9 @@ def create_notebook(note_store, name):
         notebook = note_store.createNotebook(notebook)
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[create_notebook] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
     return notebook
 
@@ -125,14 +128,15 @@ def get_notebook(note_store, guid=None, name=None):
         notebook = note_store.getNotebook(guid)
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[get_notebook] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
         error = True
     except Errors.EDAMNotFoundException:
         app.logger.exception(
-            '[get_notebook] EDAMNotFoundException: '
-            'Invalid notebook GUID (%s).' % guid
+            'EDAMNotFoundException: Invalid notebook GUID (%s).',
+            guid
         )
         error = True
     if error:
@@ -146,13 +150,14 @@ def create_note(note_store, note):
         note = note_store.createNote(note)
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[create_note] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
     except Errors.EDAMNotFoundException:
         app.logger.exception(
-            '[create_note] EDAMNotFoundException: '
-            'Invalid notebook GUID (%s).' % note.notebookGuid
+            'EDAMNotFoundException: Invalid notebook GUID (%s).',
+            note.notebookGuid
         )
     return note
 
@@ -162,13 +167,13 @@ def update_note(note_store, note):
         note = note_store.updateNote(note)
     except Errors.EDAMUserException as eue:
         app.logger.exception(
-            '[update_note] EDAMUserException code: %i, '
-            'paramter: %s' % (eue.errorCode, eue.parameter)
+            'EDAMUserException code: %i, paramter: %s',
+            eue.errorCode,
+            eue.parameter
         )
     except Errors.EDAMNotFoundException:
         app.logger.exception(
-            '[update_note] EDAMNotFoundException: '
-            'Invalid notebook or note GUID.'
+            'EDAMNotFoundException: Invalid notebook or note GUID.'
         )
     return note
 
@@ -181,7 +186,7 @@ def create_or_update_note(note_store, note):
 
 def generate_enml_makeup(book, notes=None, template='default'):
     notes = notes or book.notes
-    template = 'evernote/%s.xml' % template
+    template = 'evernote/{template}.xml'.format(template=template)
     annotations = OrderedDict()
     for note in notes:
         chapter = note.chapter

@@ -56,7 +56,7 @@ class User(db.Model, UserMixin):
         return url_for('user.index', uid=self.douban_uid)
 
     def __repr__(self):
-        return b'<User(%s)>' % self.douban_uid
+        return b'<User({uid})>'.format(uid=self.douban_uid)
 
 
 class UserBook(db.Model):
@@ -100,7 +100,10 @@ class UserBook(db.Model):
         self.evernote_guid = evernote_guid
 
     def __repr__(self):
-        return b'<UserBook(%s, %s)>' % (self.user_id, self.book_id)
+        return b'<UserBook({user_id}, {book_id})>'.format(
+            user_id=self.user_id,
+            book_id=self.book_id
+        )
 
 
 class Book(db.Model):
@@ -125,7 +128,7 @@ class Book(db.Model):
     @property
     def alt(self):
         if self.douban_id:
-            return 'http://book.douban.com/subject/%s' % self.douban_id
+            return 'http://book.douban.com/subject/{id}'.format(id=self.douban_id)
         return ''
 
     @property
@@ -133,7 +136,10 @@ class Book(db.Model):
         return url_for('book.index', book_id=self.id)
 
     def __repr__(self):
-        return b'<Book(%s, %s)>' % (self.id, to_bytes(self.title))
+        return b'<Book({id}, {title})>'.format(
+            id=self.id,
+            title=to_bytes(self.title)
+        )
 
 
 class Note(db.Model):
@@ -155,7 +161,7 @@ class Note(db.Model):
     @property
     def alt(self):
         if self.douban_id:
-            return 'http://book.douban.com/annotation/%s/' % self.douban_id
+            return 'http://book.douban.com/annotation/{id}/'.format(id=self.douban_id)
         return ''
 
     @property
@@ -163,4 +169,8 @@ class Note(db.Model):
         return url_for('note.index', note_id=self.id)
 
     def __repr__(self):
-        return b'<Note(%s, %s, %s)>' % (self.id, self.book_id, self.douban_id)
+        return b'<Note({id}, {book_id}, {douban_id})>'.format(
+            id=self.id,
+            book_id=self.book_id,
+            douban_id=self.douban_id
+        )

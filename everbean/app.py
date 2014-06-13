@@ -61,8 +61,11 @@ def load_configuration(app, config, envvar, debug):
             'EVERNOTE_CONSUMER_SECRET',
             'SQLALCHEMY_DATABASE_URI'):
         if not app.config[name]:
-            print('Configuration %s is not set, '
-                  'application may not work as expected.' % name)
+            app.logger.warning(
+                'Configuration %s is not set, '
+                'application may not work as expected.',
+                name
+            )
 
 
 def register_hooks(app):

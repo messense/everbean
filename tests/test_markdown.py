@@ -51,34 +51,37 @@ def test_douban_to_markdown_image():
 
 
 def test_markdown_to_douban_quote():
-    expect = '<原文开始>\n%s\n</原文结束>'
+    expect = '<原文开始>\n{text}\n</原文结束>'
     s = '>test'
     r = markdown_to_douban(s)
-    assert r == expect % 'test'
+    assert r == expect.format(text='test')
 
     s = ' > test'
     r = markdown_to_douban(s)
-    assert r == expect % 'test'
+    assert r == expect.format(text='test')
 
     s = ' > test \n> test'
     r = markdown_to_douban(s)
     print(r)
-    assert r == expect % 'test \ntest'
+    assert r == expect.format(text='test \ntest')
 
 
 def test_markdown_to_douban_code():
-    expect = '<代码开始 lang="%s">\n%s\n</代码结束>'
+    expect = '<代码开始 lang="{lang}">\n{code}\n</代码结束>'
     s = '```python\nimport os\n```'
     r = markdown_to_douban(s)
-    assert r == expect % ('python', 'import os')
+    assert r == expect.format(
+        lang='python',
+        code='import os'
+    )
 
 
 def test_markdown_to_douban_image():
-    expect = '<图片%s>\n'
+    expect = '<图片{id}>\n'
     s = '![图片1](1.jpg)'
     r = markdown_to_douban(s)
     print(r)
-    assert r == expect % '1'
+    assert r == expect.format(id='1')
 
 
 if __name__ == '__main__':

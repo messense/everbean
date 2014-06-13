@@ -135,7 +135,7 @@ def bind():
         db.session.add(current_user)
         db.session.commit()
 
-        flash('成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+        flash('成功绑定 Evernote 账号 {name} ！'.format(name=user.username), 'success')
         return redirect(url_for('home.index'))
     else:
         tp = request.args.get('type', '0')
@@ -163,7 +163,10 @@ def unbind():
         current_user.evernote_access_token = ''
         db.session.add(current_user)
         db.session.commit()
-        flash('已经解除本帐户与 %s 帐号 %s 的绑定。' % (service_name, username), 'success')
+        flash('已经解除本帐户与 {service} 帐号 {name} 的绑定。'.format(
+            service=service_name,
+            name=username
+        ), 'success')
     return redirect(url_for('account.settings'))
 
 

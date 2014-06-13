@@ -19,7 +19,7 @@ from everbean.models import User
 class SettingsForm(Form):
     enable_sync = BooleanField('启用笔记同步')
     email = TextField('电子邮件', validators=[
-        Email(),
+        Email(message='请输入有效的 Email 地址。'),
         Optional(),
     ])
     evernote_notebook = SelectField('默认笔记本', validators=[
@@ -38,7 +38,7 @@ class SettingsForm(Form):
 
 class CreateNoteForm(Form):
     book_id = HiddenField('书籍 ID', default=0, validators=[
-        DataRequired()
+        DataRequired(message='必须提供书籍 ID 。')
     ])
     chapter = TextField('章节名', validators=[
         Optional(),
@@ -52,7 +52,7 @@ class CreateNoteForm(Form):
         ('1', '仅自己可见')
     ], default='2')
     content = TextAreaField('笔记内容', validators=[
-        DataRequired(),
+        DataRequired(message='笔记内容不能为空。'),
         Length(min=16, message='笔记内容长度必须大于 15 字。')
     ])
 
@@ -70,6 +70,6 @@ class EditNoteForm(Form):
         ('1', '仅自己可见')
     ], default='2')
     content = TextAreaField('笔记内容', validators=[
-        DataRequired(),
+        DataRequired(message='笔记内容不能为空。'),
         Length(min=16, message='笔记内容长度必须大于 15 字。')
     ])

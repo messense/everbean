@@ -24,7 +24,7 @@ def douban():
     error = request.args.get('error', '')
     code = request.args.get('code', '')
     if error or (not code):
-        app.logger.warning('Error happened: %s' % error)
+        app.logger.warning('Error happened: %s', error)
         flash('豆瓣 OAuth 登录失败！', 'error')
         return redirect(url_for('home.index'))
 
@@ -34,7 +34,7 @@ def douban():
     try:
         me = client.user.me
     except DoubanAPIError as e:
-        app.logger.warning('Error happened: status(%s), reason(%s)' % (e.status, e.reason))
+        app.logger.error('Error happened: status(%s), reason(%s)', e.status, e.reason)
         flash('豆瓣 OAuth 登录失败！', 'error')
         return redirect(url_for('home.index'))
 
@@ -92,7 +92,6 @@ def evernote():
         oauth_token_secret,
         oauth_verifier
     )
-    app.logger.debug('evernote auth_token: %s' % auth_token)
 
     if auth_token:
         client = get_evernote_client(is_i18n, auth_token)
@@ -109,9 +108,9 @@ def evernote():
         c_user = User.query.filter_by(id=current_user.id).first()
         tasks.sync_notes(c_user)
         if is_i18n:
-            flash('成功绑定 Evernote 账号 %s ！' % user.username, 'success')
+            flash('成功绑定 Evernote 账号 {name} ！'.format(name=user.username), 'success')
         else:
-            flash('成功绑定 印象笔记 账号 %s ！' % user.username, 'success')
+            flash('成功绑定 印象笔记 账号 {name} ！'.format(name=user.username), 'success')
         return redirect(url_for('home.index'))
     else:
         if is_i18n:

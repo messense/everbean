@@ -64,7 +64,7 @@ def syncdb():
         print('Database creation succeed.')
     except Exception as e:
         print('Database creation failed.')
-        print('Exception message: %s' % e.message)
+        print('Exception message: {msg}'.format(msg=e.message))
 
 
 @manager.command

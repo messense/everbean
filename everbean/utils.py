@@ -52,14 +52,16 @@ def to_bytes(s, encoding='utf-8', errors='strict'):
 
 def parse_config_file(app, filename):
     if not filename or not os.path.exists(filename):
-        app.logger.warning('Configuration file %s does not exist.' % filename)
+        app.logger.warning('Configuration file %s does not exist.', filename)
         return
     if filename.endswith('.py'):
         try:
             app.config.from_pyfile(filename)
         except IOError:
-            app.logger.warning('Cannot load configuration '
-                               'from python file %s' % filename)
+            app.logger.warning(
+                'Cannot load configuration from python file %s',
+                filename
+            )
     else:
         app.config.from_object(filename)
 

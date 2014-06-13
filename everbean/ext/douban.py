@@ -41,18 +41,18 @@ def get_douban_books(user, client=None, books=None,
                      start=0, count=100, recursive=True):
     client = client or get_douban_client(user.douban_access_token)
     books = books or []
-    entrypoint = 'user/%s/collections?count=%i&start=%i'
+    entrypoint = 'user/{uid}/collections?count={count}&start={start}'
     try:
         result = client.book.get(
-            entrypoint % (
-                user.douban_uid,
-                count,
-                start
+            entrypoint.format(
+                uid=user.douban_uid,
+                count=count,
+                start=start
             )
         )
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return books
     books.extend(result['collections'])
     total = result['total']
@@ -70,20 +70,20 @@ def get_douban_annotations(user, client=None, annotations=None,
                            recursive=True):
     client = client or get_douban_client(user.douban_access_token)
     annotations = annotations or []
-    entrypoint = 'user/%s/annotations?count=%i' \
-                 '&start=%i&format=%s&order=collect'
+    entrypoint = 'user/{uid}/annotations?count={count}' \
+                 '&start={start}&format={format}&order=collect'
     try:
         annos = client.book.get(
-            entrypoint % (
-                user.douban_uid,
-                count,
-                start,
-                format
+            entrypoint.format(
+                uid=user.douban_uid,
+                count=count,
+                start=start,
+                format=format
             )
         )
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return annotations
     annotations.extend(annos['annotations'])
     total = annos['total']
@@ -218,13 +218,16 @@ def import_annotations(user, client=None):
 
 def get_annotation(user, douban_id, client=None, format='text'):
     client = client or get_douban_client(user.douban_access_token)
-    entrypoint = 'annotation/%s?format=%s' % (douban_id, format)
+    entrypoint = 'annotation/{id}?format={format}'.format(
+        id=douban_id,
+        format=format
+    )
     annotation = None
     try:
         annotation = client.book.get(entrypoint)
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
     return annotation
 
 
@@ -232,7 +235,7 @@ def create_annotation(user, note, client=None):
     if note.douban_id:
         return note
     client = client or get_douban_client(user.douban_access_token)
-    entrypoint = '/v2/book/%s/annotations' % note.book.douban_id
+    entrypoint = '/v2/book/{id}/annotations'.format(id=note.book.douban_id)
     privacy = 'public'
     if note.private:
         privacy = 'private'
@@ -247,8 +250,8 @@ def create_annotation(user, note, client=None):
     try:
         result = client.book._post(entrypoint, **data)
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return False
 
     note.douban_id = result['id']
@@ -264,7 +267,7 @@ def update_annotation(user, note, client=None):
     if not note.douban_id:
         return False
     client = client or get_douban_client(user.douban_access_token)
-    entrypoint = '/v2/book/annotation/%s' % note.douban_id
+    entrypoint = '/v2/book/annotation/{id}'.format(id=note.douban_id)
     privacy = 'public'
     if note.private:
         privacy = 'private'
@@ -279,8 +282,8 @@ def update_annotation(user, note, client=None):
     try:
         result = client.book._put(entrypoint, **data)
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return False
 
     note.summary = result['summary']
@@ -295,12 +298,12 @@ def delete_annotation(user, note, client=None):
     if not note.douban_id:
         return False
     client = client or get_douban_client(user.douban_access_token)
-    entrypoint = '/v2/book/annotation/%s' % note.douban_id
+    entrypoint = '/v2/book/annotation/{id}'.format(id=note.douban_id)
     try:
         client.book._delete(entrypoint)
     except DoubanAPIError as e:
-        app.logger.exception('DoubanAPIError status: %s' % e.status)
-        app.logger.exception('DoubanAPIError reason: %s' % e.reason)
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return False
     except ValueError:
         return True

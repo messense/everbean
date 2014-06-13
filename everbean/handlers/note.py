@@ -15,7 +15,10 @@ bp = Blueprint('note', __name__, url_prefix='/note')
 
 
 def _sync_user_book_notes(user, book):
-    cache_key = 'sync_book_notes_%i_%i' % (user.id, book.id)
+    cache_key = 'sync_book_notes_{user_id}_{book_id}'.format(
+        user_id=user.id,
+        book_id=book.id
+    )
     last_task_id = cache.get(cache_key)
     if last_task_id:
         # cancel last task

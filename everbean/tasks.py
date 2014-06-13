@@ -59,7 +59,7 @@ def refresh_douban_access_token(user_id):
         db.session.add(user)
         db.session.commit()
     else:
-        app.logger.error('Refresh token for user %s error.' % user.douban_uid)
+        app.logger.error('Refresh token for user %s error.', user.douban_uid)
 
 
 @celery.task

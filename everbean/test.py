@@ -35,7 +35,7 @@ class TestCase(unittest.TestCase):
                 'EVERNOTE_CONSUMER_SECRET': '',
             }
             self.db_fd, self.db_path = tempfile.mkstemp('.db')
-            config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///%s' % self.db_path
+            config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{path}'.format(path=self.db_path)
         else:
             config = self.__config__
         self.app = create_app(config, debug=True)
