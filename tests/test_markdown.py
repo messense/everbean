@@ -4,6 +4,7 @@ import nose
 from everbean.ext.markdown import (
     douban_to_markdown,
     markdown_to_douban,
+    markdown_to_html
 )
 
 
@@ -82,6 +83,16 @@ def test_markdown_to_douban_image():
     r = markdown_to_douban(s)
     print(r)
     assert r == expect.format(id='1')
+
+
+def test_markdown_to_html_code():
+    s = """```python
+    from test import pystone
+    pystone.main()
+    ```
+    """
+    r = markdown_to_html(s)
+    assert "class=" not in r
 
 
 if __name__ == '__main__':

@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import re
-from mistune import Renderer, Markdown
+import mistune
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import HtmlFormatter
 from everbean.utils import to_text
 
 _DOUBAN_QUOTE_RE = re.compile('<原文开始>(.*?)</原文结束>', re.S)
@@ -9,7 +12,7 @@ _DOUBAN_CODE_RE = re.compile('<代码开始 lang="(.+?)">(.*?)</代码结束>', 
 _DOUBAN_IMAGE_RE = re.compile('<图片(\d+)>')
 
 
-class MarkdownToDoubanRenderer(Renderer):
+class MarkdownToDoubanRenderer(mistune.Renderer):
     def block_quote(self, text):
         return '<原文开始>\n{text}</原文结束>'.format(text=text)
 
@@ -83,14 +86,22 @@ class MarkdownToDoubanRenderer(Renderer):
         return text
 
 
-class MarkdownToHTMLRenderer(Renderer):
+class MarkdownToHTMLRenderer(mistune.Renderer):
     def block_quote(self, text):
         return '<blockquote>{text}\n</blockquote>'.format(text=text)
+
+    def block_code(self, code, lang=None):
+        if not lang:
+            return '\n<pre><code>{code}</code></pre>\n'.format(code=mistune.escape(code))
+        lexer = get_lexer_by_name(lang, stripall=True)
+        formatter = HtmlFormatter(noclasses=True)
+        text = highlight(code, lexer, formatter)
+        return text.replace('class="highlight" ', '')
 
 
 def markdown_to_douban(text):
     text = to_text(text)
-    md = Markdown(renderer=MarkdownToDoubanRenderer())
+    md = mistune.Markdown(renderer=MarkdownToDoubanRenderer())
     return md.render(text)
 
 
@@ -130,5 +141,5 @@ def douban_to_markdown(text, images=None):
 
 
 def markdown_to_html(text):
-    md = Markdown(renderer=MarkdownToHTMLRenderer(), use_xhtml=True)
+    md = mistune.Markdown(renderer=MarkdownToHTMLRenderer(), use_xhtml=True)
     return md.render(text)

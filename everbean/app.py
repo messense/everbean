@@ -54,18 +54,6 @@ def load_configuration(app, config, envvar, debug):
     # reset debug
     if debug:
         app.debug = True
-    # check config
-    for name in (
-            'DOUBAN_API_KEY', 'DOUBAN_API_SECRET',
-            'DOUBAN_REDIRECT_URI', 'EVERNOTE_CONSUMER_KEY',
-            'EVERNOTE_CONSUMER_SECRET',
-            'SQLALCHEMY_DATABASE_URI'):
-        if not app.config[name]:
-            app.logger.warning(
-                'Configuration %s is not set, '
-                'application may not work as expected.',
-                name
-            )
 
 
 def register_hooks(app):

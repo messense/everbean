@@ -17,6 +17,7 @@ SQLAlchemy
 pylibmc
 raven
 mistune
+pygments
 Flask-WTF
 Flask-Cache
 Flask-SQLAlchemy
