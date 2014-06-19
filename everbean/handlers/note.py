@@ -25,7 +25,10 @@ def _sync_user_book_notes(user, book):
         result = AsyncResult(last_task_id)
         if result:
             result.revoke()
-    result = tasks.sync_book_notes.delay(user.id, book, countdown=300)
+    result = tasks.sync_book_notes.apply_async(
+        args=[user.id, book],
+        countdown=300
+    )
     cache.set(cache_key, result.id, timeout=300)
 
 
