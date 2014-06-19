@@ -101,6 +101,8 @@ def edit(note_id):
     if current_user.id != note.user_id:
         abort(403)
     form = EditNoteForm(obj=note)
+    private = '1' if note.private else '2'
+    form.private.data = private
     if form.validate_on_submit():
         note.chapter = form.chapter.data
         note.page_no = form.page_no.data
