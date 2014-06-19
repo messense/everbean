@@ -94,7 +94,7 @@ def index(note_id):
                            user=user)
 
 
-@bp.route('/<int:note_id>/edit')
+@bp.route('/<int:note_id>/edit', methods=("GET", "POST"))
 @login_required
 def edit(note_id):
     note = Note.query.get_or_404(note_id)
