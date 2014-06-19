@@ -15,6 +15,8 @@ bp = Blueprint('note', __name__, url_prefix='/note')
 
 
 def _sync_user_book_notes(user, book):
+    if not (user.enable_sync and user.evernote_access_token):
+        return
     cache_key = 'sync_book_notes_{user_id}_{book_id}'.format(
         user_id=user.id,
         book_id=book.id
