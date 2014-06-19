@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
 from __future__ import print_function
+try:
+    import gevent.monkey
+    gevent.monkey.patch_all()
+except ImportError:
+    pass
+
 import logging
 from everbean.app import create_app
 

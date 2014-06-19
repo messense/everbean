@@ -3,8 +3,12 @@
 from setuptools import setup, find_packages
 import everbean
 
-long_description = open('README.md').read()
-requirements = filter(lambda x: not x.startswith('--'), open('requirements.txt').readlines())
+with open('README.md') as f:
+    long_description = f.read()
+
+with open('requirements.txt') as f:
+    requirements = [l for l in f.read().splitlines() if l]
+    requirements = filter(lambda x: not x.startswith('--'), requirements)
 
 setup(
     name='Everbean',
