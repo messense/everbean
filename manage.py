@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import print_function, unicode_literals
+from __future__ import print_function, unicode_literals, with_statement
 import time
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
@@ -41,9 +41,11 @@ def run_dev(profile_log=None):
     else:
         wsgi = DebuggedApplication(app)
 
-    run_simple('0.0.0.0', port, wsgi,
-               use_reloader=True,
-               use_debugger=True)
+    run_simple(
+        '0.0.0.0', port, wsgi,
+        use_reloader=True,
+        use_debugger=True,
+    )
 
 
 @manager.command

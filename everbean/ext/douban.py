@@ -7,7 +7,11 @@ from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
-from everbean.ext.markdown import douban_to_markdown, markdown_to_html, markdown_to_douban
+from everbean.ext.markdown import (
+    douban_to_markdown,
+    markdown_to_html,
+    markdown_to_douban
+)
 
 
 def small_book_cover(url):
@@ -306,5 +310,7 @@ def delete_annotation(user, note, client=None):
         app.logger.exception('DoubanAPIError reason: %s', e.reason)
         return False
     except ValueError:
+        # This is a bug of douban-client 0.0.6
+        # See https://github.com/douban/douban-client/issues/36
         return True
     return True
