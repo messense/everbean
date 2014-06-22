@@ -29,7 +29,7 @@ def large_book_cover(url):
     return url.replace('spic/', 'lpic/')
 
 
-def get_douban_client(token=None):
+def get_douban_client(token=None, unauthorized=False):
     client = DoubanClient(
         app.config['DOUBAN_API_KEY'],
         app.config['DOUBAN_API_SECRET'],
@@ -38,6 +38,8 @@ def get_douban_client(token=None):
     )
     if token:
         client.auth_with_token(token)
+    if not token and unauthorized:
+        client.auth_with_token('')
     return client
 
 
@@ -314,3 +316,57 @@ def delete_annotation(user, note, client=None):
         # See https://github.com/douban/douban-client/issues/36
         return True
     return True
+
+
+def get_book(douban_id, user=None, client=None):
+    token = None if user is None else user.douban_access_token
+    client = client or get_douban_client(token, unauthorized=True)
+    book = None
+    try:
+        book = client.book.get(douban_id)
+    except DoubanAPIError as e:
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
+    return book
+
+
+def search_books(keyword, user=None, client=None,
+                 books=None, start=0, count=100, recursive=True):
+    token = None if user is None else user.douban_access_token
+    client = client or get_douban_client(token, unauthorized=True)
+    books = books or []
+    entrypoint = 'search?q={keyword}&count={count}&start={start}'
+    try:
+        result = client.book.get(
+            entrypoint.format(
+                keyword=keyword,
+                count=count,
+                start=start
+            )
+        )
+    except DoubanAPIError as e:
+        app.logger.exception('DoubanAPIError status: %s', e.status)
+        app.logger.exception('DoubanAPIError reason: %s', e.reason)
+        return books
+    books.extend(result['books'])
+    total = result['total']
+    real_count = len(result['books'])
+    if (total < count) or (start + real_count >= total) or (not recursive):
+        return books
+    start += count
+    # retrieve books recursively
+    books = search_books(keyword, user, client, books, start, count)
+    return books
+
+
+def search_or_get_books(keyword, user=None, client=None,
+                        start=0, count=100, recursive=True):
+    books = []
+    keyword = keyword.lower()
+    if keyword.startswith('http://book.douban.com/subject/'):
+        book = get_book(keyword.replace('http://book.douban.com/subject/', '').replace('/', ''))
+        if book:
+            books.append(book)
+    else:
+        books = search_books(keyword, user, client, books, start, count, recursive)
+    return books

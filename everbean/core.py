@@ -28,6 +28,7 @@ assets = Environment()
 
 js_all = Bundle(
     'js/vendor/jquery.min.js',
+    'js/vendor/nprogress.js',
     'js/vendor/turbolinks.js',
     'js/vendor/bootstrap.min.js',
     Bundle(
@@ -47,6 +48,7 @@ assets.register('js_all', js_all)
 
 css_all = Bundle(
     'css/vendor/bootstrap.min.css',
+    'css/vendor/nprogress.css',
     'css/vendor/editor.css',
     Bundle(
         'css/less/everbean.less',
