@@ -140,7 +140,7 @@ def preview(book_id, uid, template='default'):
 
 @bp.route('/search/<int:book_id>')
 def search(book_id):
-    book = Book.query.get(book_id)
+    book = Book.query.filter_by(douban_id=book_id).first()
     if not book:
         if current_user.is_authenticated():
             # add to database
