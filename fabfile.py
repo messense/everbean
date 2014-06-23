@@ -4,7 +4,7 @@ import os
 from fabric.api import *
 
 base_path = os.path.dirname(__file__)
-project_root = "~/project/everbean"
+project_root = "~/projects/everbean"
 pip_path = os.path.join(project_root, "bin/pip")
 python_path = os.path.join(project_root, "bin/python")
 
@@ -26,8 +26,8 @@ def update_pip_requirements():
 
 def migrate_databases():
     with cd(project_root):
-        run("%s manage.py db upgrade" % python_path)
         run("%s manage.py syncdb" % python_path)
+        run("%s manage.py db upgrade" % python_path)
 
 
 def reload_nginx():
@@ -48,9 +48,16 @@ def reload_application():
     run("kill -HUP `cat /tmp/everbean.pid`")
 
 
+def clear_cache():
+    with cd(project_root):
+        run("source bin/activate")
+        run("make clean && make assets")
+
+
 def update():
     update_from_git()
     migrate_databases()
+    clear_cache()
     reload_application()
 
 
@@ -58,5 +65,6 @@ def fullyupdate():
     update_from_git()
     update_pip_requirements()
     migrate_databases()
+    clear_cache()
     reload_nginx()
     reload_application()
