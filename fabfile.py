@@ -53,6 +53,7 @@ def clear_cache():
         run("%s setup.py clean" % python_path)
         run("%s manage.py clear_cache" % python_path)
         run("%s manage.py assets clean" % python_path)
+        run("%s manage.py assets build" % python_path)
         run("find . -name '*.pyc' -print0 | xargs -0 rm -rf")
 
 
