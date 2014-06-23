@@ -71,3 +71,9 @@ def fullyupdate():
     clear_cache()
     reload_nginx()
     reload_application()
+
+
+def minorupdate():
+    update_from_git()
+    clear_cache()
+    reload_application()
