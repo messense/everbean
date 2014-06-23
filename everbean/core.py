@@ -37,6 +37,7 @@ js_all = Bundle(
     ),
     'js/vendor/marked.js',
     'js/vendor/editor.js',
+    'js/vendor/typeahead.min.js',
     Bundle(
         'js/coffee/everbean.coffee',
         filters='coffeescript'

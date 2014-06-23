@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # coding=utf-8
-from __future__ import (print_function, with_statement,
-                        absolute_import, unicode_literals)
+from __future__ import (
+    print_function, with_statement,
+    absolute_import, unicode_literals
+)
 import os
 import time
 import logging
@@ -146,6 +148,7 @@ def register_blueprints(app):
     from everbean.handlers import oauth
     from everbean.handlers import book
     from everbean.handlers import note
+    from everbean.handlers import api
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
@@ -153,3 +156,4 @@ def register_blueprints(app):
     app.register_blueprint(oauth.bp)
     app.register_blueprint(book.bp)
     app.register_blueprint(note.bp)
+    app.register_blueprint(api.bp)

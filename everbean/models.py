@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import DateTime, Boolean, CHAR, Text

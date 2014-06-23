@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
