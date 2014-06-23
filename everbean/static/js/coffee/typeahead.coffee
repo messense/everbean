@@ -6,7 +6,13 @@ search = ->
     datumTokenizer: (d) ->
       Bloodhound.tokenizers.whitespace d.title
     queryTokenizer: Bloodhound.tokenizers.whitespace
-    remote: "/api/book/search?q=%QUERY"
+    remote:
+      url: "/api/book/search?q=%QUERY"
+      ajax:
+        beforeSend: ->
+          NProgress.start()
+        complete: ->
+          NProgress.done()
 
   books.initialize()
 
@@ -15,7 +21,7 @@ search = ->
     displayKey: "title"
     source: books.ttAdapter()
     templates:
-      empty: ""
+      empty: "<p>Oops, 找不到任何相关的书籍！</p>"
       suggestion: (context, options) ->
         """
         <div class="book-search-item clearfix" id="book-#{context['douban_id']}" data-book-id="#{context['douban_id']}">
