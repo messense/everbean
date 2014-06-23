@@ -39,9 +39,9 @@
             <li{% if request.endpoint == 'home.faq' %} class="active"{% endif %}><a href="{{ url_for('home.faq') }}" title="常见问题"><span class="glyphicon glyphicon-question-sign"></span> 常见问题</a>
             <li{% if request.endpoint == 'home.about' %} class="active"{% endif %}><a href="{{ url_for('home.about') }}" title="关于"><span class="glyphicon glyphicon-info-sign"></span> 关于</a>
           </ul>
-          <form class="navbar-form navbar-left" role="search" method="post" action="#">
+          <form id="search" class="navbar-form navbar-left" role="search" method="post" action="#">
             <div class="form-group">
-              <input name="q" type="text" class="form-control" placeholder="搜索书名/作者/豆瓣地址" />
+              <input name="q" type="text" class="form-control typeahead" placeholder="搜索书名/作者/豆瓣地址" autocomplete="off" />
             </div>
           </form>
           <ul class="nav navbar-nav navbar-right">

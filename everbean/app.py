@@ -134,8 +134,8 @@ def register_template_utils(app):
     def static_url(f):
         # shortcut for url_for('static', filename=xxx)
         return url_for('static', filename=f)
-
-    app.jinja_env.bytecode_cache = MemcachedBytecodeCache(cache)
+    if not app.debug:
+        app.jinja_env.bytecode_cache = MemcachedBytecodeCache(cache)
     app.jinja_env.filters['small_book_cover'] = small_book_cover
     app.jinja_env.filters['medium_book_cover'] = medium_book_cover
     app.jinja_env.filters['large_book_cover'] = large_book_cover
