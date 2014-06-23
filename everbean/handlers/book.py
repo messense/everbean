@@ -155,7 +155,7 @@ def search(book_id):
                 book.summary = the_book['summary']
                 db.session.add(book)
                 db.session.commit()
-                return redirect(url_for('book.index', book_id=book_id))
+                return redirect(url_for('book.index', book_id=book.id))
             else:
                 abort(404)
         else:
@@ -164,4 +164,4 @@ def search(book_id):
                 book_id=book_id
             ))
     else:
-        return redirect(url_for('book.index', book_id=book_id))
+        return redirect(url_for('book.index', book_id=book.id))
