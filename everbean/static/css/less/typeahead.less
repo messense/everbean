@@ -1,10 +1,12 @@
 #search .typeahead {
-  width: 200px;
+  width: 220px;
 }
 
 .tt-dropdown-menu {
-  width: 200px;
-  margin-top: 12px;
+  width: 220px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -18,9 +20,9 @@
 }
 
 .tt-suggestion {
-  padding: 3px 20px;
+  padding: 3px 5px;
   font-size: 18px;
-  line-height: 24px;
+  line-height: 16px;
 }
 
 .tt-suggestion.tt-cursor {
@@ -31,4 +33,21 @@
 
 .tt-suggestion p {
   margin: 0;
+}
+
+.book-search-item-cover {
+  float: left;
+  width: 30px;
+  height: 40px;
+  margin-right: 5px;
+}
+
+.book-search-item-info {
+  float: left;
+  width: 150px;
+  height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
+  font-size: 12px;
 }

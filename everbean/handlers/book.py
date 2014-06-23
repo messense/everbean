@@ -1,16 +1,18 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
 from sqlalchemy.orm import load_only, joinedload
-from flask import Blueprint, render_template, abort, request
+from flask import Blueprint, render_template
+from flask import redirect, abort, request, url_for
 from flask.ext.login import current_user, login_required
 from everbean.models import Book, Note, User
-from everbean.core import cache
+from everbean.core import cache, db
 from everbean.utils import ObjectDict
 from everbean.ext.evernote import (
     generate_enml_makeup,
     enml_to_html,
     get_template_name
 )
+from everbean.ext.douban import get_book
 
 bp = Blueprint('book', __name__, url_prefix='/book')
 
@@ -134,3 +136,32 @@ def preview(book_id, uid, template='default'):
                            user=user,
                            book=book,
                            body=body)
+
+
+@bp.route('/search/<int:book_id>')
+def search(book_id):
+    book = Book.query.get(book_id)
+    if not book:
+        if current_user.is_authenticated():
+            # add to database
+            the_book = get_book(book_id, current_user)
+            if the_book:
+                book = Book()
+                book.douban_id = book_id
+                book.title = the_book['title'][:100]
+                book.author = ', '.join(the_book['author'])[:100]
+                book.cover = the_book['image']
+                book.pubdate = the_book['pubdate']
+                book.summary = the_book['summary']
+                db.session.add(book)
+                db.session.commit()
+                return redirect(url_for('book.index', book_id=book_id))
+            else:
+                abort(404)
+        else:
+            # redirect to douban
+            return redirect('http://book.douban.com/subject/{book_id}/'.format(
+                book_id=book_id
+            ))
+    else:
+        return redirect(url_for('book.index', book_id=book_id))
