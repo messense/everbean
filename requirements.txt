@@ -1,3 +1,4 @@
+gevent
 six
 fabric
 Flask
@@ -15,6 +16,7 @@ evernote
 gunicorn
 SQLAlchemy
 pylibmc
+redis
 raven
 mistune
 pygments

@@ -38,8 +38,6 @@ sudo npm install -g coffee-script less
 2. Install dependencies using pip:
 
         pip install -r requirements.txt
-        # install optional dependencies if you want a better performance
-        pip install -r optional-requirements.txt
 
 3. Now you are good to go
 
