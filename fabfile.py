@@ -20,8 +20,7 @@ def update_from_git():
 
 def update_pip_requirements():
     with cd(project_root):
-        run("%s install -U -r requirements.txt" % pip_path)
-        run("%s install -U -r optional-requirements.txt" % pip_path)
+        run("%s install -U -r dev-requirements.txt" % pip_path)
 
 
 def migrate_databases():
@@ -31,17 +30,15 @@ def migrate_databases():
 
 
 def reload_nginx():
-    _current_user = env.user
-    env.user = 'root'
-    run("/etc/init.d/nginx reload")
-    env.user = _current_user
+    sudo("/etc/init.d/nginx reload")
 
 
 def restart_application():
-    _current_user = env.user
-    env.user = 'root'
-    run("supervisorctl pid everbean | xargs kill -HUP")
-    env.user = _current_user
+    sudo("supervisorctl restart everbean")
+
+
+def restart_worker():
+    sudo("supervisorctl restart everbean_celery")
 
 
 def reload_application():
