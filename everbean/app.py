@@ -109,6 +109,10 @@ def register_extensions(app):
     turbolinks(app)
     assets.init_app(app)
 
+    if app.config['USE_SERVER_SIDE_SESSION']:
+        from flask.ext.session import Session
+        Session(app)
+
     if app.debug:
         # load debug toobar
         from flask.ext.debugtoolbar import DebugToolbarExtension

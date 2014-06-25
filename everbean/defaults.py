@@ -37,6 +37,13 @@ SECRET_KEY = ''
 # MySQL database URI
 SQLALCHEMY_DATABASE_URI = ''
 
+# Server side session
+USE_SERVER_SIDE_SESSION = False
+# Server side session type
+SESSION_TYPE = 'redis'
+# Session key prefix
+SESSION_KEY_PREFIX = 'everbean:'
+
 # Cache type
 CACHE_TYPE = 'simple'
 # Cache key prefix
