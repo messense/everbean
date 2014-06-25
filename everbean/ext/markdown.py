@@ -127,10 +127,13 @@ def douban_to_markdown(text, images=None):
 
     def _image(m):
         _id = m.group(1)
-        return '![图片{id}]({url})'.format(
-            id=_id,
-            url=images[_id]
-        )
+        if _id in images:
+            return '![图片{id}]({url})'.format(
+                id=_id,
+                url=images[_id]
+            )
+        else:
+            return ''
 
     text = to_text(text)
     text = _DOUBAN_QUOTE_RE.sub(_quote, text)

@@ -50,6 +50,10 @@ def test_douban_to_markdown_image():
     r = douban_to_markdown(s, images)
     assert r == '![图片1](1.jpg)![图片2](2.png)\n![图片3](3.gif)'
 
+    s = '<图片1><图片4>'
+    r = douban_to_markdown(s, images)
+    assert r == '![图片1](1.jpg)'
+
 
 def test_markdown_to_douban_quote():
     expect = '<原文开始>\n{text}\n</原文结束>'
