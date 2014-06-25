@@ -32,12 +32,17 @@ sudo apt-get -y install memcached libmemcached-dev rabbitmq-server mysql-server
 sudo npm install -g coffee-script less
 ```
 
+Then you should install `redis` by yourself according to [Redis Quick Start](http://redis.io/topics/quickstart) to 
+support server side session for Flask and result backend for Celery.
+
 ## Installation
 
 1. Clone or download this repository to your local disk and change directory to that directory.
 2. Install dependencies using pip:
 
         pip install -r requirements.txt
+        # if you want to run test cases, use dev-requirements.txt:
+        pip install -r dev-requirements.txt
 
 3. Now you are good to go
 
@@ -53,8 +58,8 @@ Run `python manage.py syncdb` to automatically create database structure for the
 
 Run
 
-    python manage.py db upgrade
     python manage.py syncdb
+    python manage.py db upgrade
 
 to migrate database to the latest version.
 

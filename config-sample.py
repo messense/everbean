@@ -32,7 +32,7 @@ SECRET_KEY = ''
 SQLALCHEMY_DATABASE_URI = ''
 
 # Server side session
-USE_SERVER_SIDE_SESSION = False
+USE_SERVER_SIDE_SESSION = True
 # Server side session type
 SESSION_TYPE = 'redis'
 # Session key prefix
