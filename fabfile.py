@@ -59,6 +59,7 @@ def update():
     migrate_databases()
     clear_cache()
     reload_application()
+    restart_worker()
 
 
 def fullyupdate():
@@ -67,10 +68,12 @@ def fullyupdate():
     migrate_databases()
     clear_cache()
     reload_nginx()
-    reload_application()
+    restart_application()
+    restart_worker()
 
 
 def minorupdate():
     update_from_git()
     clear_cache()
     reload_application()
+    restart_worker()
