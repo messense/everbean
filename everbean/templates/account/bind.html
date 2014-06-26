@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 {% block title %}绑定印象笔记/Evernote - Everbean{% endblock %}
 {% block main %}
-<div class="page-header">
-  <h1>请选择要绑定的服务类型</h1>
-</div>
-<div>
-    <a class="logo center-block" href="{{ url_for('account.bind') }}?type=1" title="Evernote International"><img src="{{ static_url('images/evernote_logo.png') }}" alt="Evernote International" /></a>
-    <a class="logo center-block" href="{{ url_for('account.bind') }}?type=2" title="印象笔记"><img src="{{ static_url('images/yinxiang_logo.png') }}" alt="印象笔记" /></a>
+<div class="eb-box">
+    <header><span class="glyphicon glyphicon-cog"></span> 请选择要绑定的服务类型</header>
+    <section class="eb-box-inner">
+        <a class="logo center-block" href="{{ url_for('account.bind') }}?type=1" title="Evernote International"><img src="{{ static_url('images/evernote_logo.png') }}" alt="Evernote International" /></a>
+        <a class="logo center-block" href="{{ url_for('account.bind') }}?type=2" title="印象笔记"><img src="{{ static_url('images/yinxiang_logo.png') }}" alt="印象笔记" /></a>
+    </section>
 </div>
 {% endblock %}
