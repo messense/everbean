@@ -53,6 +53,11 @@ CACHE_KEY_PREFIX = 'everbean_'
 BROKER_URL = ''
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
+# Flask-Limiter
+RATELIMIT_STORE_URL = 'redis://localhost:6379'
+# Enables returning Rate-limiting Headers
+RATELIMIT_HEADERS_ENABLED = True
+
 # mail server
 MAIL_SERVER = ''
 # mail port

@@ -7,6 +7,7 @@ from flask.ext.djangoquery import SQLAlchemy
 from flask.ext.login import LoginManager
 from flask.ext.assets import Environment, Bundle
 from flask.ext.mail import Mail
+from flask.ext.limiter import Limiter
 
 # database
 db = SQLAlchemy()
@@ -22,6 +23,9 @@ cache = Cache()
 
 # flask-mail
 mail = Mail()
+
+# flask-limiter
+limiter = Limiter()
 
 # flask-assets
 assets = Environment()

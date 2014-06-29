@@ -11,7 +11,7 @@ from flask import Flask, url_for, render_template, g
 from jinja2 import MemcachedBytecodeCache
 from everbean.utils import parse_config_file
 from everbean.models import User
-from everbean.core import db, celery, cache, login_manager, assets, mail
+from everbean.core import login_manager, cache
 
 
 def create_app(config=None, envvar='everbean_config', debug=False):
@@ -66,23 +66,6 @@ def register_hooks(app):
             app.logger.addHandler(logging.StreamHandler())
             app.logger.setLevel(logging.INFO)
 
-    @app.before_request
-    def before_request():
-        g.start_time = time.time()
-
-    @app.after_request
-    def after_request(response):
-        diff = int((time.time() - g.start_time) * 1000)  # to get a time in ms
-        symble = b'__EXECUTION_TIME__'
-        if response.response and \
-                response.content_type.startswith('text/html') and \
-                response.status_code == 200 and \
-                response.response[0].find(symble) != -1:
-            response.response[0] = response.response[0]\
-                .replace(symble, str(diff))
-            response.headers["Content-Length"] = len(response.response[0])
-        return response
-
 
 def register_errorhandlers(app):
     @app.errorhandler(403)
@@ -100,6 +83,8 @@ def register_errorhandlers(app):
 
 def register_extensions(app):
     from flask.ext.turbolinks import turbolinks
+    from everbean.core import db, celery, assets
+    from everbean.core import mail, limiter
 
     db.init_app(app)
     cache.init_app(app)
@@ -108,6 +93,7 @@ def register_extensions(app):
     mail.init_app(app)
     turbolinks(app)
     assets.init_app(app)
+    limiter.init_app(app)
 
     if app.config['USE_SERVER_SIDE_SESSION']:
         from flask.ext.session import Session

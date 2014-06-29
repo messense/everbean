@@ -33,6 +33,7 @@ Flask-Failsafe
 Flask-Turbolinks
 Flask-Assets
 Flask-Mail
+Flask-Limiter
 --allow-external mysql-connector-python
 --allow-unverified mysql-connector-python
 mysql-connector-python

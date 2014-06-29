@@ -46,6 +46,11 @@ CACHE_KEY_PREFIX = 'everbean_'
 # Celery broker url
 BROKER_URL = ''
 
+# Flask-Limiter
+RATELIMIT_STORE_URL = 'redis://localhost:6379'
+# Enables returning Rate-limiting Headers
+RATELIMIT_HEADERS_ENABLED = True
+
 # mail server
 MAIL_SERVER = ''
 # mail port

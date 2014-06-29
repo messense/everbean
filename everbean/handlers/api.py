@@ -3,10 +3,10 @@ from __future__ import absolute_import, unicode_literals
 import json
 import functools
 from flask import Blueprint, jsonify as flask_jsonify
-from flask import request, Response, url_for
+from flask import request, Response
 from flask.ext.login import current_user
-from everbean.models import Book
 from everbean.ext.douban import search_or_get_books
+from everbean.core import limiter
 
 
 bp = Blueprint('api', __name__, url_prefix='/api')
@@ -34,6 +34,7 @@ def login_required(func):
 
 
 @bp.route('/book/search')
+@limiter.limit('15/minute')
 def book_search():
     keyword = request.args.get('q', None)
     if keyword is None:
