@@ -5,9 +5,8 @@ from __future__ import (
     absolute_import, unicode_literals
 )
 import os
-import time
 import logging
-from flask import Flask, url_for, render_template, g
+from flask import Flask, url_for, render_template
 from jinja2 import MemcachedBytecodeCache
 from everbean.utils import parse_config_file
 from everbean.models import User
