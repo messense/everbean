@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 import nose
+
 from everbean.test import TestCase
 
 
@@ -21,6 +23,7 @@ class TestCaseTest(TestCase):
         with self.app.app_context():
             user = self.create_user()
             self.assertEqual(self.login(user), 'True')
+
 
 if __name__ == '__main__':
     nose.runmodule()

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import re
+
 import mistune
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
+
 from everbean.utils import to_text
+
 
 _DOUBAN_QUOTE_RE = re.compile('<原文开始>(.*?)</原文结束>', re.S)
 _DOUBAN_CODE_RE = re.compile('<代码开始 lang="(.+?)">(.*?)</代码结束>', re.S)

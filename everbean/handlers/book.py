@@ -1,9 +1,11 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+
 from sqlalchemy.orm import load_only, joinedload
 from flask import Blueprint, render_template
 from flask import redirect, abort, request, url_for
 from flask.ext.login import current_user, login_required
+
 from everbean.models import Book, Note, User
 from everbean.core import cache, db
 from everbean.utils import ObjectDict
@@ -13,6 +15,7 @@ from everbean.ext.evernote import (
     get_template_name
 )
 from everbean.ext.douban import get_book
+
 
 bp = Blueprint('book', __name__, url_prefix='/book')
 

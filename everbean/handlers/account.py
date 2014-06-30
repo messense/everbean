@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+
 from werkzeug.security import gen_salt
 from flask import Blueprint, render_template
 from flask import flash, url_for, session, abort
@@ -7,6 +8,7 @@ from flask import request, redirect, current_app as app
 from flask.ext.login import logout_user, current_user, login_user
 from flask.ext.login import login_required
 from flask.ext.mail import Message
+
 from everbean.core import db, cache
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client, get_notebooks
@@ -14,6 +16,7 @@ from everbean.forms import SettingsForm
 from everbean.utils import to_text
 from everbean.models import User
 import everbean.tasks as tasks
+
 
 bp = Blueprint('account', __name__, url_prefix='/account')
 
@@ -52,6 +55,7 @@ def logout():
 @login_required
 def settings():
     from everbean.ext.evernote import get_available_templates
+
     @cache.memoize(300)
     def _get_notebooks(user):
         client = get_evernote_client(

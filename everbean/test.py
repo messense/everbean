@@ -4,15 +4,16 @@ import os
 import random
 import unittest
 import tempfile
+
 from werkzeug.security import gen_salt
 from flask import url_for
+
 from everbean.app import create_app
 from everbean.core import db
 from everbean.models import User
 
 
 class TestCase(unittest.TestCase):
-
     __config__ = None
 
     def setUp(self):

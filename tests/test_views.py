@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals, with_statement
+
 import nose
 from flask import url_for
 from werkzeug.security import gen_salt
+
 from everbean.test import TestCase
 from everbean.core import db
 from everbean.models import User
@@ -43,6 +45,7 @@ class AccountTest(TestCase):
             self.client.get(url_for('account.verify', code=user.email_verify_code))
             user = User.query.get(user.id)
             self.assertTrue(user.email_verified)
+
 
 if __name__ == '__main__':
     nose.runmodule()

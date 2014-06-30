@@ -1,13 +1,14 @@
 # coding=utf-8
 from __future__ import unicode_literals
 import os
+
 from fabric.api import *
+
 
 base_path = os.path.dirname(__file__)
 project_root = "~/projects/everbean"
 pip_path = os.path.join(project_root, "bin/pip")
 python_path = os.path.join(project_root, "bin/python")
-
 
 env.user = "messense"
 env.hosts = ["messense.me"]

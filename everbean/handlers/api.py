@@ -2,9 +2,11 @@
 from __future__ import absolute_import, unicode_literals
 import json
 import functools
+
 from flask import Blueprint, jsonify as flask_jsonify
 from flask import request, Response
 from flask.ext.login import current_user
+
 from everbean.ext.douban import search_or_get_books
 from everbean.core import limiter
 
@@ -30,6 +32,7 @@ def login_required(func):
                 error=1,
                 message='请先登录！'
             )
+
     return wrapper
 
 

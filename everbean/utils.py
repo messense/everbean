@@ -2,13 +2,13 @@
 from __future__ import absolute_import, unicode_literals
 import os
 from functools import wraps
+
 import six
 from flask import redirect, url_for, flash
 from flask.ext.login import current_user
 
 
 class ObjectDict(dict):
-
     def __getattr__(self, key):
         if key in self:
             return self[key]
@@ -74,4 +74,5 @@ def require_bind_evernote(func):
         else:
             flash('您需要先绑定 Evernote/印象笔记 账号后才能进行操作', 'info')
             return redirect(url_for('account.bind'))
+
     return decorated_view

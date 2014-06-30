@@ -1,16 +1,19 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
 from datetime import datetime
+
 from flask import Blueprint, flash, url_for, session
 from flask import request, redirect, current_app as app
 from flask.ext.login import current_user, login_required
 from flask.ext.login import login_user
 from douban_client.api.error import DoubanAPIError
+
 from everbean.core import db, cache
 from everbean.models import User
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client
 from everbean import tasks
+
 
 bp = Blueprint('oauth', __name__, url_prefix='/oauth')
 

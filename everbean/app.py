@@ -6,10 +6,10 @@ from __future__ import (
 )
 import os
 import logging
+
 from flask import Flask, url_for, render_template
-from jinja2 import MemcachedBytecodeCache
+
 from everbean.utils import parse_config_file
-from everbean.models import User
 from everbean.core import login_manager, cache
 
 
@@ -96,6 +96,7 @@ def register_extensions(app):
 
     if app.config['USE_SERVER_SIDE_SESSION']:
         from flask.ext.session import Session
+
         Session(app)
 
     if app.debug:
@@ -107,6 +108,8 @@ def register_extensions(app):
 
 
 def setup_extensions(app):
+    from everbean.models import User
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.filter_by(douban_id=user_id).first()
@@ -123,8 +126,12 @@ def register_template_utils(app):
     def static_url(f):
         # shortcut for url_for('static', filename=xxx)
         return url_for('static', filename=f)
+
     if not app.debug:
+        from jinja2 import MemcachedBytecodeCache
+
         app.jinja_env.bytecode_cache = MemcachedBytecodeCache(cache)
+
     app.jinja_env.filters['small_book_cover'] = small_book_cover
     app.jinja_env.filters['medium_book_cover'] = medium_book_cover
     app.jinja_env.filters['large_book_cover'] = large_book_cover

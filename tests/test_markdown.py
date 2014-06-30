@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+
 import nose
+
 from everbean.ext.markdown import (
     douban_to_markdown,
     markdown_to_douban,

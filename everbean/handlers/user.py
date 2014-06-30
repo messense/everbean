@@ -1,12 +1,14 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+
 from sqlalchemy.orm import joinedload
 from flask import Blueprint, render_template
-
 from flask.ext.login import current_user, login_required
+
 from everbean.core import cache
 from everbean.models import User, Book, Note
 from everbean.utils import ObjectDict
+
 
 bp = Blueprint('user', __name__, url_prefix='/u')
 

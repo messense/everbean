@@ -1,10 +1,12 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
 from datetime import datetime
+
 import six
 from flask import current_app as app
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
+
 from everbean.core import db
 from everbean.models import Book, Note, UserBook
 from everbean.ext.markdown import (
@@ -160,7 +162,7 @@ def import_books(user, client=None):
             book_id=the_book.id
         ).first()
         # if not User.query.filter(id == user.id,
-        #                          User.books.any(id=the_book.id)):
+        # User.books.any(id=the_book.id)):
         if not user_book:
             user_book = UserBook(user, the_book, datetime.now(), book['status'])
         else:

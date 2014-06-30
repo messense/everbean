@@ -2,10 +2,12 @@
 # coding=utf-8
 from __future__ import print_function, unicode_literals, with_statement
 import time
+
 from flask.ext.script import Manager
 from flask.ext.migrate import Migrate, MigrateCommand
 from flask.ext.assets import ManageAssets
 from flask.ext.failsafe import failsafe
+
 from everbean import tasks
 from everbean.core import db
 from everbean.models import User
@@ -14,7 +16,9 @@ from everbean.models import User
 @failsafe
 def create_app_for_manager():
     from everbean.app import create_app
+
     return create_app()
+
 
 app = create_app_for_manager()
 manager = Manager(app)
@@ -72,6 +76,7 @@ def syncdb():
 @manager.command
 def clear_cache():
     from everbean.core import cache
+
     with app.app_context():
         cache.clear()
 

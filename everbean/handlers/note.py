@@ -1,15 +1,18 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
 from datetime import datetime
+
 from flask import Blueprint, render_template
 from flask import flash, redirect, url_for, abort
 from flask.ext.login import current_user, login_required
 from celery.result import AsyncResult
+
 from everbean.models import Book, Note, UserBook
 from everbean.core import db, cache
 from everbean.forms import CreateNoteForm, EditNoteForm
 from everbean.ext.douban import create_annotation, update_annotation, delete_annotation
 from everbean import tasks
+
 
 bp = Blueprint('note', __name__, url_prefix='/note')
 
@@ -46,6 +49,7 @@ def create(book_id):
                 user_id=user_id
             )
         ).all()
+
     books = _user_reading_books(current_user.id)
     book = None
     user_book = None

@@ -6,8 +6,10 @@ from __future__ import (
 )
 import time
 from datetime import datetime
+
 from flask import current_app as app
 from flask.ext.mail import Message
+
 from everbean.core import mail, db, celery
 from everbean.models import User, Note
 from everbean.ext.douban import (
@@ -142,6 +144,7 @@ def sync_notes(user):
         ).order_by(Note.created.asc()).all()
         if notes:
             sync_book_notes.delay(user.id, book, notes)
+
     if not user.enable_sync:
         return
     books = user.books

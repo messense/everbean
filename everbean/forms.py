@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+
 from flask.ext.wtf import Form
 from flask.ext.login import current_user
 from wtforms import ValidationError
@@ -13,6 +14,7 @@ from wtforms.validators import (
     Email, Optional,
     DataRequired, Length,
 )
+
 from everbean.models import User
 
 

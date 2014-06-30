@@ -3,9 +3,11 @@ from __future__ import absolute_import, with_statement, unicode_literals
 import os
 import sys
 from StringIO import StringIO
-import nose
 from subprocess import Popen, PIPE
+
+import nose
 from flask.ext.mail import Message
+
 from everbean.app import create_app
 
 

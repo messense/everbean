@@ -1,9 +1,12 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+
 from flask import Blueprint, render_template
+
 from everbean.utils import ObjectDict
 from everbean.models import Book
 from everbean.core import cache
+
 
 bp = Blueprint('home', __name__, url_prefix='/')
 

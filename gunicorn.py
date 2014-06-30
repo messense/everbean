@@ -1,7 +1,9 @@
 # coding=utf-8
 from __future__ import unicode_literals
+
 try:
     import gevent.monkey
+
     gevent.monkey.patch_all()
 except ImportError:
     pass

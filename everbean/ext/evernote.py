@@ -3,11 +3,13 @@ from __future__ import absolute_import, unicode_literals
 import re
 from datetime import datetime
 from collections import OrderedDict
+
 from flask import render_template, current_app as app
 from jinja2 import TemplateNotFound
 from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
+
 from everbean.core import cache
 from everbean.utils import to_bytes
 

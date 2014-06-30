@@ -1,8 +1,10 @@
 # coding=utf-8
 from __future__ import absolute_import, with_statement, unicode_literals
 import os
-import nose
 from datetime import datetime
+
+import nose
+
 from everbean.app import create_app
 from everbean.ext.evernote import generate_enml_makeup, enml_to_html
 from everbean.utils import ObjectDict
@@ -87,6 +89,7 @@ def test_enml_to_html():
         assert '<en-note>' not in html
         assert '</en-note>' not in html
         assert 'http://xml.evernote.com/pub/enml2.dtd' not in html
+
 
 if __name__ == '__main__':
     nose.runmodule()
