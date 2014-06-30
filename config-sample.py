@@ -39,7 +39,7 @@ SESSION_TYPE = 'redis'
 SESSION_KEY_PREFIX = 'everbean:'
 
 # Cache type
-CACHE_TYPE = 'simple'
+CACHE_TYPE = 'memcached'
 # Cache key prefix
 CACHE_KEY_PREFIX = 'everbean_'
 

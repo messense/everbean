@@ -33,7 +33,8 @@ sudo npm install -g coffee-script less
 ```
 
 Then you should install `redis` by yourself according to [Redis Quick Start](http://redis.io/topics/quickstart) to 
-support server side session for Flask and result backend for Celery.
+support server side session for Flask, result backend for Celery 
+and rate limit of API calls based on [Flask-Limiter](http://flask-limiter.readthedocs.org/en/latest/).
 
 ## Installation
 
@@ -49,6 +50,9 @@ support server side session for Flask and result backend for Celery.
 ## Configuration
 
 Copy `config-sample.py` or rename it to `config.py`, then make the changes as you wish.
+
+* To setup Celery broker (we use RabbitMQ here) you should configure `BROKER_URL`.
+* To setup database connection you should configure `SQLALCHEMY_DATABASE_URI`. We use `mysql-connector-python` so it should look like `mysql+mysqlconnector://root:root@localhost/everbean` while `root:root` is you MySQL username and password seperated by a `:`.
 
 ## Database creation
 
@@ -82,6 +86,8 @@ Run `celery worker --app=celeryworker.app -l info` to start Celery woker process
 ## Deployment
 
 Check out [conf](conf/) directory for `nginx.conf`, `supervisor.conf` and `crontab` configuration.
+
+You can use [Fabric](http://www.fabfile.org) to deploy it. Run `fab -l` in your terminal to see the avaliable commands.
 
 ## License
 
