@@ -25,11 +25,16 @@
                 </div>
             </div>
         </div>
-        <footer class="text-right">
-        {% if current_user.is_authenticated() and current_user.id == note.user_id %}
-            <a class="btn btn-sm btn-default" href="{{ url_for('note.edit', note_id=note.id) }}">编辑</a>
-            <a class="btn btn-sm btn-danger js-delete-note" data-note-id="{{ note.id }}" href="#">删除</a>
-        {% endif %}
+        <footer class="clearfix">
+            <div class="pull-right">
+            {% if current_user.is_authenticated() and current_user.id == note.user_id %}
+                <a class="btn btn-sm btn-default" href="{{ url_for('note.edit', note_id=note.id) }}">编辑</a>
+                <a class="btn btn-sm btn-danger js-delete-note" data-note-id="{{ note.id }}" href="#">删除</a>
+            {% endif %}
+            {% if current_user.is_authenticated() and current_user.id != note.user_id %}
+                <a class="btn btn-sm btn-default" href="{{ url_for('note.fork', note_id=note.id) }}">Fork</a>
+            {% endif %}
+            </div>
         </footer>
     </div>
 </div>

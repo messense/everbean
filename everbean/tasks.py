@@ -85,13 +85,16 @@ def sync_book_notes(user_id, book, notes=None):
     user = User.query.get(user_id)
     if not user or not user.evernote_access_token:
         return
+
     if notes is None:
         notes = Note.query.filter_by(
             user_id=user.id,
             book_id=book.id
         ).order_by(Note.created.asc()).all()
+
     if not notes:
         return
+
     # generate evernote format note
     token = user.evernote_access_token
     en = get_evernote_client(user.is_i18n, token)
@@ -105,12 +108,15 @@ def sync_book_notes(user_id, book, notes=None):
         user.evernote_notebook = notebook.guid
         db.session.add(user)
         db.session.commit()
+
     note = None
     the_book = user.user_books.filter_by(book_id=book.id).first()
     if not the_book:
         return
+
     if the_book.evernote_guid:
         note = find_note(note_store, the_book.evernote_guid)
+
     note = make_note(
         book,
         notes,
@@ -118,17 +124,13 @@ def sync_book_notes(user_id, book, notes=None):
         notebook,
         template=user.template
     )
-    if note.guid:
-        # note.updated is milliseconds, should convert it to seconds
-        updated = note.updated / 1000
-        book_updated = time.mktime(the_book.updated.timetuple())
-        if updated >= book_updated:
-            return
+
     # sync to evernote
     note = create_or_update_note(note_store, note)
     # sync guid to database
     if note and hasattr(note, 'guid'):
         the_book.evernote_guid = note.guid
+
     the_book.updated = datetime.now()
 
     db.session.add(the_book)

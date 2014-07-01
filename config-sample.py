@@ -61,3 +61,6 @@ MAIL_USERNAME = ''
 MAIL_PASSWORD = ''
 # default mail sender
 DEFAULT_MAIL_SENDER = 'admin@example.com'
+
+# Sentry
+SENTRY_DSN = ''

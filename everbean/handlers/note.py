@@ -148,3 +148,30 @@ def delete(note_id):
     else:
         flash('笔记删除失败', 'error')
     return redirect(url_for('note.index', note_id=note_id))
+
+
+@bp.route('/<int:note_id>/fork')
+@login_required
+def fork(note_id):
+    from sqlalchemy.orm.session import make_transient
+    note = Note.query.get_or_404(note_id)
+    if current_user.id == note.user_id:
+        flash('不能 fork 自己的笔记！', 'error')
+        return redirect(url_for('note.index', note_id=note_id))
+    # duplicate the note
+    db.session.expunge(note)
+    make_transient(note)
+    note.id = None
+    note.douban_id = None
+    note.user_id = current_user.id
+    note.created = note.updated = datetime.now()
+    # TODO: make create annotation async
+    note = create_annotation(current_user, note)
+    if note and note.douban_id:
+        # sync note to evernote after create
+        _sync_user_book_notes(current_user, note.book)
+        flash('fork 笔记成功！', 'success')
+        return redirect(url_for('note.index', note_id=note.id))
+    else:
+        flash('fork 笔记失败！', 'error')
+        return redirect(url_for('note.index', note_id=note_id))
