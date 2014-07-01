@@ -126,8 +126,12 @@ def preview(book_id, uid, template='default'):
     book_notes = Note.query.filter_by(
         user_id=user.id,
         book_id=book.id
-    ).order_by(Note.created.asc()).all()
-    if not notes:
+    )
+    if current_user.douban_uid != uid:
+        book_notes = book_notes.filter_by(private=False)
+    book_notes = book_notes.order_by(Note.created.asc()).all()
+
+    if not book_notes:
         abort(404)
 
     template = request.args.get('template', template)
