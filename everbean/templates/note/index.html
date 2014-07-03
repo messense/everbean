@@ -41,13 +41,15 @@
 <div class="eb-sidebar col-md-4">
     <div class="eb-box">
         <header><span class="glyphicon glyphicon-book"></span> 书籍详情</header>
-        <div class="eb-box-inner">
+        <div class="eb-box-inner" style="padding: 20px 5px;">
             <section class="book-info clearfix">
                 <div class="book-cover col-xs-4">
-                    <img src="{{ note.book.cover|small_book_cover }}" />
+                    <a href="{{ note.book.absolute_url }}"><img src="{{ note.book.cover|small_book_cover }}" /></a>
                 </div>
                 <div class="book-intro col-xs-8">
-                    <h3 class="book-title">{{ note.book.title }}</h3>
+                    <a href="{{ note.book.absolute_url }}">
+                        <h3 class="book-title">{{ note.book.title }}</h3>
+                    </a>
                     <p class="book-author">
                         <span>作者</span> {{ note.book.author }}
                     </p>
