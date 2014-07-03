@@ -11,7 +11,7 @@ pip_path = os.path.join(project_root, "bin/pip")
 python_path = os.path.join(project_root, "bin/python")
 
 env.user = "messense"
-env.hosts = ["messense.me"]
+env.hosts = ["everbean.messense.me"]
 
 
 def update_from_git():

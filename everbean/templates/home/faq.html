@@ -1,2 +1,33 @@
 {% extends 'layout.html' %}
 {% block title %}常见问题 - Everbean{% endblock %}
+{% block main %}
+<div class="eb-content">
+    <div class="eb-box">
+         <header><span class="glyphicon glyphicon-question-sign"></span> 常见问题</header>
+         <section class="eb-box-inner">
+            <ul style="list-style-type: decimal;">
+                <li>
+                    <h4>Everbean 是什么？</h4>
+                    <p>参见 <a href="{{ url_for('home.about') }}">关于</a> 栏目。</p>
+                </li>
+                <li>
+                    <h4>为什么只能使用<a href="http://www.douban.com" target="_blank">豆瓣</a>账户登录？</h4>
+                    <p>本站的基础功能（书籍、笔记）依赖于<a href="http://book.douban.com" target="_blank">豆瓣读书</a>，使用豆瓣账户登录可以使系统获取您在豆瓣读书上标记的书籍和写过的笔记信息。</p>
+                </li>
+                <li>
+                    <h4>是不是只能绑定 Evernote 和印象笔记中的一个，不能同时绑定？</h4>
+                    <p>目前来说是这样的。</p>
+                </li>
+                <li>
+                    <h4>只支持同步笔记到 Evernote/印象笔记？不能同步到其它笔记服务上吗？</h4>
+                    <p>Everbean 设计的初衷是同步豆瓣笔记到 Evernote/印象笔记 上，所以不会支持同步到其它笔记服务上。</p>
+                </li>
+                <li>
+                    <h4>为什么撰写新笔记后没有立即同步到 Evernote/印象笔记？</h4>
+                    <p>因为系统是将整本书的所有笔记合并起来生成一篇笔记同步到 Evernote/印象笔记，为了节省系统资源，在撰写笔记时同步任务默认延时 3 分钟执行，如果您在这 3 分钟内又撰写了同一本书的新的笔记，前一次同步任务将被取消新的同步任务被安排延时执行，直到最后的那个同步任务被成功执行后笔记才会被同步到 Evernote/印象笔记上。</p>
+                </li>
+            </ul>
+         </section>
+    </div>
+</div>
+{% endblock %}
