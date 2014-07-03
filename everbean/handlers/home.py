@@ -40,7 +40,8 @@ def index():
 
 @bp.route('about')
 def about():
-    return render_template('home/about.html')
+    import everbean
+    return render_template('home/about.html', version=everbean.__version__)
 
 
 @bp.route('faq')
