@@ -10,6 +10,7 @@ kombu
 amqp
 anyjson
 celery
+flower
 jsmin
 douban-client
 evernote
