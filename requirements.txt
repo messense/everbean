@@ -18,6 +18,7 @@ gunicorn
 SQLAlchemy
 pylibmc
 redis
+newrelic
 raven
 mistune
 pygments
