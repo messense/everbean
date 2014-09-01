@@ -37,7 +37,7 @@ def proxy_douban_image(douban_url):
         return douban_url
     splited = httplib.urlsplit(douban_url)
     if splited:
-        return splited.path
+        return '/douban_images{path}'.format(path=splited.path)
     return douban_url
 
 
