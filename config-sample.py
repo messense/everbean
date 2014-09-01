@@ -11,6 +11,8 @@ DOUBAN_API_SECRET = ''
 DOUBAN_API_SCOPE = 'douban_basic_common,book_basic_r,book_basic_w'
 # douban redirect uri
 DOUBAN_REDIRECT_URI = ''
+# proxy douban image?
+PROXY_DOUBAN_IMAGE = False
 
 # evernote consumer key
 EVERNOTE_CONSUMER_KEY = ''

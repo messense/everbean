@@ -9,7 +9,7 @@
              {% for book in books.reading %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
@@ -28,7 +28,7 @@
             {% for book in books.read %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
@@ -47,7 +47,7 @@
             {% for book in books.wish %}
              <div class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>

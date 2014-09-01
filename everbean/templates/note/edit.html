@@ -44,7 +44,7 @@ jQuery(document).ready(function ($) {
                     <li class="book">
                         <div class="book-cover">
                             <a href="{{ note.book.absolute_url }}" title="{{ note.book.title }}" target="_blank">
-                                <img src="{{ note.book.cover }}"/></a>
+                                <img src="{{ note.book.cover|proxy_douban_image }}"/></a>
                         </div>
                         <div class="book-title">
                             <a href="{{ note.book.absolute_url }}" title="{{ note.book.title }}" target="_blank">

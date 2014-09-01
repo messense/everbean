@@ -7,7 +7,7 @@
         <header><span class="glyphicon glyphicon-user"></span> 个人资料</header>
         <div class="eb-box-inner">
             <header>
-                <img class="avatar avatar-large" src="{{ user.large_avatar }}" alt="" />
+                <img class="avatar avatar-large" src="{{ user.large_avatar|proxy_douban_image }}" alt="" />
                 <h3>{{ user.douban_name }} <small>({{ user.signature }})</small></h3>
                 <p>{{ user.desc }}</p>
             </header>

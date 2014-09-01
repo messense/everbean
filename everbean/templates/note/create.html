@@ -47,7 +47,7 @@ jQuery(document).ready(function ($) {
                         <li class="book">
                             <div class="book-cover">
                                 <a href="{{ book.absolute_url }}" title="{{ book.title }}" target="_blank">
-                                    <img src="{{ book.cover }}"/></a>
+                                    <img src="{{ book.cover|proxy_douban_image }}"/></a>
                             </div>
                             <div class="book-title">
                                 <a href="{{ book.absolute_url }}" title="{{ book.title }}" target="_blank">
@@ -72,7 +72,7 @@ jQuery(document).ready(function ($) {
                             <div class="book-cover">
                                 <a class="js-book" href="{{ bk.absolute_url }}" title="{{ bk.title }}"
                                    data-target="{{ bk.id }}" target="_blank">
-                                    <img src="{{ bk.cover }}"/>
+                                    <img src="{{ bk.cover|proxy_douban_image }}"/>
                                 </a>
                             </div>
                             <div class="book-title">

@@ -1,5 +1,6 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
+import httplib
 from datetime import datetime
 
 import six
@@ -29,6 +30,15 @@ def medium_book_cover(url):
 def large_book_cover(url):
     url = url.replace('mpic/', 'lpic/')
     return url.replace('spic/', 'lpic/')
+
+
+def proxy_douban_image(douban_url):
+    if not app.config['PROXY_DOUBAN_IMAGE']:
+        return douban_url
+    splited = httplib.urlsplit(douban_url)
+    if splited:
+        return splited.path
+    return douban_url
 
 
 def get_douban_client(token=None, unauthorized=False):

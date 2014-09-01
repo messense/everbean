@@ -59,7 +59,7 @@
         <li id="book-{{ book.id }}">
             <section class="book-info clearfix">
                 <div class="book-cover col-xs-5 col-md-3">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|medium_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|medium_book_cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-intro col-xs-7 col-md-9">
                     <h3 class="book-title"><a href="{{ book.absolute_url }}" title="{{ book.title }}">{{ book.title }}</a></h3>
@@ -89,7 +89,7 @@
              {% for book in books.reading %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
@@ -108,7 +108,7 @@
             {% for book in books.read %}
              <div class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
@@ -127,7 +127,7 @@
             {% for book in books.wish %}
              <li class="book">
                 <div class="book-cover">
-                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover }}" /></a>
+                    <a href="{{ book.absolute_url }}" title="{{ book.title }}"><img src="{{ book.cover|small_book_cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-title">
                     <a href="{{ book.absolute_url }}" title="{{ book.title }}"><h3>{{ book.title }}</h3></a>
@@ -145,7 +145,7 @@
         <header><span class="glyphicon glyphicon-user"></span> 用户信息</header>
         <div class="eb-box-inner">
             <header>
-                <img class="avatar avatar-large" src="{{ user.large_avatar }}" alt="" />
+                <img class="avatar avatar-large" src="{{ user.large_avatar|proxy_douban_image }}" alt="" />
                 <h3>{{ user.douban_name }} <small>({{ user.signature }})</small></h3>
                 <p>{{ user.desc }}</p>
             </header>

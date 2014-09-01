@@ -44,7 +44,7 @@
         <div class="eb-box-inner" style="padding: 20px 5px;">
             <section class="book-info clearfix">
                 <div class="book-cover col-xs-4">
-                    <a href="{{ note.book.absolute_url }}"><img src="{{ note.book.cover|small_book_cover }}" /></a>
+                    <a href="{{ note.book.absolute_url }}"><img src="{{ note.book.cover|small_book_cover|proxy_douban_image }}" /></a>
                 </div>
                 <div class="book-intro col-xs-8">
                     <a href="{{ note.book.absolute_url }}">

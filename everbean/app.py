@@ -121,6 +121,7 @@ def register_template_utils(app):
     from everbean.ext.douban import small_book_cover
     from everbean.ext.douban import medium_book_cover
     from everbean.ext.douban import large_book_cover
+    from everbean.ext.douban import proxy_douban_image
 
     @app.template_global('static_url')
     def static_url(f):
@@ -135,6 +136,7 @@ def register_template_utils(app):
     app.jinja_env.filters['small_book_cover'] = small_book_cover
     app.jinja_env.filters['medium_book_cover'] = medium_book_cover
     app.jinja_env.filters['large_book_cover'] = large_book_cover
+    app.jinja_env.filters['proxy_douban_image'] = proxy_douban_image
 
 
 def register_blueprints(app):

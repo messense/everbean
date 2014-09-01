@@ -7,7 +7,7 @@
         <div class="eb-box-inner">
             <section class="book-info clearfix">
                 <div class="book-cover col-xs-5 col-md-3">
-                    <img src="{{ book.cover|medium_book_cover }}" />
+                    <img src="{{ book.cover|medium_book_cover|proxy_douban_image }}" />
                 </div>
                 <div class="book-intro col-xs-7 col-md-9">
                     <h3 class="book-title">{{ book.title }}</h3>
@@ -37,7 +37,7 @@
                         {% if note.chapter %}{{ note.chapter }}{% else %}第 {{ note.page_no }} 页{% endif %}
                     </a>&nbsp;<span style="font-size: 12px; color: #666;">by</span>&nbsp;
                     <a href="{{ note.user.absolute_url }}" title="{{ note.user.douban_name }}">
-                        <img class="avatar avatar-small" src="{{ note.user.avatar }}" alt="">
+                        <img class="avatar avatar-small" src="{{ note.user.avatar|proxy_douban_image }}" alt="">
                         <span class="user-name">{{ note.user.douban_name }}</span>
                     </a>
                 </div>
@@ -79,7 +79,7 @@
              {% for user in users.noted %}
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
-                    <img src="{{ user.avatar }}" alt="">
+                    <img src="{{ user.avatar|proxy_douban_image }}" alt="">
                     <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
@@ -96,7 +96,7 @@
              {% for user in users.reading %}
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
-                    <img src="{{ user.avatar }}" alt="">
+                    <img src="{{ user.avatar|proxy_douban_image }}" alt="">
                     <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
@@ -113,7 +113,7 @@
              {% for user in users.wish %}
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
-                    <img src="{{ user.avatar }}" alt="">
+                    <img src="{{ user.avatar|proxy_douban_image }}" alt="">
                     <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
@@ -130,7 +130,7 @@
              {% for user in users.read %}
              <li class="user">
                 <a href="{{ user.absolute_url }}" title="{{ user.douban_name }}">
-                    <img src="{{ user.avatar }}" alt="">
+                    <img src="{{ user.avatar|proxy_douban_image }}" alt="">
                     <p class="user-name">{{ user.douban_name }}</p>
                 </a>
              </li>
