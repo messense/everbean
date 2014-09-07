@@ -1,8 +1,8 @@
 # coding=utf-8
 from __future__ import absolute_import, unicode_literals
-import json
 import functools
 
+import flask.json as json
 from flask import Blueprint, jsonify as flask_jsonify
 from flask import request, Response
 from flask.ext.login import current_user
