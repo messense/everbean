@@ -9,15 +9,15 @@ from datetime import datetime
 from flask import current_app as app
 from flask.ext.mail import Message
 
-from everbean.core import mail, db, celery
-from everbean.account.models import User
-from everbean.note.models import Note
-from everbean.ext.douban import (
+from .core import mail, db, celery
+from .account.models import User
+from .note.models import Note
+from .ext.douban import (
     get_douban_client,
     import_annotations,
     import_books
 )
-from everbean.ext.evernote import (
+from .ext.evernote import (
     get_evernote_client,
     get_notebook,
     find_note,

@@ -9,8 +9,8 @@ import logging
 
 from flask import Flask, url_for, render_template
 
-from everbean.utils import parse_config_file
-from everbean.core import login_manager, cache
+from .utils import parse_config_file
+from .core import login_manager, cache
 
 
 def create_app(config=None, envvar='everbean_config', debug=False):
@@ -82,8 +82,8 @@ def register_errorhandlers(app):
 
 def register_extensions(app):
     from flask.ext.turbolinks import turbolinks
-    from everbean.core import db, celery, assets
-    from everbean.core import mail, limiter
+    from .core import db, celery, assets
+    from .core import mail, limiter
 
     db.init_app(app)
     cache.init_app(app)
@@ -108,7 +108,7 @@ def register_extensions(app):
 
 
 def setup_extensions(app):
-    from everbean.account.models import User
+    from .account.models import User
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -118,10 +118,10 @@ def setup_extensions(app):
 
 
 def register_template_utils(app):
-    from everbean.ext.douban import small_book_cover
-    from everbean.ext.douban import medium_book_cover
-    from everbean.ext.douban import large_book_cover
-    from everbean.ext.douban import proxy_douban_image
+    from .ext.douban import small_book_cover
+    from .ext.douban import medium_book_cover
+    from .ext.douban import large_book_cover
+    from .ext.douban import proxy_douban_image
 
     @app.template_global('static_url')
     def static_url(f):
@@ -140,13 +140,13 @@ def register_template_utils(app):
 
 
 def register_blueprints(app):
-    import everbean.home.views as home
-    import everbean.account.views as account
-    import everbean.user.views as user
-    import everbean.oauth.views as oauth
-    import everbean.book.views as book
-    import everbean.note.views as note
-    import everbean.api.views as api
+    from .home import views as home
+    from .account import views as account
+    from .user import views as user
+    from .oauth import views as oauth
+    from .book import views as book
+    from .note import views as note
+    from .api import views as api
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)
