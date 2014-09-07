@@ -7,7 +7,8 @@ from flask import flash, redirect, url_for, abort
 from flask.ext.login import current_user, login_required
 from celery.result import AsyncResult
 
-from everbean.models import Book, Note, UserBook
+from everbean.book.models import Book, UserBook
+from everbean.note.models import Note
 from everbean.core import db, cache
 from everbean.forms import CreateNoteForm, EditNoteForm
 from everbean.ext.douban import create_annotation, update_annotation, delete_annotation

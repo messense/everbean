@@ -9,7 +9,7 @@ from flask.ext.login import login_user
 from douban_client.api.error import DoubanAPIError
 
 from everbean.core import db, cache
-from everbean.models import User
+from everbean.account.models import User
 from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client
 from everbean import tasks

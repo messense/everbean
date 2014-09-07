@@ -10,7 +10,7 @@ from flask.ext.failsafe import failsafe
 
 from everbean import tasks
 from everbean.core import db
-from everbean.models import User
+from everbean.account.models import User
 
 
 @failsafe

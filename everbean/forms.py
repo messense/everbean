@@ -5,7 +5,7 @@ from flask.ext.wtf import Form
 from flask.ext.login import current_user
 from wtforms import ValidationError
 from wtforms.fields import (
-    TextField, TextAreaField,
+    StringField, TextAreaField,
     BooleanField, SelectField,
     IntegerField, HiddenField,
     RadioField,
@@ -15,12 +15,12 @@ from wtforms.validators import (
     DataRequired, Length,
 )
 
-from everbean.models import User
+from everbean.account.models import User
 
 
 class SettingsForm(Form):
     enable_sync = BooleanField('启用笔记同步')
-    email = TextField('电子邮件', validators=[
+    email = StringField('电子邮件', validators=[
         Email(message='请输入有效的 Email 地址。'),
         Optional(),
     ])
@@ -42,7 +42,7 @@ class CreateNoteForm(Form):
     book_id = HiddenField('书籍 ID', default=0, validators=[
         DataRequired(message='必须提供书籍 ID 。')
     ])
-    chapter = TextField('章节名', validators=[
+    chapter = StringField('章节名', validators=[
         Optional(),
         Length(max=100, message='章节长度不能超过 100 字。')
     ])
@@ -60,7 +60,7 @@ class CreateNoteForm(Form):
 
 
 class EditNoteForm(Form):
-    chapter = TextField('章节名', validators=[
+    chapter = StringField('章节名', validators=[
         Optional(),
         Length(max=100, message='章节长度不能超过 100 字。')
     ])

@@ -108,7 +108,7 @@ def register_extensions(app):
 
 
 def setup_extensions(app):
-    from everbean.models import User
+    from everbean.account.models import User
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -140,13 +140,13 @@ def register_template_utils(app):
 
 
 def register_blueprints(app):
-    from everbean.handlers import home
-    from everbean.handlers import account
-    from everbean.handlers import user
-    from everbean.handlers import oauth
-    from everbean.handlers import book
-    from everbean.handlers import note
-    from everbean.handlers import api
+    import everbean.home.views as home
+    import everbean.account.views as account
+    import everbean.user.views as user
+    import everbean.oauth.views as oauth
+    import everbean.book.views as book
+    import everbean.note.views as note
+    import everbean.api.views as api
 
     app.register_blueprint(home.bp)
     app.register_blueprint(account.bp)

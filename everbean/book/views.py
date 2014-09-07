@@ -6,7 +6,9 @@ from flask import Blueprint, render_template
 from flask import redirect, abort, request, url_for
 from flask.ext.login import current_user, login_required
 
-from everbean.models import Book, Note, User
+from everbean.account.models import User
+from everbean.book.models import Book
+from everbean.note.models import Note
 from everbean.core import cache, db
 from everbean.utils import ObjectDict
 from everbean.ext.evernote import (

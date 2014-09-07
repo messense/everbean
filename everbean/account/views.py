@@ -14,7 +14,7 @@ from everbean.ext.douban import get_douban_client
 from everbean.ext.evernote import get_evernote_client, get_notebooks
 from everbean.forms import SettingsForm
 from everbean.utils import to_text
-from everbean.models import User
+from everbean.account.models import User
 import everbean.tasks as tasks
 
 

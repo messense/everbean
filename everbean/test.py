@@ -10,7 +10,7 @@ from flask import url_for
 
 from everbean.app import create_app
 from everbean.core import db
-from everbean.models import User
+from everbean.account.models import User
 
 
 class TestCase(unittest.TestCase):

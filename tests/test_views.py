@@ -7,7 +7,7 @@ from werkzeug.security import gen_salt
 
 from everbean.test import TestCase
 from everbean.core import db
-from everbean.models import User
+from everbean.account.models import User
 
 
 class AccountTest(TestCase):

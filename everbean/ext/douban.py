@@ -9,7 +9,8 @@ from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 
 from everbean.core import db
-from everbean.models import Book, Note, UserBook
+from everbean.book.models import Book, UserBook
+from everbean.note.models import Note
 from everbean.ext.markdown import (
     douban_to_markdown,
     markdown_to_html,
