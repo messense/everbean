@@ -8,11 +8,12 @@ from flask.ext.login import current_user, login_required
 from celery.result import AsyncResult
 
 from everbean.book.models import Book, UserBook
-from everbean.note.models import Note
 from everbean.core import db, cache
-from everbean.forms import CreateNoteForm, EditNoteForm
 from everbean.ext.douban import create_annotation, update_annotation, delete_annotation
 from everbean import tasks
+
+from .models import Note
+from .forms import CreateNoteForm, EditNoteForm
 
 
 bp = Blueprint('note', __name__, url_prefix='/note')
