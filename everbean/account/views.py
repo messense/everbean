@@ -9,11 +9,11 @@ from flask.ext.login import logout_user, current_user, login_user
 from flask.ext.login import login_required
 from flask.ext.mail import Message
 
-from everbean.core import db, cache
-from everbean.ext.douban import get_douban_client
-from everbean.ext.evernote import get_evernote_client, get_notebooks
-from everbean.utils import to_text
-import everbean.tasks as tasks
+from ..core import db, cache
+from ..ext.douban import get_douban_client
+from ..ext.evernote import get_evernote_client, get_notebooks
+from ..utils import to_text
+from .. import tasks
 
 from .models import User
 from .forms import SettingsForm
@@ -55,7 +55,7 @@ def logout():
 @bp.route('/settings', methods=('GET', 'POST'))
 @login_required
 def settings():
-    from everbean.ext.evernote import get_available_templates
+    from ..ext.evernote import get_available_templates
 
     @cache.memoize(300)
     def _get_notebooks(user):

@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import DateTime, Boolean, Text
 from flask import url_for
 
-from everbean.core import db
+from ..core import db
 
 
 class Note(db.Model):

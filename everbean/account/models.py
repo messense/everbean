@@ -9,8 +9,8 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from flask import url_for
 from flask.ext.login import UserMixin
 
-from everbean.core import db
-from everbean.note.models import Note
+from ..core import db
+from ..note.models import Note
 
 
 class User(db.Model, UserMixin):

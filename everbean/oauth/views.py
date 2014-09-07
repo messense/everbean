@@ -8,11 +8,11 @@ from flask.ext.login import current_user, login_required
 from flask.ext.login import login_user
 from douban_client.api.error import DoubanAPIError
 
-from everbean.core import db, cache
-from everbean.account.models import User
-from everbean.ext.douban import get_douban_client
-from everbean.ext.evernote import get_evernote_client
-from everbean import tasks
+from ..core import db, cache
+from ..account.models import User
+from ..ext.douban import get_douban_client
+from ..ext.evernote import get_evernote_client
+from .. import tasks
 
 
 bp = Blueprint('oauth', __name__, url_prefix='/oauth')

@@ -6,16 +6,16 @@ from flask import Blueprint, render_template
 from flask import redirect, abort, request, url_for
 from flask.ext.login import current_user, login_required
 
-from everbean.account.models import User
-from everbean.note.models import Note
-from everbean.core import cache, db
-from everbean.utils import ObjectDict
-from everbean.ext.evernote import (
+from ..account.models import User
+from ..note.models import Note
+from ..core import cache, db
+from ..utils import ObjectDict
+from ..ext.evernote import (
     generate_enml_makeup,
     enml_to_html,
     get_template_name
 )
-from everbean.ext.douban import get_book
+from ..ext.douban import get_book
 
 from .models import Book
 

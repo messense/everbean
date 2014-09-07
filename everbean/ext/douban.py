@@ -8,10 +8,11 @@ from flask import current_app as app
 from douban_client.client import DoubanClient
 from douban_client.api.error import DoubanAPIError
 
-from everbean.core import db
-from everbean.book.models import Book, UserBook
-from everbean.note.models import Note
-from everbean.ext.markdown import (
+from ..core import db
+from ..book.models import Book, UserBook
+from ..note.models import Note
+
+from .markdown import (
     douban_to_markdown,
     markdown_to_html,
     markdown_to_douban

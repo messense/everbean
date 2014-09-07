@@ -10,8 +10,8 @@ from evernote.api.client import EvernoteClient
 import evernote.edam.type.ttypes as Types
 import evernote.edam.error.ttypes as Errors
 
-from everbean.core import cache
-from everbean.utils import to_bytes
+from ..core import cache
+from ..utils import to_bytes
 
 
 _ENML_BODY_RE = re.compile(r'<\?.*?\?>\s*<!.*?>\s*<en\-note>(.+)</en\-note>', re.I | re.S)

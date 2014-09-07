@@ -3,9 +3,9 @@ from __future__ import absolute_import, unicode_literals
 
 from flask import Blueprint, render_template
 
-from everbean.utils import ObjectDict
-from everbean.book.models import Book
-from everbean.core import cache
+from ..utils import ObjectDict
+from ..book.models import Book
+from ..core import cache
 
 
 bp = Blueprint('home', __name__, url_prefix='/')

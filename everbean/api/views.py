@@ -7,8 +7,8 @@ from flask import Blueprint, jsonify as flask_jsonify
 from flask import request, Response
 from flask.ext.login import current_user
 
-from everbean.ext.douban import search_or_get_books
-from everbean.core import limiter
+from ..ext.douban import search_or_get_books
+from ..core import limiter
 
 
 bp = Blueprint('api', __name__, url_prefix='/api')

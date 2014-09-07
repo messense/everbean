@@ -5,11 +5,11 @@ from sqlalchemy.orm import joinedload
 from flask import Blueprint, render_template
 from flask.ext.login import current_user, login_required
 
-from everbean.core import cache
-from everbean.account.models import User
-from everbean.book.models import Book
-from everbean.note.models import Note
-from everbean.utils import ObjectDict
+from ..core import cache
+from ..account.models import User
+from ..book.models import Book
+from ..note.models import Note
+from ..utils import ObjectDict
 
 
 bp = Blueprint('user', __name__, url_prefix='/u')

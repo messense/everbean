@@ -7,9 +7,9 @@ from sqlalchemy import DateTime, Boolean, Text
 from sqlalchemy.orm import relationship, backref
 from flask import url_for
 
-from everbean.core import db
-from everbean.utils import to_bytes
-from everbean.note.models import Note
+from ..core import db
+from ..utils import to_bytes
+from ..note.models import Note
 
 
 class Book(db.Model):

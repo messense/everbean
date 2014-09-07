@@ -7,7 +7,7 @@ from wtforms.validators import Email, Optional
 from flask.ext.wtf import Form
 from flask.ext.login import current_user
 
-from everbean.account.models import User
+from .models import User
 
 
 class SettingsForm(Form):

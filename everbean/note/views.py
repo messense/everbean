@@ -7,10 +7,10 @@ from flask import flash, redirect, url_for, abort
 from flask.ext.login import current_user, login_required
 from celery.result import AsyncResult
 
-from everbean.book.models import Book, UserBook
-from everbean.core import db, cache
-from everbean.ext.douban import create_annotation, update_annotation, delete_annotation
-from everbean import tasks
+from ..book.models import Book, UserBook
+from ..core import db, cache
+from ..ext.douban import create_annotation, update_annotation, delete_annotation
+from .. import tasks
 
 from .models import Note
 from .forms import CreateNoteForm, EditNoteForm
@@ -156,6 +156,7 @@ def delete(note_id):
 @login_required
 def fork(note_id):
     from sqlalchemy.orm.session import make_transient
+
     note = Note.query.get_or_404(note_id)
     if current_user.id == note.user_id:
         flash('不能 fork 自己的笔记！', 'error')

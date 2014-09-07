@@ -7,7 +7,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
 
-from everbean.utils import to_text
+from ..utils import to_text
 
 
 _DOUBAN_QUOTE_RE = re.compile('<原文开始>(.*?)</原文结束>', re.S)
