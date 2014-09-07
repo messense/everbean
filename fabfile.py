@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import os
 
-from fabric.api import *
+from fabric.api import env, cd, run, sudo
 
 
 base_path = os.path.dirname(__file__)
@@ -10,6 +10,7 @@ project_root = "~/projects/everbean"
 pip_path = os.path.join(project_root, "bin/pip")
 python_path = os.path.join(project_root, "bin/python")
 
+env.use_ssh_config = True
 env.user = "messense"
 env.hosts = ["everbean.messense.me"]
 
