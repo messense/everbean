@@ -12,10 +12,10 @@ from ..note.models import Note
 from ..utils import ObjectDict
 
 
-bp = Blueprint('user', __name__, url_prefix='/u')
+blueprint = Blueprint('user', __name__, url_prefix='/u')
 
 
-@bp.route('/<uid>')
+@blueprint.route('/<uid>')
 @login_required
 def index(uid):
     @cache.memoize(300)
@@ -62,8 +62,8 @@ def index(uid):
     )
 
 
-@bp.route('/<uid>/wish')
-@bp.route('/<uid>/wish/<int:page>')
+@blueprint.route('/<uid>/wish')
+@blueprint.route('/<uid>/wish/<int:page>')
 def wish(uid, page=1):
     if current_user.is_authenticated() and current_user.douban_uid == uid:
         user = current_user
@@ -86,8 +86,8 @@ def wish(uid, page=1):
                            books=books)
 
 
-@bp.route('/<uid>/reading')
-@bp.route('/<uid>/reading/<int:page>')
+@blueprint.route('/<uid>/reading')
+@blueprint.route('/<uid>/reading/<int:page>')
 def reading(uid, page=1):
     if current_user.is_authenticated() and current_user.douban_uid == uid:
         user = current_user
@@ -110,8 +110,8 @@ def reading(uid, page=1):
                            books=books)
 
 
-@bp.route('/<uid>/read')
-@bp.route('/<uid>/read/<int:page>')
+@blueprint.route('/<uid>/read')
+@blueprint.route('/<uid>/read/<int:page>')
 def read(uid, page=1):
     if current_user.is_authenticated() and current_user.douban_uid == uid:
         user = current_user

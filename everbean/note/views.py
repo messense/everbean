@@ -16,7 +16,7 @@ from .models import Note
 from .forms import CreateNoteForm, EditNoteForm
 
 
-bp = Blueprint('note', __name__, url_prefix='/note')
+blueprint = Blueprint('note', __name__, url_prefix='/note')
 
 
 def _sync_user_book_notes(user, book):
@@ -39,8 +39,8 @@ def _sync_user_book_notes(user, book):
     cache.set(cache_key, result.id, timeout=300)
 
 
-@bp.route('/create', defaults={'book_id': 0})
-@bp.route('/create/<int:book_id>', methods=("GET", "POST"))
+@blueprint.route('/create', defaults={'book_id': 0})
+@blueprint.route('/create/<int:book_id>', methods=("GET", "POST"))
 @login_required
 def create(book_id):
     @cache.memoize(timeout=300)
@@ -96,7 +96,7 @@ def create(book_id):
                            form=form)
 
 
-@bp.route('/<int:note_id>')
+@blueprint.route('/<int:note_id>')
 def index(note_id):
     note = Note.query.get_or_404(note_id)
     user = note.user
@@ -105,7 +105,7 @@ def index(note_id):
                            user=user)
 
 
-@bp.route('/<int:note_id>/edit', methods=("GET", "POST"))
+@blueprint.route('/<int:note_id>/edit', methods=("GET", "POST"))
 @login_required
 def edit(note_id):
     note = Note.query.get_or_404(note_id)
@@ -133,7 +133,7 @@ def edit(note_id):
                            form=form)
 
 
-@bp.route('/<int:note_id>/delete')
+@blueprint.route('/<int:note_id>/delete')
 @login_required
 def delete(note_id):
     note = Note.query.get_or_404(note_id)
@@ -152,7 +152,7 @@ def delete(note_id):
     return redirect(url_for('note.index', note_id=note_id))
 
 
-@bp.route('/<int:note_id>/fork')
+@blueprint.route('/<int:note_id>/fork')
 @login_required
 def fork(note_id):
     from sqlalchemy.orm.session import make_transient

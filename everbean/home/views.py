@@ -8,10 +8,10 @@ from ..book.models import Book
 from ..core import cache
 
 
-bp = Blueprint('home', __name__, url_prefix='/')
+blueprint = Blueprint('home', __name__, url_prefix='/')
 
 
-@bp.route('/')
+@blueprint.route('/')
 def index():
     @cache.cached(timeout=300, key_prefix='reading_books_12')
     def _reading_books():
@@ -38,12 +38,12 @@ def index():
     return render_template('home/index.html', books=books)
 
 
-@bp.route('about')
+@blueprint.route('about')
 def about():
     import everbean
     return render_template('home/about.html', version=everbean.__version__)
 
 
-@bp.route('faq')
+@blueprint.route('faq')
 def faq():
     return render_template('home/faq.html')

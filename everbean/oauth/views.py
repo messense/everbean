@@ -15,10 +15,10 @@ from ..ext.evernote import get_evernote_client
 from .. import tasks
 
 
-bp = Blueprint('oauth', __name__, url_prefix='/oauth')
+blueprint = Blueprint('oauth', __name__, url_prefix='/oauth')
 
 
-@bp.route('/douban')
+@blueprint.route('/douban')
 def douban():
     """Use request argument code to get OAuth2
     access_token, refresh_token and etc."""
@@ -77,7 +77,7 @@ def douban():
     return redirect(url_for('home.index'))
 
 
-@bp.route('/evernote')
+@blueprint.route('/evernote')
 @login_required
 def evernote():
     is_i18n = bool(session['is_i18n'])

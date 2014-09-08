@@ -11,7 +11,7 @@ from ..ext.douban import search_or_get_books
 from ..core import limiter
 
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+blueprint = Blueprint('api', __name__, url_prefix='/api')
 
 
 def jsonify(*args, **kwargs):
@@ -36,7 +36,7 @@ def login_required(func):
     return wrapper
 
 
-@bp.route('/book/search')
+@blueprint.route('/book/search')
 @limiter.limit('15/minute')
 def book_search():
     keyword = request.args.get('q', None)

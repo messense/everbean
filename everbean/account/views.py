@@ -19,10 +19,10 @@ from .models import User
 from .forms import SettingsForm
 
 
-bp = Blueprint('account', __name__, url_prefix='/account')
+blueprint = Blueprint('account', __name__, url_prefix='/account')
 
 
-@bp.route('/login')
+@blueprint.route('/login')
 def login():
     """Redirect to douban.com to login"""
     if current_user.is_authenticated():
@@ -31,7 +31,7 @@ def login():
     return redirect(client.authorize_url)
 
 
-@bp.route('/fakelogin', methods=('POST', ))
+@blueprint.route('/fakelogin', methods=('POST', ))
 def fakelogin():
     if not app.config['TESTING']:
         abort(403)
@@ -44,7 +44,7 @@ def fakelogin():
     return 'False'
 
 
-@bp.route('/logout')
+@blueprint.route('/logout')
 def logout():
     """logout user"""
     if current_user.is_authenticated():
@@ -52,7 +52,7 @@ def logout():
     return redirect(url_for('home.index'))
 
 
-@bp.route('/settings', methods=('GET', 'POST'))
+@blueprint.route('/settings', methods=('GET', 'POST'))
 @login_required
 def settings():
     from ..ext.evernote import get_available_templates
@@ -122,7 +122,7 @@ def settings():
     return render_template('account/settings.html', form=form)
 
 
-@bp.route('/bind')
+@blueprint.route('/bind')
 @login_required
 def bind():
     sandbox_token = app.config['EVERNOTE_SANDBOX_TOKEN']
@@ -156,7 +156,7 @@ def bind():
         return redirect(client.get_authorize_url(token))
 
 
-@bp.route('/unbind')
+@blueprint.route('/unbind')
 @login_required
 def unbind():
     if current_user.evernote_access_token:
@@ -175,7 +175,7 @@ def unbind():
     return redirect(url_for('account.settings'))
 
 
-@bp.route('/verify/<code>')
+@blueprint.route('/verify/<code>')
 def verify(code):
     if not code:
         flash('没有有效的电子邮件验证码！', 'error')

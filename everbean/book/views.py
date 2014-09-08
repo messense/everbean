@@ -20,10 +20,10 @@ from ..ext.douban import get_book
 from .models import Book
 
 
-bp = Blueprint('book', __name__, url_prefix='/book')
+blueprint = Blueprint('book', __name__, url_prefix='/book')
 
 
-@bp.route('/<int:book_id>')
+@blueprint.route('/<int:book_id>')
 def index(book_id):
     @cache.memoize(300)
     def _get_book(bk_id):
@@ -105,8 +105,8 @@ def index(book_id):
     )
 
 
-@bp.route('/<int:book_id>/notes')
-@bp.route('/<int:book_id>/notes/<int:page>')
+@blueprint.route('/<int:book_id>/notes')
+@blueprint.route('/<int:book_id>/notes/<int:page>')
 def notes(book_id, page=1):
     book = Book.query.get_or_404(book_id)
     book_notes = Note.query.options(joinedload('user')).filter_by(
@@ -118,7 +118,7 @@ def notes(book_id, page=1):
                            pager=pager)
 
 
-@bp.route('/<int:book_id>/<uid>/notes')
+@blueprint.route('/<int:book_id>/<uid>/notes')
 @login_required
 def preview(book_id, uid, template='default'):
     if current_user.douban_uid == uid:
@@ -148,7 +148,7 @@ def preview(book_id, uid, template='default'):
                            body=body)
 
 
-@bp.route('/search/<int:book_id>')
+@blueprint.route('/search/<int:book_id>')
 def search(book_id):
     book = Book.query.filter_by(douban_id=book_id).first()
     if not book:

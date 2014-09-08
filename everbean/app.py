@@ -140,18 +140,18 @@ def register_template_utils(app):
 
 
 def register_blueprints(app):
-    from .home import views as home
-    from .account import views as account
-    from .user import views as user
-    from .oauth import views as oauth
-    from .book import views as book
-    from .note import views as note
-    from .api import views as api
+    from .home.views import blueprint as home
+    from .account.views import blueprint as account
+    from .user.views import blueprint as user
+    from .oauth.views import blueprint as oauth
+    from .book.views import blueprint as book
+    from .note.views import blueprint as note
+    from .api.views import blueprint as api
 
-    app.register_blueprint(home.bp)
-    app.register_blueprint(account.bp)
-    app.register_blueprint(user.bp)
-    app.register_blueprint(oauth.bp)
-    app.register_blueprint(book.bp)
-    app.register_blueprint(note.bp)
-    app.register_blueprint(api.bp)
+    app.register_blueprint(home)
+    app.register_blueprint(account)
+    app.register_blueprint(user)
+    app.register_blueprint(oauth)
+    app.register_blueprint(book)
+    app.register_blueprint(note)
+    app.register_blueprint(api)
